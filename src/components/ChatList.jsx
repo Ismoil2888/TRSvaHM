@@ -42,7 +42,7 @@ const ChatList = () => {
   // Обработчик изменения размера окна
   useEffect(() => {
     const checkMobile = () => {
-      const mobile = window.innerWidth < 700;
+      const mobile = window.innerWidth < 800;
       setIsMobile(mobile);
       if (mobile) {
         setIsMenuOpen(false);

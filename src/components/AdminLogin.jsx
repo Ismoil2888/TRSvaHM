@@ -10,14 +10,15 @@ const AdminLogin = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    if (password === 'admin2025') {
-      // Сохраняем флаг авторизации и время входа
+    const adminPassword = process.env.REACT_APP_ADMIN_PASSWORD;
+
+    if (password === adminPassword) {
       localStorage.setItem('isAdminAuthenticated', 'true');
-      localStorage.setItem('adminLoginTime', Date.now()); // Сохраняем текущее время
+      localStorage.setItem('adminLoginTime', Date.now());
 
       setShowWelcome(true);
       setTimeout(() => {
-        navigate('/admin'); // Перенаправление в административную панель
+        navigate('/admin');
       }, 2000);
     } else {
       setError('Неверный пароль');
