@@ -1,0 +1,218 @@
+.my-profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #1e2c39;
+    height: 100vh;
+    width: 100%;
+  }
+  
+  .my-profile-content {
+    width: 90%;
+    height: 100vh;
+    /* height: 700px; */
+    max-width: 332px;
+    margin-top: 70px;
+    background-color: #2c3e50;
+    color: white;
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .my-profile-content h3{
+    color: white;
+  }
+  
+  .my-profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    padding-bottom: 10px;
+    /* border-bottom: 1px solid grey; */
+    box-shadow: 0 10px 5px -5px rgba(255, 255, 255, 0.2);
+  }
+  
+  .avatar-section {
+    position: relative;
+  }
+  
+  .avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+}
+  
+  .avatar-upload-btn {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    color: white;
+    text-align: center;
+    padding: 8px 12px;
+    background-color: #007bff;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .avatar-upload-btn:hover {
+    background-color: #e1e1e1;
+  }
+
+  .avatar-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Затемненный фон */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Поверх всех элементов */
+  }
+  
+  .avatar-overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }  
+  
+  .full-size-avatar {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+ 
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideIn {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }        
+  
+  .username-section h2 {
+    font-size: 24px;
+    margin-bottom: 5px;
+    color: rgb(204, 214, 235);
+  }
+  
+  .username-section p {
+    font-size: 14px;
+    color: #777;
+  }
+  
+  .menu-icon {
+    cursor: pointer;
+    font-size: 24px;
+    color: #00eaff;
+  }
+
+  .back-button{
+    font-size: 25px;
+  }
+  
+  .menu-dropdown {
+    position: absolute;
+    top: 49px;
+    right: 10px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 10px;
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+  }
+  
+  .menu-dropdown button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: transparent;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .menu-dropdown button:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .edit-username-section {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .edit-username-section input {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+  }
+  
+  .edit-username-section button {
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .edit-username-section button:hover {
+    background-color: #0056b3;
+  }
+  
+  .profile-info {
+    margin-top: 40px;
+  }
+
+  .info-section{
+    margin-top: 30px;
+  }
+  
+  .info-section h3 {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+  
+  .info-section p {
+    font-size: 14px;
+    color: #69e8bd;
+  }
+
+  .ident-block-basic{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: red;
+  }
+
+  @media (width > 984px) {
+    .my-profile-content{
+      margin-bottom: 50px;
+    }    
+  }

@@ -1,0 +1,99 @@
+/* Общие стили */
+.notifications-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #1e2c39;
+    min-height: 100vh;
+    width: 100%;
+  }
+  
+  .notifications-header {
+    width: 100%;
+    background-color: #0078d7;
+    color: #fff;
+    padding: 15px 20px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 8px;
+    position: absolute;
+    top: 0;
+  }
+  
+  .notifications-content {
+    width: 100%;
+    max-width: 6000px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 80px;
+  }
+  
+  /* Карточки уведомлений */
+/* Стили для кнопки удаления */
+.delete-notification-button {
+    width: 20px;
+    border: none;
+    font-size: 18px;
+    color: #8b0002;
+    cursor: pointer;
+    background: none;
+    /* align-self: flex-start; */
+    transition: color 0.2s ease;
+  }
+  
+  .delete-notification-button:hover {
+    color: #d9363e;
+  }
+  
+  /* Уведомления в целом */
+  .notification-card {
+    max-width: 800px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #6ba8fe;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .notification-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }  
+  
+  .notification-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+    border: 2px solid #0078d7;
+    object-fit: cover;
+  }
+  
+  .notification-info {
+    flex: 1;
+  }
+  
+  .notification-text {
+    margin: 0;
+    font-size: 16px;
+    color: #ffffff;
+  }
+  
+  .notification-time {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #dddbdb;
+  }
+  
+  /* Стили для случая, когда уведомлений нет */
+  .no-notifications {
+    text-align: center;
+    color: #888;
+    font-size: 18px;
+    padding: 20px;
+  }  

@@ -1,0 +1,46 @@
+.tch-login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+  }
+  
+  .tch-login-container h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .tch-login-container input {
+    width: 300px;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #0f799f;
+  }
+  
+  .tch-login-container button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 325px;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+  }
+  
+  .tch-login-container button:hover {
+    background-color: #45a049;
+  }
+  
+  .error-message {
+    color: red;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }  

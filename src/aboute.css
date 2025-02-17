@@ -1,0 +1,100 @@
+.about-hero {
+  text-align: center;
+  background: linear-gradient(45deg, #0957a4, #02152b);
+  /* padding: 50px 20px; */
+  padding-top: 90px;
+  color: white;
+  box-shadow: 0 4px 10px rgba(14, 101, 176, 20);
+  border-radius: 15px;
+}
+
+.slider-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto;
+  max-width: 2000px;
+}
+
+.slider-section img {
+  width: 100%;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.section-title {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #1e90ff;
+}
+
+.about-section {
+  background: #555454;
+  padding: 40px 20px;
+  text-align: justify;
+  /* line-height: 1.6; */
+  box-shadow: 0 0px 10px rgba(0, 0, 0, 9);
+}
+
+.about-section h2{
+  color: white;
+  padding-bottom: 20px;
+}
+
+.about-section p{
+  color: white;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.faculty-image {
+  display: block;
+  /* margin: 20px auto; */
+  /* max-width: 200px; */
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* footer {
+  background: #1e90ff;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+}   */
+
+
+
+
+
+
+
+
+/* Общий стиль для стрелок */
+.swiper-button-next,
+.swiper-button-prev {
+color: #fff; /* Цвет стрелок */
+background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон */
+border-radius: 50%; /* Круглая форма */
+width: 40px; /* Размер стрелки */
+height: 40px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 16px; /* Размер значка стрелки */
+transition: background-color 0.3s ease;
+}
+
+/* Изменение цвета при наведении */
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Для замены иконок стрелок на свои */
+.swiper-button-next::after,
+.swiper-button-prev::after {
+font-size: 18px; /* Размер стрелки */
+font-weight: bold;
+}
