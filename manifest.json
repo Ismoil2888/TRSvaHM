@@ -1,0 +1,25 @@
+{
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#1e2c39",
+  "background_color": "#1e2c39",
+  "short_name": "University App",
+  "name": "University",
+  "icons": [
+    {
+      "src": "/logosite1024.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/logosite1024.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/logoapp512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
