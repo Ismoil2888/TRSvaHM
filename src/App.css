@@ -1821,3 +1821,98 @@ color: transparent;
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+/* Стили для PWA промпта */
+.pwa-install-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pwa-install-modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+}
+
+.close-button-and-icon{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pwa-icon{
+  width: 100px;
+  border-radius: 17px;
+  position: absolute;
+}
+
+.pwa-close-btn {
+  position: absolute;
+  top: 0;
+  left: 140px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+}
+
+.pwa-buttons {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.install-btn {
+  background: #007bff;
+  color: white;
+  padding: 0rem 1.5rem;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+
+.install-btn:hover {
+  background: #0056b3;
+}
+
+.skip-btn {
+  background: #caccce;
+  color: #333;
+  padding: 0rem 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+
+.skip-btn:hover {
+  background: #e9ecef;
+}
