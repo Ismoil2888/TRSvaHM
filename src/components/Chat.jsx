@@ -1509,18 +1509,18 @@ const Chat = () => {
                         )}
                         {viewingImage && (
                           <div className="image-viewer-overlay" onClick={() => setViewingImage(null)}>
-                            <div className="image-viewer-content">
-                              <img
-                                src={viewingImage}
-                                alt="Full size"
-                                onClick={(e) => e.stopPropagation()}
-                              />
                               <button
                                 className="close-button"
                                 onClick={() => setViewingImage(null)}
                               >
                                 &times;
                               </button>
+                            <div className="image-viewer-content">
+                              <img
+                                src={viewingImage}
+                                alt="Full size"
+                                onClick={(e) => e.stopPropagation()}
+                              />
                             </div>
                           </div>
                         )}

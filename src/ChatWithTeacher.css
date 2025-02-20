@@ -952,8 +952,8 @@ border-radius: 8px;
 
 .close-button {
 position: absolute;
-bottom: 540px;
-left: 170px;
+top: 0;
+left: 160px;
 background: none;
 border: none;
 color: white;
