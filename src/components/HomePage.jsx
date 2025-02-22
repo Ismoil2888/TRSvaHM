@@ -2083,7 +2083,7 @@ const showNotificationError = (message) => {
                 <div className="post-author">
                   <img
                     src={post.userAvatar || defaultAvatar}
-                    alt="User Avatar"
+                    alt=""
                     className="post-avatar skeleton-media-avatars"
                     onClick={() => goToProfile(post.userId)}
                   />
@@ -2114,9 +2114,9 @@ const showNotificationError = (message) => {
         <div className="skeleton-media" />
       )}
       <img 
-        src={post.mediaUrl} 
-        alt="Post Media" 
-        className="post-media" 
+        src={post.mediaUrl}
+        alt="Post Media"
+        className="post-media"
         style={{ display: imageLoadedStatus[post.id] ? 'block' : 'none' }}
         onLoad={() => handleImageLoad(post.id)}
         onError={() => handleImageError(post.id)}

@@ -178,6 +178,7 @@ object-fit: cover;
   display: flex;
   align-items: center;
   justify-content: space-around;
+  white-space: nowrap;
 }
 
 .chat-list {
@@ -890,7 +891,7 @@ cursor: pointer;
 margin-top: 8px;
 background: #f0f0f0;
 border-radius: 8px;
-max-width: 250px;
+max-width: 215px;
 overflow: hidden;
 text-overflow: ellipsis;
 }
