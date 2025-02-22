@@ -693,7 +693,7 @@ import {
 import { auth } from "../firebase";
 import "../ChatWithTeacher.css";
 import CryptoJS from 'crypto-js';
-import { FiBookmark, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
+import { FiBookmark, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch, FiFile, FiImage } from "react-icons/fi";
 import basiclogo from "../basic-logo.png";
 import ttulogo from "../Ttulogo.png";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -1717,8 +1717,8 @@ const Chat = () => {
 
             {showAttachmentMenu && (
               <div className="attachment-menu">
-                <button onClick={() => handleFileSelect('image')}>Изображение</button>
-                <button onClick={() => handleFileSelect('file')}>Файл</button>
+                <button style={{display: "flex", alignItems: "center", gap: "15px"}} onClick={() => handleFileSelect('image')}><FiImage /> Изображение</button>
+                <button style={{display: "flex", alignItems: "center", gap: "15px"}} onClick={() => handleFileSelect('file')}><FiFile /> Документ или видео</button>
               </div>
             )}
           </div>
