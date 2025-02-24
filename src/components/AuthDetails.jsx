@@ -990,7 +990,7 @@ import { onAuthStateChanged, signOut, getAuth, reauthenticateWithCredential, Ema
 import { getStorage, ref as storageRef, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { getDatabase, ref as databaseRef, onValue, push, update, get, query, orderByChild, equalTo, remove } from "firebase/database";
 import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import { auth, database, storage } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEllipsisV, FaTimes, FaPen, FaArrowLeft, FaLock, FaEye, FaEyeSlash, FaRegAddressBook } from "react-icons/fa"; // Иконка карандаша
@@ -998,6 +998,9 @@ import imageCompression from 'browser-image-compression';
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
 import basiclogo from "../basic-logo.png";
 import ttulogo from "../Ttulogo.png";
+import { LanguageContext } from '../contexts/LanguageContext';
+import { translations } from '../translations';
+import useTranslation from '../hooks/useTranslation';
 
 const AuthDetails = () => {
   const [authUser, setAuthUser] = useState(null);
@@ -1028,6 +1031,9 @@ const AuthDetails = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
 
   const [isMobile, setIsMobile] = useState(false);
+  const t = useTranslation();
+  const { language, handleLanguageChange, showModal, setShowModal } = useContext(LanguageContext);
+
   const [isMenuOpen, setIsMenuOpen] = useState(() => {
     // Восстанавливаем состояние из localStorage при инициализации
     const savedState = localStorage.getItem('isMenuOpen');
@@ -1159,11 +1165,12 @@ const AuthDetails = () => {
           const data = snapshot.val();
           if (data) {
             setUsername(data.username || "User");
-            setPhoneNumber(data.phoneNumber || "+Введите номер телефона");
+            // setPhoneNumber(data.phoneNumber || "+Введите номер телефона");
+            setPhoneNumber(data.phoneNumber ? data.phoneNumber : t('addtelnumber'));
             setStatus(data.status || "offline");
             setLastActive(data.lastActive || "");
             setAvatarUrl(data.avatarUrl || "./default-image.png");
-            setAboutMe(data.aboutMe || "Информация не указана");
+            setAboutMe(data.aboutMe || t('infonot'));
           }
         });
 
@@ -1183,7 +1190,7 @@ const AuthDetails = () => {
             );
           } else {
             setRequestId(null); // No request found
-            setIdentificationStatus("не идентифицирован");
+            setIdentificationStatus(t('notident'));
           }
         });
 
@@ -1217,7 +1224,7 @@ const AuthDetails = () => {
         setAuthUser(null);
         setUsername("");
         setEmail("");
-        setPhoneNumber("");
+        setPhoneNumber("Добавить номер телефона");
         setStatus("offline");
         setLastActive("");
         setAvatarUrl("./default-image.png");
@@ -1230,32 +1237,60 @@ const AuthDetails = () => {
     };
   }, []);
 
-  // Открытие модального окна для изменения телефона
   const handlePhoneModalOpen = () => {
-    setNewPhoneNumber("+992");
+    setNewPhoneNumber(phoneNumber === "Добавить номер телефона" ? "+992" : phoneNumber);
     setIsPhoneModalOpen(true);
   };
-
-  // Сохранение нового или измененного номера телефона
+  
+  // Сохранение номера
   const handleSavePhoneNumber = async () => {
     if (!newPhoneNumber || newPhoneNumber === "+992") {
-      setPhoneNumber("Добавить номер телефона");
-      setIsPhoneModalOpen(false); // Закрытие модального окна после сохранения
-      return;
-    }
-
-    if (authUser) {
-      try {
+      setPhoneNumber("Добавить номер телефона"); // Сбрасываем номер
+      if (authUser) {
         const userRef = databaseRef(database, 'users/' + authUser.uid);
-        await update(userRef, { phoneNumber: newPhoneNumber });
-        setPhoneNumber(newPhoneNumber);
-        showNotification("Номер телефона успешно обновлен.");
-        setIsPhoneModalOpen(false); // Закрытие модального окна после сохранения
-      } catch (error) {
-        console.error("Ошибка при обновлении номера телефона:", error);
+        await update(userRef, { phoneNumber: null }); // Удаляем номер из базы
+      }
+    } else {
+      setPhoneNumber(newPhoneNumber);
+      if (authUser) {
+        try {
+          const userRef = databaseRef(database, 'users/' + authUser.uid);
+          await update(userRef, { phoneNumber: newPhoneNumber }); // Сохраняем новый номер
+          showNotification("Номер телефона успешно обновлен.");
+        } catch (error) {
+          console.error("Ошибка при обновлении номера телефона:", error);
+        }
       }
     }
+    setIsPhoneModalOpen(false); // Закрываем модальное окно
   };
+
+  // Открытие модального окна для изменения телефона
+  // const handlePhoneModalOpen = () => {
+  //   setNewPhoneNumber("+992");
+  //   setIsPhoneModalOpen(true);
+  // };
+
+  // // Сохранение нового или измененного номера телефона
+  // const handleSavePhoneNumber = async () => {
+  //   if (!newPhoneNumber || newPhoneNumber === "+992") {
+  //     setPhoneNumber("Добавить номер телефона");
+  //     setIsPhoneModalOpen(false); // Закрытие модального окна после сохранения
+  //     return;
+  //   }
+
+  //   if (authUser) {
+  //     try {
+  //       const userRef = databaseRef(database, 'users/' + authUser.uid);
+  //       await update(userRef, { phoneNumber: newPhoneNumber });
+  //       setPhoneNumber(newPhoneNumber);
+  //       showNotification("Номер телефона успешно обновлен.");
+  //       setIsPhoneModalOpen(false); // Закрытие модального окна после сохранения
+  //     } catch (error) {
+  //       console.error("Ошибка при обновлении номера телефона:", error);
+  //     }
+  //   }
+  // };
 
 
   // Функция для успешных уведомлений
@@ -1327,20 +1362,34 @@ const AuthDetails = () => {
   };
 
   const handleUsernameChange = async () => {
-    const usernameRegex = /^[a-zA-Z0-9._]+$/; // Валидация имени пользователя
+    const usernameRegex = /^[a-zA-Z0-9._]+$/;
     if (authUser && newUsername.trim() !== "" && usernameRegex.test(newUsername)) {
       try {
-        // Проверяем, существует ли уже пользователь с таким именем
+        const userDatabaseRef = databaseRef(database, 'users/' + authUser.uid);
+        const userSnapshot = await get(userDatabaseRef);
+        const userData = userSnapshot.val();
+        
+        if (userData?.lastUsernameChange) {
+          const lastChangeTimestamp = userData.lastUsernameChange;
+          const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
+          if (Date.now() - lastChangeTimestamp < oneWeekInMs) {
+            showNotificationError("Вы можете менять имя только раз в неделю.");
+            return;
+          }
+        }
+  
         const usersRef = query(databaseRef(database, 'users'), orderByChild('username'), equalTo(newUsername));
         const snapshot = await get(usersRef);
         if (snapshot.exists()) {
           showNotificationError("Пользователь с таким именем уже существует, выберите другое имя.");
           return;
         }
-
-        // Если имя уникально, обновляем
-        const userDatabaseRef = databaseRef(database, 'users/' + authUser.uid);
-        await update(userDatabaseRef, { username: newUsername });
+  
+        await update(userDatabaseRef, {
+          username: newUsername,
+          lastUsernameChange: Date.now(),
+        });
+  
         setUsername(newUsername);
         setIsEditingUsername(false);
         showNotification(`Имя изменено на "${newUsername}"`);
@@ -1351,6 +1400,32 @@ const AuthDetails = () => {
       showNotificationError("Имя пользователя может содержать только буквы, цифры, нижнее подчеркивание и точку.");
     }
   };
+
+  // const handleUsernameChange = async () => {
+  //   const usernameRegex = /^[a-zA-Z0-9._]+$/; // Валидация имени пользователя
+  //   if (authUser && newUsername.trim() !== "" && usernameRegex.test(newUsername)) {
+  //     try {
+  //       // Проверяем, существует ли уже пользователь с таким именем
+  //       const usersRef = query(databaseRef(database, 'users'), orderByChild('username'), equalTo(newUsername));
+  //       const snapshot = await get(usersRef);
+  //       if (snapshot.exists()) {
+  //         showNotificationError("Пользователь с таким именем уже существует, выберите другое имя.");
+  //         return;
+  //       }
+
+  //       // Если имя уникально, обновляем
+  //       const userDatabaseRef = databaseRef(database, 'users/' + authUser.uid);
+  //       await update(userDatabaseRef, { username: newUsername });
+  //       setUsername(newUsername);
+  //       setIsEditingUsername(false);
+  //       showNotification(`Имя изменено на "${newUsername}"`);
+  //     } catch (error) {
+  //       console.error("Ошибка при изменении имени пользователя:", error);
+  //     }
+  //   } else {
+  //     showNotificationError("Имя пользователя может содержать только буквы, цифры, нижнее подчеркивание и точку.");
+  //   }
+  // };
 
   const handleAboutMeChange = async () => {
     if (authUser) {
@@ -1411,9 +1486,9 @@ const AuthDetails = () => {
 
   const renderStatus = () => {
     if (status === "online") {
-      return <span className="status-online">в сети</span>;
+      return <span className="status-online">{t('status')}</span>;
     } else {
-      return <span className="status-offline">был(а) в сети: {lastActive}</span>;
+      return <span className="status-offline">{t('wasonline')}: {lastActive}</span>;
     }
   };
 
@@ -1527,7 +1602,7 @@ const AuthDetails = () => {
                 className="avatar"
                 onClick={() => setIsAvatarModalOpen(true)}
               />
-              <label htmlFor="avatarInput" className="avatar-upload-btn">Загрузить фото</label>
+              <label htmlFor="avatarInput" className="avatar-upload-btn">{t('uploadphoto')}</label>
               <input
                 type="file"
                 id="avatarInput"
@@ -1562,6 +1637,7 @@ const AuthDetails = () => {
                 type="text"
                 value={newUsername}
                 onChange={(e) => setNewUsername(e.target.value)}
+                maxLength="12"
                 placeholder="Новое имя пользователя"
               />
               <button style={{ height: "35px" }} onClick={handleUsernameChange}>Изменить</button>
@@ -1572,7 +1648,7 @@ const AuthDetails = () => {
           <div className="profile-info">
             <div className="info-section account" onClick={handlePhoneModalOpen}>
               <div>
-                <h3>Номер телефона</h3>
+                <h3>{t('telnumber')}</h3>
                 <p>{phoneNumber}</p>
               </div>
               <FaRegAddressBook style={{ fontSize: "22px" }} />
@@ -1586,6 +1662,7 @@ const AuthDetails = () => {
                   <input
                     type="text"
                     value={newPhoneNumber}
+                    maxLength={13}
                     onChange={(e) => setNewPhoneNumber(e.target.value)}
                     placeholder="Введите номер телефона"
                   />
@@ -1598,7 +1675,7 @@ const AuthDetails = () => {
             <div className="info-section osebe"
               onClick={() => setIsEditingAboutMe(true)}>
               <div>
-                <h3>О себе</h3>
+                <h3>{t('about')}</h3>
                 <p>{aboutMe}</p>
               </div>
               <FaPen
@@ -1625,7 +1702,7 @@ const AuthDetails = () => {
             <div className="info-section">
               <div className="ident-block-basic" onClick={handleOpenForm}>
                 <div className="ident-block1">
-                  <h3>Идентификация</h3>
+                  <h3>{t('identification')}</h3>
                   <p>{identificationStatus}</p>
                 </div>
                 <div className="ident-block2">
@@ -1650,17 +1727,16 @@ const AuthDetails = () => {
             )}
 
             <div className="info-section">
-              <h3>Электронная почта</h3>
+              <h3>{t('email')}</h3>
               <p>{email}</p>
             </div>
 
             <div className="settings">
-              <h3>Настройки</h3>
+              <h3>{t('settings')}</h3>
               <ul>
-                <li>Конфиденциальность</li>
-                <li>Уведомления и звуки</li>
+                <li>{t('confidentiality')}</li>
                 <div className="edit-password" onClick={openPasswordModal}>
-                  <li>Пароль</li>
+                  <li>{t('password')}</li>
                   <FaPen />
                 </div>
                 {isPasswordModalOpen && (
@@ -1704,12 +1780,47 @@ const AuthDetails = () => {
                     </div>
                   </div>
                 )}
-                <li>Язык</li>
+                <li onClick={() => setShowModal(true)}>
+      {translations[language].language}
+      {showModal && (
+        <div 
+          className="modal-backdrop"
+          onClick={() => setShowModal(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000
+          }}
+        >
+          <div 
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: 'white',
+              padding: '20px',
+              borderRadius: '8px',
+              minWidth: '200px'
+            }}
+          >
+            <button onClick={() => handleLanguageChange('tajik')}>Тоҷикӣ</button>
+            <button onClick={() => handleLanguageChange('russian')}>Русский</button>
+            <button onClick={() => handleLanguageChange('english')}>English</button>
+          </div>
+        </div>
+      )}
+    </li>
               </ul>
             </div>
           </div>
 
-          <button className="signout-btn" onClick={userSignOut}>Выйти из аккаунта</button>
+          <button className="signout-btn" onClick={userSignOut}>{t('logout')}</button>
 
           <button
             className="delete-account-btn"
@@ -1719,7 +1830,7 @@ const AuthDetails = () => {
               }
             }}
           >
-            Удалить аккаунт
+            {t('delaccount')}
           </button>
 
 

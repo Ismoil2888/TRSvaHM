@@ -277,6 +277,7 @@ import basiclogo from "../basic-logo.png";
 import ttulogo from "../Ttulogo.png";
 import "../MyProfile.css";
 import "../App.css";
+import useTranslation from '../hooks/useTranslation';
 
 const MyProfile = () => {
   const [authUser, setAuthUser] = useState(null);
@@ -295,6 +296,7 @@ const MyProfile = () => {
   const menuRef = useRef(null);
   const [userUid, setUserUid] = useState(null);
   const navigate = useNavigate();
+  const t = useTranslation();
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(() => {
     // Восстанавливаем состояние из localStorage при инициализации
@@ -535,7 +537,7 @@ const MyProfile = () => {
             <RiSettingsLine style={{ color: "white", fontSize: "25px", marginLeft: "15px" }} />
           </Link>
 
-          <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>Профиль</ul>
+          <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>{t('profile')}</ul>
 
           <div className={`burger-menu-icon ${isMenuOpenMobile ? 'open' : ''}`} onClick={toggleMenuMobile}>
             <span className="bm-span"></span>

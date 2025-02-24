@@ -1218,13 +1218,13 @@ input[type="file"] {
           z-index: 9999; */
           position: absolute;
           margin-top: 17%;
-          left: 40%;
-          color: rgb(110, 79, 79);
+          left: 20%;
+          /* color: rgb(110, 79, 79); */
           padding-left: 15px;
           padding-top: 10px;
           border-radius: 15px;
           z-index: 9999;
-          background-color: rgba(201, 199, 199, 0.3);
+          /* background-color: rgba(201, 199, 199, 0.3); */
           backdrop-filter: blur(10px);
           width: 350px;
           height: 60px;
@@ -1264,7 +1264,8 @@ input[type="file"] {
         }
 
         .notification.neutral {
-          background-color: rgba(201, 199, 199, 0.3); /* Красный цвет для ошибок */
+          background-color: rgba(201, 199, 199, 0.3);
+          color: #ffffff;
         }
       
         .ci-txt{
@@ -1552,11 +1553,11 @@ color: transparent;
 
 .delete-account-btn {
   margin-top: 10px;
-  background-color: #ff4d4d;
+  background-color: #dc3545;
   color: white;
   border: none;
   padding: 10px 15px;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s;
 }

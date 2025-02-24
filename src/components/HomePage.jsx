@@ -1496,7 +1496,7 @@ const HomePage = () => {
       setTimeout(() => {
         setNotification("");
         setNotificationType("");
-      }, 3000);
+      }, 300000);
     };
 
 // Функция для ошибочных уведомлений
@@ -1602,7 +1602,7 @@ const showNotificationError = (message) => {
       }
     });
   
-    // Загрузка данных текущего пользователя
+    // // Загрузка данных текущего пользователя
     const user = auth.currentUser;
     if (user) {
       const userRef = dbRef(db, `users/${user.uid}`);
@@ -1683,6 +1683,8 @@ const showNotificationError = (message) => {
 
     if (editingCommentId) {
       update(dbRef(database, `postComments/${commentModal.postId}/${editingCommentId}`), {
+        avatarUrl: isAnonymous ? anonymAvatar : userDetails.avatarUrl,
+        username: isAnonymous ? "Анонимно" : userDetails.username,
         comment: newComment,
         timestamp: formattedTimestamp, // Используем читаемую дату
       });

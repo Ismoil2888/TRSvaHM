@@ -7,7 +7,7 @@ import defaultAvatar from "../default-image.png";
 import defaultImage from "../Ttulogo.jpg";
 import "../App.css";
 import "../PostForm.css";
-import { FaLock, FaPhone, FaUserEdit, FaChevronLeft, FaEllipsisV } from "react-icons/fa";
+import { FaChevronLeft } from "react-icons/fa";
 import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FaPlusCircle } from "react-icons/fa";

@@ -124,17 +124,11 @@
   }  
 
   .notification{
-    margin-top: 50px;
-    left: 20%;
+    margin-top: 60px;
+    left: 10%;
   }
 
   .notification.success {
     background-color: rgba(0, 255, 157, 0.3); 
     color: rgb(255, 255, 255);
-  }
-
-  .notification.neutral {
-    background-color: rgba(201, 199, 199, 0.3);
-    color: #1d689a;
-    font-weight: 800;
   }

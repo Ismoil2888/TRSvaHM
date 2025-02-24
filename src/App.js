@@ -30,6 +30,7 @@ import PostForm from "./components/PostForm";
 import NotificationsPage from "./components/NotificationsPage";
 import Chat from "./components/Chat";
 import ChatList from "./components/ChatList";
+import { LanguageProvider } from './contexts/LanguageContext';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -123,6 +124,7 @@ function App() {
     disableTextSelection();
 
   return (
+    <LanguageProvider>
     <>
     {showPWAInstallPrompt && (
       <div className="pwa-install-overlay">
@@ -187,6 +189,7 @@ function App() {
       <Route path="/chats" element={<PrivateRoute> <ChatList /> </PrivateRoute>} />
     </Routes>
     </>
+    </LanguageProvider>
   );
 }
 
