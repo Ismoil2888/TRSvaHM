@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPhone, faUserCog, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
 import ttulogo from "../Ttulogo.png";
+import useTranslation from '../hooks/useTranslation';
 
 const SearchStudents = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -27,7 +28,7 @@ const SearchStudents = () => {
   const [userAvatarUrl, setUserAvatarUrl] = useState(null);
   const [userDetails, setUserDetails] = useState({ username: "", avatarUrl: "" });
   const [isMobile, setIsMobile] = useState(false);
-
+  const t = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(() => {
     // Восстанавливаем состояние из localStorage при инициализации
     const savedState = localStorage.getItem('isMenuOpen');
@@ -347,7 +348,7 @@ const SearchStudents = () => {
               <FaArrowLeft />
             </Link>
 
-            <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>Поиск студентов</ul>
+            <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>{t('findstudent')}</ul>
 
             <div className={`burger-menu-icon ${isMenuOpenMobile ? 'open' : ''}`} onClick={toggleMenuMobile}>
               <span className="bm-span"></span>
@@ -371,7 +372,7 @@ const SearchStudents = () => {
         </header>
 
         <div className="chat-page-header">
-          <h2>Поиск</h2>
+          <h2>{t('findstudents')}</h2>
           <div className="chat-page-search-icon" onClick={() => setShowSearch(!showSearch)}>
             <FaSearch />
           </div>

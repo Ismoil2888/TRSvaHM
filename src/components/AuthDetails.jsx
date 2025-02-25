@@ -1075,7 +1075,7 @@ const AuthDetails = () => {
 
   const navigate = useNavigate();
 
-  const [identificationStatus, setIdentificationStatus] = useState("не идентифицирован");
+  const [identificationStatus, setIdentificationStatus] = useState(t('notident'));
   const [requestId, setRequestId] = useState(null); // New state for tracking request ID
   const user = auth.currentUser;
 
@@ -1090,7 +1090,7 @@ const AuthDetails = () => {
   });
 
   const handleOpenForm = () => {
-    if (identificationStatus === "не идентифицирован") {
+    if (identificationStatus === t('notident')) {
       setIsRequestFormOpen(true);
     } else {
       showNotification("Вы уже идентифицированы.");
@@ -1186,7 +1186,7 @@ const AuthDetails = () => {
             const requestData = Object.values(snapshot.val())[0];
             setRequestId(requestData.id); // Get request ID
             setIdentificationStatus(
-              requestData.status === "accepted" ? "идентифицирован" : "не идентифицирован"
+              requestData.status === "accepted" ? t('ident') : t('notident')
             );
           } else {
             setRequestId(null); // No request found
@@ -1238,10 +1238,10 @@ const AuthDetails = () => {
   }, []);
 
   const handlePhoneModalOpen = () => {
-    setNewPhoneNumber(phoneNumber === "Добавить номер телефона" ? "+992" : phoneNumber);
+    setNewPhoneNumber(phoneNumber === t('addtelnumber') ? "+992" : phoneNumber);
     setIsPhoneModalOpen(true);
   };
-  
+
   // Сохранение номера
   const handleSavePhoneNumber = async () => {
     if (!newPhoneNumber || newPhoneNumber === "+992") {
@@ -1368,7 +1368,7 @@ const AuthDetails = () => {
         const userDatabaseRef = databaseRef(database, 'users/' + authUser.uid);
         const userSnapshot = await get(userDatabaseRef);
         const userData = userSnapshot.val();
-        
+
         if (userData?.lastUsernameChange) {
           const lastChangeTimestamp = userData.lastUsernameChange;
           const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
@@ -1377,19 +1377,19 @@ const AuthDetails = () => {
             return;
           }
         }
-  
+
         const usersRef = query(databaseRef(database, 'users'), orderByChild('username'), equalTo(newUsername));
         const snapshot = await get(usersRef);
         if (snapshot.exists()) {
           showNotificationError("Пользователь с таким именем уже существует, выберите другое имя.");
           return;
         }
-  
+
         await update(userDatabaseRef, {
           username: newUsername,
           lastUsernameChange: Date.now(),
         });
-  
+
         setUsername(newUsername);
         setIsEditingUsername(false);
         showNotification(`Имя изменено на "${newUsername}"`);
@@ -1623,9 +1623,9 @@ const AuthDetails = () => {
 
             {showMenu && (
               <div className="menu-dropdown" ref={menuRef}>
-                <button onClick={() => document.getElementById('avatarInput').click()}>Добавить фото профиля</button>
-                <button onClick={deleteAvatar}>Удалить фото профиля</button>
-                <button onClick={() => setIsEditingUsername(true)}>Изменить имя пользователя</button>
+                <button onClick={() => document.getElementById('avatarInput').click()}>{t('addphoto')}</button>
+                <button onClick={deleteAvatar}>{t('delphoto')}</button>
+                <button onClick={() => setIsEditingUsername(true)}>{t('changeusername')}</button>
               </div>
             )}
 
@@ -1706,7 +1706,7 @@ const AuthDetails = () => {
                   <p>{identificationStatus}</p>
                 </div>
                 <div className="ident-block2">
-                  <FaLock style={{ color: identificationStatus === "идентифицирован" ? '#0AFFFF' : 'red' }} />
+                  <FaLock style={{ color: identificationStatus === t('ident') ? '#0AFFFF' : 'red' }} />
                 </div>
               </div>
             </div>
@@ -1781,41 +1781,29 @@ const AuthDetails = () => {
                   </div>
                 )}
                 <li onClick={() => setShowModal(true)}>
-      {translations[language].language}
-      {showModal && (
-        <div 
-          className="modal-backdrop"
-          onClick={() => setShowModal(false)}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000
-          }}
-        >
-          <div 
-            className="modal-content"
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              backgroundColor: 'white',
-              padding: '20px',
-              borderRadius: '8px',
-              minWidth: '200px'
-            }}
-          >
-            <button onClick={() => handleLanguageChange('tajik')}>Тоҷикӣ</button>
-            <button onClick={() => handleLanguageChange('russian')}>Русский</button>
-            <button onClick={() => handleLanguageChange('english')}>English</button>
-          </div>
-        </div>
-      )}
-    </li>
+                  {translations[language].language}
+                </li>
+                {showModal && (
+                  <div
+                    className="modal-backdrop-lang"
+                    onClick={() => setShowModal(false)}
+                  >
+                    <div
+                      className="modal-content-lang"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button onClick={() => handleLanguageChange('tajik')}>Тоҷикӣ</button>
+                      <div style={{borderBottom: "1px solid grey",width: "25px"}}>
+                      </div>
+                      <button onClick={() => handleLanguageChange('russian')}>Русский</button>
+                      <div style={{borderBottom: "1px solid grey",width: "25px"}}>
+                      </div>
+                      <button onClick={() => handleLanguageChange('english')}>English</button>
+                      <div style={{borderBottom: "1px solid grey",width: "25px"}}>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </ul>
             </div>
           </div>

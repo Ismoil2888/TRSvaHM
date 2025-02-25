@@ -384,11 +384,11 @@ const MyProfile = () => {
           const data = snapshot.val();
           if (data) {
             setUsername(data.username || "User");
-            setPhoneNumber(data.phoneNumber || "+Введите номер телефона");
+            setPhoneNumber(data.phoneNumber || t('addtelnumber'));
             setStatus(data.status || "offline");
             setLastActive(data.lastActive || "");
             setAvatarUrl(data.avatarUrl || "./default-image.png");
-            setAboutMe(data.aboutMe || "Информация не указана");
+            setAboutMe(data.aboutMe || t('infonot'));
           }
         });
 
@@ -401,10 +401,10 @@ const MyProfile = () => {
           if (snapshot.exists()) {
             const requestData = Object.values(snapshot.val())[0];
             setIdentificationStatus(
-              requestData.status === "accepted" ? "идентифицирован" : "не идентифицирован"
+              requestData.status === "accepted" ? (t('ident')) : (t('notident'))
             );
           } else {
-            setIdentificationStatus("не идентифицирован");
+            setIdentificationStatus(t('notident'));
           }
         });
 
@@ -456,9 +456,9 @@ const MyProfile = () => {
 
   const renderStatus = () => {
     if (status === "online") {
-      return <span className="status-online">в сети</span>;
+      return <span className="status-online">{t('status')}</span>;
     } else {
-      return <span className="status-offline">был(а) в сети: {lastActive}</span>;
+      return <span className="status-offline">{t('wasonline')}: {lastActive}</span>;
     }
   };
 
@@ -605,7 +605,7 @@ const MyProfile = () => {
             {showMenu && (
               <div className="menu-dropdown" ref={menuRef}>
                 <Link to="/authdetails">
-                  <button>Редактировать профиль</button>
+                  <button>{t('editprofile')}</button>
                 </Link>
               </div>
             )}
@@ -614,7 +614,7 @@ const MyProfile = () => {
           <div className="profile-info">
             <div className="info-section account">
               <div>
-                <h3>Номер телефона</h3>
+                <h3>{t('telnumber')}</h3>
                 <p>{phoneNumber}</p>
               </div>
               <FaRegAddressBook
@@ -624,7 +624,7 @@ const MyProfile = () => {
 
             <div className="info-section osebe">
               <div>
-                <h3>О себе</h3>
+                <h3>{t('about')}</h3>
                 <p>{aboutMe}</p>
               </div>
               <FcAbout
@@ -636,7 +636,7 @@ const MyProfile = () => {
             <div className="info-section">
               <div className="ident-block-basic">
                 <div className="ident-block1">
-                  <h3>Идентификация</h3>
+                  <h3>{t('identification')}</h3>
                   <p>{identificationStatus}</p>
                 </div>
                 <div className="ident-block2">

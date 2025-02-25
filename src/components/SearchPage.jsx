@@ -11,10 +11,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPhone, faUserCog, faSearch, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
 import ttulogo from "../Ttulogo.png";
+import useTranslation from '../hooks/useTranslation';
 
 const SearchPage = () => {
   const [userAvatarUrl, setUserAvatarUrl] = useState(null);
   const [userDetails, setUserDetails] = useState({ username: "", avatarUrl: "" });
+  const t = useTranslation();
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpenMobile, setIsMenuOpenMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(() => {
@@ -210,7 +212,7 @@ const SearchPage = () => {
 
             <img src={basiclogo} width="50px" alt="logo" style={{ marginLeft: "10px" }} />
 
-            <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>Поиск</ul>
+            <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>{t('findstudents')}</ul>
 
             <div className={`burger-menu-icon ${isMenuOpenMobile ? 'open' : ''}`} onClick={toggleMenuMobile}>
               <span className="bm-span"></span>
@@ -235,7 +237,7 @@ const SearchPage = () => {
 
         <div className="search-main">
           <div className="h2-icon-block">
-            <h2>Найдите то что искали!</h2>
+            <h2>{t('find')}!</h2>
 
             <div className="search-page-search-icon">
               <FaSearch />
@@ -247,14 +249,14 @@ const SearchPage = () => {
               <Link to="/searchstudents">
                 <div className="students-search sb">
                   <FontAwesomeIcon icon={faUser} className="footer-icon" />
-                  <p>Поиск студентов</p>
+                  <p>{t('students')}</p>
                 </div>
               </Link>
 
               <Link to="/teachers">
                 <div className="teachers-search sb">
                   <FontAwesomeIcon icon={faChalkboardTeacher} className="footer-icon" />
-                  <p>Поиск Учителей</p>
+                  <p>{t('teachers')}</p>
                 </div>
               </Link>
             </div>
@@ -263,14 +265,14 @@ const SearchPage = () => {
               <Link to="/library">
                 <div className="books-search sb">
                   <FontAwesomeIcon icon={faBook} className="footer-icon" />
-                  <p>Поиск книг</p>
+                  <p>{t('books')}</p>
                 </div>
               </Link>
 
               <Link to="/schedule">
                 <div className="schedule-search sb">
                   <FontAwesomeIcon icon={faCalendarAlt} className="footer-icon" />
-                  <p>Поиск Расписание</p>
+                  <p>{t('schedule')}</p>
                 </div>
               </Link>
             </div>

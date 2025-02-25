@@ -12,10 +12,10 @@ const LanguageProvider = ({ children }) => {
   }, []);
 
   const handleLanguageChange = (lang) => {
-    setLanguage(lang);
-    localStorage.setItem('language', lang);
     setShowModal(false);
+    setLanguage(lang);
     window.location.reload();
+    localStorage.setItem('language', lang);
   };
 
   return (

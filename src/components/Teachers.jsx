@@ -333,6 +333,7 @@ import { GoKebabHorizontal } from "react-icons/go";
 import anonymAvatar from '../anonym2.jpg';
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
 import ttulogo from "../Ttulogo.png";
+import useTranslation from '../hooks/useTranslation';
 
 const Teachers = () => {
   const [teachers, setTeachers] = useState([]);
@@ -347,7 +348,7 @@ const Teachers = () => {
   const [actionMenuId, setActionMenuId] = useState(null);
   const actionMenuRef = useRef(null); // Реф для отслеживания кликов за пределами
   const [isMobile, setIsMobile] = useState(false);
-
+  const t = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(() => {
     // Восстанавливаем состояние из localStorage при инициализации
     const savedState = localStorage.getItem('isMenuOpen');
@@ -666,7 +667,7 @@ const Teachers = () => {
 
             <img src={basiclogo} width="50px" alt="logo" style={{ marginLeft: "10px" }} />
 
-            <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>Преподаватели</ul>
+            <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>{t('teachcollective')}</ul>
 
             <div className={`burger-menu-icon ${isMenuOpenMobile ? 'open' : ''}`} onClick={toggleMenuMobile}>
               <span className="bm-span"></span>
@@ -693,7 +694,7 @@ const Teachers = () => {
           <div className="faculty-image">
             <img style={{ height: "240px", marginTop: "70px" }} width="255px" src={logoTip} alt="Фото преподавателей" />
           </div>
-          <h1>Преподавательский Состав</h1>
+          <h1>{t('teachcollective')}</h1>
         </section>
 
         <motion.nav

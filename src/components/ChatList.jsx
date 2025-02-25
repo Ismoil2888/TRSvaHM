@@ -15,6 +15,7 @@ import "../ChatWithTeacher.css";
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
 import basiclogo from "../basic-logo.png";
 import ttulogo from "../Ttulogo.png";
+import useTranslation from '../hooks/useTranslation';
 
 const ChatList = () => {
   const [chatList, setChatList] = useState([]);
@@ -24,6 +25,7 @@ const ChatList = () => {
   const auth = getAuth();
   const currentUserId = auth.currentUser?.uid; // Текущий пользователь
   const navigate = useNavigate();
+  const t = useTranslation();
   const [unreadCounts, setUnreadCounts] = useState({});
   const [notification, setNotification] = useState(""); // Для уведомления
   const [notificationType, setNotificationType] = useState(""); // Для типа уведомления
@@ -286,7 +288,7 @@ const ChatList = () => {
         )} {/* Уведомление */}
         <div className="chat-list-head">
           <FaChevronLeft style={{ color: "white", fontSize: "25px" }} onClick={() => navigate(-1)} />
-          <h2 style={{ marginRight: "160px" }}>Мои чаты</h2>
+          <h2 style={{ marginRight: "160px" }}>{t('mychats')}</h2>
         </div>
         <ul className="chat-list">
           {chatList.map((chat) => (

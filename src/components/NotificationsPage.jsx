@@ -10,11 +10,13 @@ import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight,
 import basiclogo from "../basic-logo.png";
 import ttulogo from "../Ttulogo.png";
 import "../NotificationsPage.css";
+import useTranslation from '../hooks/useTranslation';
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
   const currentUserId = auth.currentUser?.uid;
   const navigate = useNavigate();
+  const t = useTranslation();
   // const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const userId = auth.currentUser?.uid; // Текущий пользователь
@@ -294,7 +296,7 @@ const NotificationsPage = () => {
               </div>
             ))
           ) : (
-            <p className="no-notifications">У вас пока нет уведомлений.</p>
+            <p className="no-notifications">{t('dontnotifications')}.</p>
           )}
         </main>
       </div>
