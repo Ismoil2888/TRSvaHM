@@ -6,9 +6,6 @@ import {
   getDatabase,
   ref as databaseRef,
   onValue,
-  set,
-  get,
-  push,
   remove,
 } from "firebase/database";
 import "../ChatWithTeacher.css";
@@ -74,17 +71,6 @@ const ChatList = () => {
     transition: "margin 0.3s ease",
   };
 
-  const currentUserHeader = {
-    marginRight: isMenuOpen ? "400px" : "80px",
-    marginBottom: isMenuOpen ? "11px" : "0px",
-    transition: "margin 0.3s ease",
-  };
-
-  const HeaderDesktop = {
-    margin: isMenuOpen ? "12px" : "0 20px",
-    transition: "margin 0.3s ease",
-  };
-
   // Функция для успешных уведомлений
   const showNotification = (message) => {
     setNotificationType("success");
@@ -95,27 +81,49 @@ const ChatList = () => {
     }, 3000);
   };
 
-  const generateUniqueChatId = (userId1, userId2) => {
-    return [userId1, userId2].sort().join("_");
+useEffect(() => {
+  if (!currentUserId || !chatList.length) return;
+  
+  const db = getDatabase();
+  const recipientsData = {};
+
+  // Для каждого чата подписываемся на данные собеседника
+  chatList.forEach(chat => {
+    const recipientId = chat.chatRoomId.split('_').find(id => id !== currentUserId);
+    
+    if (recipientId && !recipientsData[recipientId]) {
+      const recipientRef = databaseRef(db, `users/${recipientId}`);
+      
+      const unsubscribe = onValue(recipientRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          setChatList(prev => prev.map(c => {
+            if (c.chatRoomId === chat.chatRoomId) {
+              return {
+                ...c,
+                recipientName: data.username,
+                recipientAvatar: data.avatarUrl
+              }
+            }
+            return c;
+          }));
+        }
+      });
+      
+      recipientsData[recipientId] = unsubscribe;
+    }
+  });
+
+  // Cleanup function
+  return () => {
+    Object.values(recipientsData).forEach(unsubscribe => unsubscribe());
   };
+}, [chatList, currentUserId]);
 
   useEffect(() => {
     if (!currentUserId) return;
     const db = getDatabase();
     const userChatsRef = databaseRef(db, `users/${currentUserId}/chats`);
-
-    onValue(userChatsRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        const loadedChats = Object.keys(data).map((chatRoomId) => ({
-          chatRoomId,
-          ...data[chatRoomId],
-        }));
-        setChatList(loadedChats);
-      } else {
-        setChatList([]);
-      }
-    });
 
     // Подписка на чаты пользователя
     const unsubscribeChats = onValue(userChatsRef, (snapshot) => {
@@ -302,6 +310,10 @@ const ChatList = () => {
                     src={chat.recipientAvatar || "./default-image.png"}
                     alt={chat.recipientName}
                     className="chat-avatar skeleton-media-avatars"
+                    onError={(e) => {
+                      e.target.onerror = null; 
+                      e.target.src = "./default-image.png";
+                    }}
                   />
                   <div className="chat-info">
                     <h3 className="chat-name">{chat.recipientName}</h3>

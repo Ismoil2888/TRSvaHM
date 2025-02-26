@@ -2088,6 +2088,10 @@ const showNotificationError = (message) => {
                     alt=""
                     className="post-avatar skeleton-media-avatars"
                     onClick={() => goToProfile(post.userId)}
+                    onError={(e) => {
+                      e.target.onerror = null; 
+                      e.target.src = "./default-image.png";
+                    }}
                   />
                   <span 
                   className="post-username"
@@ -2210,6 +2214,10 @@ const showNotificationError = (message) => {
                             alt={comment.username} 
                             className="comment-avatar skeleton-media-avatars" 
                             onClick={() => goToProfile(comment.userId)}
+                            onError={(e) => {
+                              e.target.onerror = null; 
+                              e.target.src = "./default-image.png";
+                            }}
                           />
                           <div className="comment-content">
                             <p

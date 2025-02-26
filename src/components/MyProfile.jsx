@@ -642,7 +642,7 @@ const MyProfile = () => {
                 <div className="ident-block2">
                   <FaLock
                     style={{
-                      color: identificationStatus === "идентифицирован" ? "#0AFFFF" : "red",
+                      color: identificationStatus === t('ident') ? "#0AFFFF" : "red",
                       fontSize: "20px",
                     }}
                   />
