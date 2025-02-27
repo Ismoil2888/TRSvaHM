@@ -38,6 +38,8 @@ export const translations = {
       teachcollective: "Омӯзгорон",
       //Chats
       mychats: "Чатҳои ман",
+      //HomePage
+      main: "Асосӣ",
     },
     russian: {
         //AuthDetails
@@ -78,6 +80,8 @@ export const translations = {
       teachcollective: "Преподавательский Состав",
       //Chats
       mychats: "Мои чаты",
+      //HomePage
+      main: "Главная",
     },
     english: {
         //AuthDetails
@@ -118,5 +122,7 @@ export const translations = {
       teachcollective: "Teaching staff",
       //Chats
       mychats: "My chats",
+      //HomePage
+      main: "Main",
     }
   };

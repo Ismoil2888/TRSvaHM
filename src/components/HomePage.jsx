@@ -1386,6 +1386,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FaPlusCircle, FaHeart, FaRegHeart, FaRegComment, FaRegBookmark } from "react-icons/fa";
 import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPhone, faUserCog, faSearch, faBell } from "@fortawesome/free-solid-svg-icons";
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiUsers, FiSearch } from "react-icons/fi";
+import useTranslation from '../hooks/useTranslation';
 
 const HomePage = () => {
   const [notification, setNotification] = useState("");
@@ -1406,6 +1407,7 @@ const HomePage = () => {
   const userId = auth.currentUser?.uid; // Текущий пользователь
   const [unreadCount, setUnreadCount] = useState(0);
   const navigate = useNavigate();
+  const t = useTranslation();
   const [unreadChatsCount, setUnreadChatsCount] = useState(0);
   const [imageLoadedStatus, setImageLoadedStatus] = useState({});
   const [isMobile, setIsMobile] = useState(false);
@@ -2027,7 +2029,7 @@ const showNotificationError = (message) => {
             </div>
           </Link>
 
-          <ul className="logo-app" style={{color: "#58a6ff", fontSize: "25px"}}>Главная</ul>
+          <ul className="logo-app" style={{color: "#58a6ff", fontSize: "25px"}}>{t('main')}</ul>
 
           <Link to="/chats">
   <div style={{ position: "relative" }}>

@@ -14,7 +14,6 @@ import ttulogo from "../Ttulogo.png";
 import useTranslation from '../hooks/useTranslation';
 
 const SearchPage = () => {
-  const [userAvatarUrl, setUserAvatarUrl] = useState(null);
   const [userDetails, setUserDetails] = useState({ username: "", avatarUrl: "" });
   const t = useTranslation();
   const [isMobile, setIsMobile] = useState(false);
@@ -292,7 +291,7 @@ const SearchPage = () => {
             <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>
             <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
             <Link to="/myprofile">
-              <img src={userAvatarUrl || "./default-image.png"} alt="User Avatar" className="footer-avatar" />
+              <img src={userDetails.avatarUrl || "./default-image.png"} alt="User Avatar" className="footer-avatar" />
             </Link>
           </motion.nav>
         </div>
