@@ -324,8 +324,8 @@ const SearchStudents = () => {
       </div>
       <div className="chat-page" style={mainContentStyle}>
         <header>
-          <nav style={HeaderDesktop}>
-            <ul>
+          <nav className="header-nav" style={HeaderDesktop}>
+            <ul className="header-ul">
               <li><Link to="/home">Главная</Link></li>
               <li><Link to="/about">О факультете</Link></li>
               <li><Link to="/teachers">Преподаватели</Link></li>
@@ -337,7 +337,7 @@ const SearchStudents = () => {
                   alt="User Avatar"
                   className="user-avatar"
                 />
-                <span style={{ fontSize: "25px", color: "lightgreen"}}>{userDetails.username}</span>
+                <span style={{ fontSize: "20px", color: "lightgreen"}}>{userDetails.username}</span>
               </div>
             </Link>
           </nav>

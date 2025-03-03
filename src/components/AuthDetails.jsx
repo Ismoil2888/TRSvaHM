@@ -1030,6 +1030,14 @@ const AuthDetails = () => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
 
+  const [showFacultyList, setShowFacultyList] = useState(false);
+const [showCourseList, setShowCourseList] = useState(false);
+const [showGroupList, setShowGroupList] = useState(false);
+
+const faculties = ["Информационных технологий", "Экономики", "Юридический", "Механико-математический"];
+const courses = ["1", "2", "3", "4"];
+const groups = ["ИТ-101", "ИТ-202", "ЭК-301", "ЮР-401", "ММ-501"];
+
   const [isMobile, setIsMobile] = useState(false);
   const t = useTranslation();
   const { language, handleLanguageChange, showModal, setShowModal } = useContext(LanguageContext);
@@ -1088,6 +1096,10 @@ const AuthDetails = () => {
     group: "",
     photo: null,
   });
+
+  const facultyDropdownRef = useRef(null);
+const courseDropdownRef = useRef(null);
+const groupDropdownRef = useRef(null);
 
   const handleOpenForm = () => {
     if (identificationStatus === t('notident')) {
@@ -1148,12 +1160,28 @@ const AuthDetails = () => {
 
 
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setShowMenu(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
+    
+      const handleClickOutside = (e) => {
+        if (menuRef.current && !menuRef.current.contains(e.target)) {
+          setShowMenu(false);
+        }
+        if (
+          facultyDropdownRef.current && !facultyDropdownRef.current.contains(e.target) &&
+          courseDropdownRef.current && !courseDropdownRef.current.contains(e.target) &&
+          groupDropdownRef.current && !groupDropdownRef.current.contains(e.target)
+        ) {
+          setShowFacultyList(false);
+          setShowCourseList(false);
+          setShowGroupList(false);
+        }
+      };
+  
+    // const handleClickOutside = (e) => {
+    //   if (menuRef.current && !menuRef.current.contains(e.target)) {
+    //     setShowMenu(false);
+    //   }
+    // };
+    // document.addEventListener("mousedown", handleClickOutside);
 
     const listen = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -1265,34 +1293,6 @@ const AuthDetails = () => {
     setIsPhoneModalOpen(false); // Закрываем модальное окно
   };
 
-  // Открытие модального окна для изменения телефона
-  // const handlePhoneModalOpen = () => {
-  //   setNewPhoneNumber("+992");
-  //   setIsPhoneModalOpen(true);
-  // };
-
-  // // Сохранение нового или измененного номера телефона
-  // const handleSavePhoneNumber = async () => {
-  //   if (!newPhoneNumber || newPhoneNumber === "+992") {
-  //     setPhoneNumber("Добавить номер телефона");
-  //     setIsPhoneModalOpen(false); // Закрытие модального окна после сохранения
-  //     return;
-  //   }
-
-  //   if (authUser) {
-  //     try {
-  //       const userRef = databaseRef(database, 'users/' + authUser.uid);
-  //       await update(userRef, { phoneNumber: newPhoneNumber });
-  //       setPhoneNumber(newPhoneNumber);
-  //       showNotification("Номер телефона успешно обновлен.");
-  //       setIsPhoneModalOpen(false); // Закрытие модального окна после сохранения
-  //     } catch (error) {
-  //       console.error("Ошибка при обновлении номера телефона:", error);
-  //     }
-  //   }
-  // };
-
-
   // Функция для успешных уведомлений
   const showNotification = (message) => {
     setNotificationType("success");
@@ -1400,32 +1400,6 @@ const AuthDetails = () => {
       showNotificationError("Имя пользователя может содержать только буквы, цифры, нижнее подчеркивание и точку.");
     }
   };
-
-  // const handleUsernameChange = async () => {
-  //   const usernameRegex = /^[a-zA-Z0-9._]+$/; // Валидация имени пользователя
-  //   if (authUser && newUsername.trim() !== "" && usernameRegex.test(newUsername)) {
-  //     try {
-  //       // Проверяем, существует ли уже пользователь с таким именем
-  //       const usersRef = query(databaseRef(database, 'users'), orderByChild('username'), equalTo(newUsername));
-  //       const snapshot = await get(usersRef);
-  //       if (snapshot.exists()) {
-  //         showNotificationError("Пользователь с таким именем уже существует, выберите другое имя.");
-  //         return;
-  //       }
-
-  //       // Если имя уникально, обновляем
-  //       const userDatabaseRef = databaseRef(database, 'users/' + authUser.uid);
-  //       await update(userDatabaseRef, { username: newUsername });
-  //       setUsername(newUsername);
-  //       setIsEditingUsername(false);
-  //       showNotification(`Имя изменено на "${newUsername}"`);
-  //     } catch (error) {
-  //       console.error("Ошибка при изменении имени пользователя:", error);
-  //     }
-  //   } else {
-  //     showNotificationError("Имя пользователя может содержать только буквы, цифры, нижнее подчеркивание и точку.");
-  //   }
-  // };
 
   const handleAboutMeChange = async () => {
     if (authUser) {
@@ -1712,6 +1686,112 @@ const AuthDetails = () => {
             </div>
 
             {isRequestFormOpen && (
+  <div className="request-form-modal">
+    <div className="form-content">
+      <h2>Идентификация студента</h2>
+      <input type="text" name="fio" placeholder="ФИО" onChange={handleInputChange} required />
+      
+      {/* Факультет */}
+      <div className="custom-dropdown-auth" ref={facultyDropdownRef}>
+        <div 
+          className="dropdown-header-auth"
+          onClick={() => {
+            setShowFacultyList(!showFacultyList);
+            setShowCourseList(false);
+            setShowGroupList(false);
+          }}
+        >
+          {studentInfo.faculty || "Выберите факультет"}
+          <span className={`arrow-auth ${showFacultyList ? "up-auth" : "down-auth"}`}></span>
+        </div>
+        {showFacultyList && (
+          <div className="dropdown-list-auth">
+            {faculties.map((faculty) => (
+              <div
+                key={faculty}
+                className="dropdown-item-auth"
+                onClick={() => {
+                  setStudentInfo(prev => ({ ...prev, faculty }));
+                  setShowFacultyList(false);
+                }}
+              >
+                {faculty}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Курс */}
+      <div className="custom-dropdown-auth" ref={courseDropdownRef}>
+        <div 
+          className="dropdown-header-auth"
+          onClick={() => {
+            setShowCourseList(!showCourseList);
+            setShowFacultyList(false);
+            setShowGroupList(false);
+          }}
+        >
+          {studentInfo.course || "Выберите курс"}
+          <span className={`arrow-auth ${showCourseList ? "up-auth" : "down-auth"}`}></span>
+        </div>
+        {showCourseList && (
+          <div className="dropdown-list-auth">
+            {courses.map((course) => (
+              <div
+                key={course}
+                className="dropdown-item-auth"
+                onClick={() => {
+                  setStudentInfo(prev => ({ ...prev, course }));
+                  setShowCourseList(false);
+                }}
+              >
+                {course}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Группа */}
+      <div className="custom-dropdown-auth" ref={groupDropdownRef}>
+        <div 
+          className="dropdown-header-auth"
+          onClick={() => {
+            setShowGroupList(!showGroupList);
+            setShowFacultyList(false);
+            setShowCourseList(false);
+          }}
+        >
+          {studentInfo.group || "Выберите группу"}
+          <span className={`arrow-auth ${showGroupList ? "up-auth" : "down-auth"}`}></span>
+        </div>
+        {showGroupList && (
+          <div className="dropdown-list-auth">
+            {groups.map((group) => (
+              <div
+                key={group}
+                className="dropdown-item-auth"
+                onClick={() => {
+                  setStudentInfo(prev => ({ ...prev, group }));
+                  setShowGroupList(false);
+                }}
+              >
+                {group}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <input type="file" name="photo" accept="image/*" onChange={handleFileChange} />
+      <button onClick={handleSubmitRequest}>Отправить</button>
+      <button onClick={handleCloseForm}>Закрыть</button>
+    </div>
+  </div>
+)}
+
+            {/* {isRequestFormOpen && (
               <div className="request-form-modal">
                 <div className="form-content">
                   <h2>Идентификация студента</h2>
@@ -1724,7 +1804,7 @@ const AuthDetails = () => {
                   <button onClick={handleCloseForm}>Закрыть</button>
                 </div>
               </div>
-            )}
+            )} */}
 
             <div className="info-section">
               <h3>{t('email')}</h3>

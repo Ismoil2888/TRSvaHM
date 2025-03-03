@@ -174,8 +174,8 @@ const showNotificationError = (message) => {
             </div>
           )} {/* Уведомление */}
 <header>
-        <nav>
-          <ul>
+        <nav className="header-nav">
+          <ul className="header-ul">
             <li><Link to="/home">Главная</Link></li>
             <li><Link to="/about">О факультете</Link></li>
             <li><Link to="/teachers">Преподаватели</Link></li>
@@ -256,21 +256,21 @@ const showNotificationError = (message) => {
         <p>&copy; 2024 Факультет Кибербезопасности. Все права защищены.</p>
       </footer>
 
-      <div className="footer-nav">
-      <motion.nav 
-        variants={navbarVariants} 
-        initial="hidden" 
-        animate="visible" 
-        className="footer-nav"
-      >
-        <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon" /></Link>
-        <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon" /></Link>
-        <Link to="/post"><FaPlusCircle className="footer-icon  active-icon" style={{}} /></Link>
-        <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
-        <Link to="/myprofile">
-          <img src={userAvatarUrl} alt="User Avatar" className="footer-avatar" />
-        </Link>
-        </motion.nav>
+<div style={{width: "100%", display: "flex", alignItems: "center", justifyContent: "center"}}>
+        <motion.nav 
+          variants={navbarVariants} 
+          initial="hidden" 
+          animate="visible" 
+          className="footer-nav"
+        >
+          <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon" /></Link>
+          <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon" /></Link>
+          <Link to="/post"><FaPlusCircle className="footer-icon active-icon" /></Link>
+          <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
+          <Link to="/myprofile">
+            <img src={userAvatarUrl} alt="" className="footer-avatar skeleton-media-avatars" />
+          </Link>
+        </motion.nav> 
       </div>
     </div>
   );

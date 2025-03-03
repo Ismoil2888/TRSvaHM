@@ -645,8 +645,8 @@ const Teachers = () => {
       </div>
       <div className="glav-container" style={mainContentStyle}>
         <header>
-          <nav style={HeaderDesktop}>
-            <ul>
+          <nav className="header-nav" style={HeaderDesktop}>
+            <ul className="header-ul">
               <li><Link to="/home">Главная</Link></li>
               <li><Link to="/about">О факультете</Link></li>
               <li><Link to="/teachers">Преподаватели</Link></li>
@@ -657,8 +657,9 @@ const Teachers = () => {
                   src={userDetails.avatarUrl || "./default-image.png"}
                   alt="User Avatar"
                   className="user-avatar"
+                  style={{width: "35px", height: "35px"}}
                 />
-                <span style={{ fontSize: "25px", color: "lightgreen"}}>{userDetails.username}</span>
+                <span style={{ fontSize: "20px", color: "lightgreen"}}>{userDetails.username}</span>
               </div>
             </Link>
           </nav>
@@ -814,22 +815,22 @@ const Teachers = () => {
           <p>&copy; 2025 Факультет Кибербезопасности. Все права защищены.</p>
         </footer>
 
-        <div className="footer-nav">
-          <motion.nav
-            variants={navbarVariants}
-            initial="hidden"
-            animate="visible"
-            className="footer-nav"
-          >
-            <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon" /></Link>
-            <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon active-icon" style={{}} /></Link>
-            <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>
-            <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
-            <Link to="/myprofile">
-              <img src={userDetails.avatarUrl} alt="User Avatar" className="footer-avatar" />
-            </Link>
-          </motion.nav>
-        </div>
+        <div style={{width: "100%", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                <motion.nav 
+                  variants={navbarVariants} 
+                  initial="hidden" 
+                  animate="visible" 
+                  className="footer-nav"
+                >
+                  <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon" /></Link>
+                  <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon active-icon" /></Link>
+                  <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>
+                  <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
+                  <Link to="/myprofile">
+                  <img src={userDetails.avatarUrl} alt="User Avatar" className="footer-avatar" />
+                  </Link>
+                </motion.nav>
+              </div>
       </div>
     </div>
   );

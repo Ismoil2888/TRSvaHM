@@ -1998,8 +1998,8 @@ const showNotificationError = (message) => {
       )}
 
       <header>
-        <nav style={HeaderDesktop}>
-          <ul>
+        <nav className="header-nav" style={HeaderDesktop}>
+          <ul className="header-ul">
             <li><Link to="/home">Главная</Link></li>
             <li><Link to="/about">О факультете</Link></li>
             <li><Link to="/teachers">Преподаватели</Link></li>
@@ -2010,8 +2010,9 @@ const showNotificationError = (message) => {
               src={userAvatarUrl || defaultAvatar} 
               alt="User Avatar" 
               className="user-avatar"
+              style={{width: "35px", height: "35px"}}
             />
-            <span style={{fontSize: "25px", color: "lightgreen"}}>{userDetails.username}</span>
+            <span style={{fontSize: "20px", color: "lightgreen"}}>{userDetails.username}</span>
           </div>
           </Link>
         </nav>
@@ -2301,7 +2302,7 @@ const showNotificationError = (message) => {
         <p>&copy; 2025 Факультет Кибербезопасности. Все права защищены.</p>
       </footer>
 
-      <div className="footer-nav">
+<div style={{width: "100%", display: "flex", alignItems: "center", justifyContent: "center"}}>
         <motion.nav 
           variants={navbarVariants} 
           initial="hidden" 

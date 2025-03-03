@@ -651,14 +651,16 @@ const MyProfile = () => {
             </div>
           </div>
 
+        <div style={{width: "100%", display: "flex", alignItems: "center", justifyContent: "center"}}>
           <div className="footer-nav">
             <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon" style={{}} /></Link>
             <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon" /></Link>
             <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>
             <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
             <Link to="/myprofile">
-              <img src={userAvatarUrl} alt="" className="footer-avatar skeleton-media-avatars" />
+              <img src={userAvatarUrl} alt="" className="footer-avatar skeleton-media-avatars active-icon" />
             </Link>
+          </div>
           </div>
         </div>
       ) : (

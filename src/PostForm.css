@@ -621,16 +621,19 @@ width: 90%; */
 }
 
 .currentUserHeader {
-  position: absolute;
+  /* position: absolute;
   top: 8px;
   bottom: 0px;
-  right: 105px;
+  right: 105px; */
   display: flex;
-  background-color: #394f65;
+  width: 150px;
+  height: 27px;
+  /* background-color: #394f65; */
+  background-color: #334454;
   align-items: center;
-  border: 1px solid #1e2c39;
   border-radius: 15px;
   padding: 10px;
+  /* margin-top: 6px; */
   transition: background-color 5s ease;
 }
 
@@ -639,8 +642,8 @@ width: 90%; */
 }
 
 .user-avatar {
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   margin-right: 15px;
   object-fit: cover;
