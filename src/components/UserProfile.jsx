@@ -12,6 +12,7 @@ import {
 import { FaLock, FaPhone, FaUserEdit, FaChevronLeft, FaEllipsisV } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import "../UserProfile.css";
+import { motion } from 'framer-motion';
 
 const UserProfile = () => {
   const { userId } = useParams();
@@ -115,7 +116,46 @@ const UserProfile = () => {
   };  
 
   if (!userData) {
-    return <p>Loading...</p>;
+    return  <div className="loading-container">
+    <motion.div
+      className="spinner"
+      animate={{ rotate: 360 }}
+      transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+    />
+    <motion.p
+      className="loading-text"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: [0, 1, 0] }}
+      transition={{ duration: 2, repeat: Infinity }}
+    >
+      Идём к пользователю...
+    </motion.p>
+    <style jsx>{`
+      .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background: radial-gradient(circle, #1a1a2e, #16213e);
+        color: white;
+        font-family: Arial, sans-serif;
+      }
+      .spinner {
+        width: 60px;
+        height: 60px;
+        border: 6px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #00d4ff;
+        border-radius: 50%;
+        margin-bottom: 20px;
+      }
+      .loading-text {
+        font-size: 18px;
+        font-weight: bold;
+        letter-spacing: 1.5px;
+      }
+    `}</style>
+  </div>;
   }
 
   return (

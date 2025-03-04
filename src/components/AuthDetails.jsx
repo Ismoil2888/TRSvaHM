@@ -1791,21 +1791,6 @@ const groupDropdownRef = useRef(null);
   </div>
 )}
 
-            {/* {isRequestFormOpen && (
-              <div className="request-form-modal">
-                <div className="form-content">
-                  <h2>Идентификация студента</h2>
-                  <input type="text" name="fio" placeholder="ФИО" onChange={handleInputChange} required />
-                  <input type="text" name="faculty" placeholder="Факультет" onChange={handleInputChange} required />
-                  <input type="text" name="course" placeholder="Курс" onChange={handleInputChange} required />
-                  <input type="text" name="group" placeholder="Группа" onChange={handleInputChange} required />
-                  <input type="file" name="photo" accept="image/*" onChange={handleFileChange} />
-                  <button onClick={handleSubmitRequest}>Отправить</button>
-                  <button onClick={handleCloseForm}>Закрыть</button>
-                </div>
-              </div>
-            )} */}
-
             <div className="info-section">
               <h3>{t('email')}</h3>
               <p>{email}</p>

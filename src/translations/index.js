@@ -111,7 +111,7 @@ export const translations = {
       //NotificationsPage
       dontnotifications: "You don't have any notifications yet",
       //SearchPage
-      find: "Find what you were looking for",
+      find: "Find what you need",
       students: "Students",
       teachers: "Teachers",
       books: "Books",

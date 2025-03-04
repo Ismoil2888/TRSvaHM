@@ -577,27 +577,11 @@ const Library = ({ userId }) => {
                   );
                 })
               ) : (
-                <p>Книги не найдены</p>
+                <p style={{color: "lightgreen", fontSize: "22px"}}>Идёт загрузка книг, подождите.</p>
               )}
             </section>
 
-            {showModal && selectedBook && (
-              <div className="modal-book">
-                <div className="modal-content-book">
-                  <h3>{selectedBook.title}</h3>
-                  <p>{selectedBook.description}</p>
-                  <div className="modal-book-buttons">
-                    <a href={selectedBook.fileURL} target="_blank" rel="noopener noreferrer">
-                      <button>Открыть</button>
-                    </a>
-                    <a href={selectedBook.fileURL} download>
-                      <button>Скачать</button>
-                    </a>
-                    <button onClick={closeBookModal}>Закрыть</button>
-                  </div>
-                </div>
-              </div>
-            )}
+
 
             {commentModal.isOpen && (
               <div className="comment-modal-overlay">
@@ -660,6 +644,24 @@ const Library = ({ userId }) => {
             )}
           </div>
         </motion.nav>
+
+        {showModal && selectedBook && (
+              <div className="modal-book">
+                <div className="modal-content-book">
+                  <h3>{selectedBook.title}</h3>
+                  <p>{selectedBook.description}</p>
+                  <div className="modal-book-buttons">
+                    <a href={selectedBook.fileURL} target="_blank" rel="noopener noreferrer">
+                      <button>Открыть</button>
+                    </a>
+                    <a href={selectedBook.fileURL} download>
+                      <button>Скачать</button>
+                    </a>
+                    <button onClick={closeBookModal}>Закрыть</button>
+                  </div>
+                </div>
+              </div>
+            )}
 
         <footer className="footer-desktop">
           <p>&copy; 2025 Факультет Кибербезопасности. Все права защищены.</p>

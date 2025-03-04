@@ -186,6 +186,7 @@ nav ul li a {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    width: 300px;
   }
 
   .modal-book-buttons{

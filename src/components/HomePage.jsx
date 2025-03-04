@@ -1385,7 +1385,7 @@ import { BsChatTextFill } from "react-icons/bs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FaPlusCircle, FaHeart, FaRegHeart, FaRegComment, FaRegBookmark } from "react-icons/fa";
 import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPhone, faUserCog, faSearch, faBell } from "@fortawesome/free-solid-svg-icons";
-import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiUsers, FiSearch } from "react-icons/fi";
+import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
 import useTranslation from '../hooks/useTranslation';
 
 const HomePage = () => {
@@ -1410,6 +1410,7 @@ const HomePage = () => {
   const t = useTranslation();
   const [unreadChatsCount, setUnreadChatsCount] = useState(0);
   const [imageLoadedStatus, setImageLoadedStatus] = useState({});
+  const [showAnonymousModal, setShowAnonymousModal] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(() => {
       // Восстанавливаем состояние из localStorage при инициализации
@@ -1727,6 +1728,10 @@ const showNotificationError = (message) => {
     }
     setNewComment("");
   };
+
+  const handleAnonymousClick = () => {
+    setShowAnonymousModal(true);
+  };  
 
   const handleEditComment = (commentId, commentText) => {
     setEditingCommentId(commentId);
@@ -2216,7 +2221,7 @@ const showNotificationError = (message) => {
                             src={comment.avatarUrl || defaultAvatar} 
                             alt={comment.username} 
                             className="comment-avatar skeleton-media-avatars" 
-                            onClick={() => goToProfile(comment.userId)}
+                            onClick={() => comment.userId ? goToProfile(comment.userId) : handleAnonymousClick()}
                             onError={(e) => {
                               e.target.onerror = null; 
                               e.target.src = "./default-image.png";
@@ -2225,7 +2230,7 @@ const showNotificationError = (message) => {
                           <div className="comment-content">
                             <p
                               className="comment-username"
-                              onClick={() => goToProfile(comment.userId)}
+                              onClick={() => comment.userId ? goToProfile(comment.userId) : handleAnonymousClick()}
                             >
                               {comment.username}
                             </p>
@@ -2265,6 +2270,16 @@ const showNotificationError = (message) => {
                   </div>
                 </div>
               )}
+
+{showAnonymousModal && (
+  <div className="anonymous-modal-overlay" onClick={() => setShowAnonymousModal(false)}>
+    <div className="anonymous-modal">
+      <img style={{borderRadius: "50px"}} src={anonymAvatar} alt="Anonym" className="hacker-image" />
+      <p style={{color: "red"}}>Данные пользователя оставившего комментарий скрыты</p>
+      <button onClick={() => setShowAnonymousModal(false)}>Закрыть</button>
+    </div>
+  </div>
+)}
 
               {likesModal.isOpen && (
                 <div className="like-modal-overlay">
