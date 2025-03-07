@@ -1985,14 +1985,13 @@ const showNotificationError = (message) => {
         </nav>
 
         <div className="logo-and-tik">
-            <img 
-              src={basiclogo} 
-              alt="logo"
-              className="tiklogo"
-            />
-        {isMenuOpen && (
-          <span style={{fontSize: "35px", fontWeight: "bold", color: "#9daddf"}}>TIK</span>
-        )}
+        {isMenuOpen &&
+        <div style={{textAlign: "center", color: "grey"}}>
+        <p>Технологияхои раками</p>
+        <p>систмахо</p>
+        <p>ва Хифзи маълумот</p>
+        </div>
+        }
         </div>
       </div>
     <div className="home-container" style={mainContentStyle}>

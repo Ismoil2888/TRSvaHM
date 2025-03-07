@@ -20,6 +20,7 @@ const NotificationsPage = () => {
   // const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const userId = auth.currentUser?.uid; // Текущий пользователь
+  const [isMenuOpenMobile, setIsMenuOpenMobile] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   const [isMenuOpen, setIsMenuOpen] = useState(() => {
@@ -53,7 +54,7 @@ const NotificationsPage = () => {
   }, []);
 
   // Модифицированная функция переключения меню
-  const toggleMenu = () => {
+  const toggleMenuDesktop = () => {
     setIsMenuOpen(prev => {
       const newState = !prev;
       localStorage.setItem('isMenuOpen', JSON.stringify(newState));
@@ -62,7 +63,7 @@ const NotificationsPage = () => {
   };
 
   const mainContentStyle = {
-    marginLeft: isMobile ? (isMenuOpen ? "360px" : "0px") : (isMenuOpen ? "360px" : "80px"),
+    marginLeft: isMobile ? (isMenuOpen ? "360px" : "0px") : (isMenuOpen ? "390px" : "150px"),
     transition: "margin 0.3s ease",
   };
 
@@ -70,13 +71,13 @@ const NotificationsPage = () => {
     navigate(`/profile/${userId}`);
   };
 
-  const toggleMenuu = () => {
-    if (isMenuOpen) {
+  const toggleMenuMobile = () => {
+    if (isMenuOpenMobile) {
       setTimeout(() => {
-        setIsMenuOpen(false);
+        setIsMenuOpenMobile(false);
       }, 0);
     } else {
-      setIsMenuOpen(true);
+      setIsMenuOpenMobile(true);
     }
   };
 
@@ -158,13 +159,13 @@ const NotificationsPage = () => {
               <h2>TTU</h2>
               <FiChevronLeft
                 className="toggle-menu"
-                onClick={toggleMenu}
+                onClick={toggleMenuDesktop}
               />
             </>
           ) : (
             <FiChevronRight
               className="toggle-menu"
-              onClick={toggleMenu}
+              onClick={toggleMenuDesktop}
             />
           )}
         </div>
@@ -239,13 +240,13 @@ const NotificationsPage = () => {
 
             <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>Уведомления</ul>
 
-            <div className={`burger-menu-icon ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenuu}>
+            <div className={`burger-menu-icon ${isMenuOpenMobile ? 'open' : ''}`} onClick={toggleMenuMobile}>
               <span className="bm-span"></span>
               <span className="bm-span"></span>
               <span className="bm-span"></span>
             </div>
 
-            <div className={`burger-menu ${isMenuOpen ? 'open' : ''}`}>
+            <div className={`burger-menu ${isMenuOpenMobile ? 'open' : ''}`}>
               <ul>
                 <li><Link to="/home"><FontAwesomeIcon icon={faHome} style={{ color: "red" }} /> Главная</Link></li>
                 <li><Link to="/about"><FontAwesomeIcon icon={faInfoCircle} /> О факультете</Link></li>

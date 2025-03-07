@@ -32,7 +32,7 @@
 
   .post-form-container {
     max-width: 500px;
-    margin: 50px auto;
+    margin: 135px auto;
     padding: 20px;
     background: #9195a1;
     border-radius: 10px;
@@ -91,11 +91,6 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-  }
-  
-  .post-author {
-    display: flex;
-    align-items: center;
   }
   
   .post-avatar {
@@ -618,6 +613,8 @@ width: 90%; */
   display: flex;
   align-items: center;
   border-top: 1px solid #07202d;
+  /* text-overflow: ellipsis; */
+  white-space: nowrap;
 }
 
 .currentUserHeader {

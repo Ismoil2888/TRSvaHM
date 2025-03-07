@@ -79,7 +79,7 @@ const Library = ({ userId }) => {
   };
 
   const mainContentStyle = {
-    marginLeft: isMobile ? (isMenuOpen ? "360px" : "0px") : (isMenuOpen ? "360px" : "80px"),
+    marginLeft: isMobile ? (isMenuOpen ? "360px" : "0px") : (isMenuOpen ? "360px" : "98px"),
     transition: "margin 0.3s ease",
   };
 
@@ -347,17 +347,17 @@ const Library = ({ userId }) => {
     };
   }, []);
 
-  // const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const toggleMenu = () => {
-    if (isMenuOpen) {
-      setTimeout(() => {
-        setIsMenuOpen(false);
-      }, 0);
-    } else {
-      setIsMenuOpen(true);
-    }
-  };
+    const [isMenuOpenMobile, setIsMenuOpenMobile] = useState(false);
+  
+    const toggleMenuMobile = () => {
+      if (isMenuOpenMobile) {
+        setTimeout(() => {
+          setIsMenuOpenMobile(false);
+        }, 0);
+      } else {
+        setIsMenuOpenMobile(true);
+      }
+    };
 
   const headerVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -399,13 +399,13 @@ const Library = ({ userId }) => {
               <h2>TTU</h2>
               <FiChevronLeft
                 className="toggle-menu"
-                onClick={toggleMenu}
+                onClick={toggleMenuDesktop}
               />
             </>
           ) : (
             <FiChevronRight
               className="toggle-menu"
-              onClick={toggleMenu}
+              onClick={toggleMenuDesktop}
             />
           )}
         </div>
@@ -470,8 +470,9 @@ const Library = ({ userId }) => {
                   src={userAvatarUrl || "./default-image.png"}
                   alt="User Avatar"
                   className="user-avatar"
+                  style={{width: "35px", height: "35px"}}
                 />
-                <span style={{ fontSize: "25px", color: "lightgreen"}}>{userDetails.username}</span>
+                <span style={{ fontSize: "20px", color: "lightgreen"}}>{userDetails.username}</span>
               </div>
             </Link>
           </nav>
@@ -482,13 +483,13 @@ const Library = ({ userId }) => {
 
             <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>Библиотека</ul>
 
-            <div className={`burger-menu-icon ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenu}>
+            <div className={`burger-menu-icon ${isMenuOpenMobile ? 'open' : ''}`} onClick={toggleMenuMobile}>
               <span className="bm-span"></span>
               <span className="bm-span"></span>
               <span className="bm-span"></span>
             </div>
 
-            <div className={`burger-menu ${isMenuOpen ? 'open' : ''}`}>
+            <div className={`burger-menu ${isMenuOpenMobile ? 'open' : ''}`}>
               <ul>
                 <li><Link to="/home"><FontAwesomeIcon icon={faHome} /> Главная</Link></li>
                 <li><Link to="/about"><FontAwesomeIcon icon={faInfoCircle} /> О факультете</Link></li>
@@ -580,10 +581,10 @@ const Library = ({ userId }) => {
                 <p style={{color: "lightgreen", fontSize: "22px"}}>Идёт загрузка книг, подождите.</p>
               )}
             </section>
+          </div>
+        </motion.nav>
 
-
-
-            {commentModal.isOpen && (
+        {commentModal.isOpen && (
               <div className="comment-modal-overlay">
                 <div className="comment-modal">
                   <div className="modal-header">
@@ -642,8 +643,6 @@ const Library = ({ userId }) => {
                 </div>
               </div>
             )}
-          </div>
-        </motion.nav>
 
         {showModal && selectedBook && (
               <div className="modal-book">
@@ -675,9 +674,9 @@ const Library = ({ userId }) => {
              className="footer-nav"
            >
              <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon" /></Link>
-             <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon active-icon" /></Link>
+             <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon" /></Link>
              <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>
-             <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
+             <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon active-icon" /></Link>
              <Link to="/myprofile">
                <img src={userAvatarUrl} alt="" className="footer-avatar skeleton-media-avatars" />
              </Link>

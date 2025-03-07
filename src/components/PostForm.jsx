@@ -12,6 +12,9 @@ import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FaPlusCircle } from "react-icons/fa";
 import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPhone, faUserCog, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
+import basiclogo from "../basic-logo.png";
+import ttulogo from "../Ttulogo.png";
 
 const PostForm = () => {
   const [userDetails, setUserDetails] = useState({ username: "", avatarUrl: defaultAvatar });
@@ -19,10 +22,65 @@ const PostForm = () => {
   const [description, setDescription] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [userAvatarUrl, setUserAvatarUrl] = useState(null);
   const [notification, setNotification] = useState(""); // Для уведомления
   const [notificationType, setNotificationType] = useState(""); // Для типа уведомления
+  const [isMobile, setIsMobile] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(() => {
+      // Восстанавливаем состояние из localStorage при инициализации
+      const savedState = localStorage.getItem('isMenuOpen');
+      return savedState ? JSON.parse(savedState) : true;
+    });
+  
+    // Сохраняем состояние в localStorage при изменении
+    useEffect(() => {
+      localStorage.setItem('isMenuOpen', JSON.stringify(isMenuOpen));
+    }, [isMenuOpen]);
+  
+    // Обработчик изменения размера окна
+    useEffect(() => {
+      const checkMobile = () => {
+        const mobile = window.innerWidth < 700;
+        setIsMobile(mobile);
+        if (mobile) {
+          setIsMenuOpen(false);
+        } else {
+          // Восстанавливаем состояние только для десктопа
+          const savedState = localStorage.getItem('isMenuOpen');
+          setIsMenuOpen(savedState ? JSON.parse(savedState) : true);
+        }
+      };
+  
+      checkMobile();
+      window.addEventListener('resize', checkMobile);
+      return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+  
+    // Модифицированная функция переключения меню
+    const toggleMenuDesktop = () => {
+      setIsMenuOpen(prev => {
+        const newState = !prev;
+        localStorage.setItem('isMenuOpen', JSON.stringify(newState));
+        return newState;
+      });
+    };
+
+    const mainContentStyle = {
+      marginLeft: isMobile ? (isMenuOpen ? "360px" : "0px") : (isMenuOpen ? "360px" : "80px"),
+      transition: "margin 0.3s ease",
+    };
+  
+    const currentUserHeader = {
+      marginRight: isMenuOpen ? "400px" : "80px",
+      marginBottom: isMenuOpen ? "11px" : "8px",
+      transition: "margin 0.3s ease",
+    };
+  
+    const HeaderDesktop = {
+      margin: isMenuOpen ? "12px" : "6px 35px",
+      transition: "margin 0.3s ease",
+    };
 
    // Функция для успешных уведомлений
  const showNotification = (message) => {
@@ -117,15 +175,17 @@ const showNotificationError = (message) => {
     // navigate("/home");
   };
 
-  const toggleMenuu = () => {
-    if (isMenuOpen) {
-      setTimeout(() => {
-        setIsMenuOpen(false);
-      }, 0); // Задержка для плавного исчезновения
-    } else {
-      setIsMenuOpen(true);
-    }
-  };
+    const [isMenuOpenMobile, setIsMenuOpenMobile] = useState(false);
+  
+    const toggleMenuMobile = () => {
+      if (isMenuOpenMobile) {
+        setTimeout(() => {
+          setIsMenuOpenMobile(false);
+        }, 0);
+      } else {
+        setIsMenuOpenMobile(true);
+      }
+    };
 
   useEffect(() => {
     const user = auth.currentUser;
@@ -162,36 +222,98 @@ const showNotificationError = (message) => {
     },
   };
 
-  const handleContextMenu = (event) => {
-    event.preventDefault();
-  }
-
   return (
-    <div className="post-container" onContextMenu={handleContextMenu}>
+    <div className="post-container">
        {notification && (
             <div className={`notification ${notificationType}`}>
         {notification}
             </div>
           )} {/* Уведомление */}
-<header>
-        <nav className="header-nav">
-          <ul className="header-ul">
-            <li><Link to="/home">Главная</Link></li>
-            <li><Link to="/about">О факультете</Link></li>
-            <li><Link to="/teachers">Преподаватели</Link></li>
-            <li><Link to="/schedule">Расписание</Link></li>
-            <li><Link to="/library">Библиотека</Link></li>
-            <li><Link to="/contacts">Контакты</Link></li>
-          </ul>
-          <ul style={{color: "#58a6ff", fontSize: "25px"}}>Главная</ul>
-          <ul>
-            <li>
-              <Link to="/myprofile">
-              {/* <FaUser className="user-icon"></FaUser> */}
-              </Link>
-            </li>
-          </ul>
+               <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
+        <div className="sidebar-header">
+          <img style={{ width: "50px", height: "45px" }} src={ttulogo} alt="" />
+          {isMenuOpen ? (
+            <>
+              <h2>TTU</h2>
+              <FiChevronLeft
+                className="toggle-menu"
+                onClick={toggleMenuDesktop}
+              />
+            </>
+          ) : (
+            <FiChevronRight
+              className="toggle-menu"
+              onClick={toggleMenuDesktop}
+            />
+          )}
+        </div>
+
+        <nav className="menu-items">
+          <Link to="/" className="menu-item">
+            <FiHome className="menu-icon" />
+            {isMenuOpen && <span>Главная</span>}
+          </Link>
+          <Link to="/searchpage" className="menu-item">
+            <FiSearch className="menu-icon" />
+            {isMenuOpen && <span>Поиск</span>}
+          </Link>
+          <Link to="/teachers" className="menu-item">
+            <FiUserCheck className="menu-icon" />
+            {isMenuOpen && <span>Преподаватели</span>}
+          </Link>
+          <Link to="/library" className="menu-item">
+            <FiBookOpen className="menu-icon" />
+            {isMenuOpen && <span>Библиотека</span>}
+          </Link>
+          <Link to="/myprofile" className="menu-item">
+            <FiUser className="menu-icon" style={{ borderBottom: "1px solid rgb(200, 255, 0)", borderRadius: "15px", padding: "5px" }} />
+            {isMenuOpen && <span>Профиль</span>}
+          </Link>
+          <Link to="/chats" className="menu-item">
+            <FiMessageSquare className="menu-icon" />
+            {isMenuOpen && <span>Сообщения</span>}
+          </Link>
+          <Link to="/notifications" className="menu-item">
+            <FiBell className="menu-icon" />
+            {isMenuOpen && <span>Уведомления</span>}
+          </Link>
+          <Link to="/authdetails" className="menu-item">
+            <FiSettings className="menu-icon" />
+            {isMenuOpen && <span>Настройки</span>}
+          </Link>
         </nav>
+
+        <div className="logo-and-tik">
+          <img
+            src={basiclogo}
+            alt="logo"
+            className="tiklogo"
+          />
+          {isMenuOpen && (
+            <span style={{ fontSize: "35px", fontWeight: "bold", color: "#9daddf" }}>TIK</span>
+          )}
+        </div>
+      </div>
+      <div className="glav-container" style={mainContentStyle}>
+<header>
+        <nav className="header-nav" style={HeaderDesktop}>
+            <ul className="header-ul">
+              <li><Link to="/home">Главная</Link></li>
+              <li><Link to="/about">О факультете</Link></li>
+              <li><Link to="/teachers">Преподаватели</Link></li>
+            </ul>
+            <Link to="/myprofile">
+              <div className="currentUserHeader" style={currentUserHeader}>
+                <img
+                  src={userDetails.avatarUrl || "./default-image.png"}
+                  alt="User Avatar"
+                  className="user-avatar"
+                  style={{width: "35px", height: "35px"}}
+                />
+                <span style={{ fontSize: "20px", color: "lightgreen"}}>{userDetails.username}</span>
+              </div>
+            </Link>
+          </nav>
 
         <div className="header-nav-2">
 
@@ -199,13 +321,13 @@ const showNotificationError = (message) => {
 
         <ul className="logo-app" style={{color: "#58a6ff", fontSize: "25px"}}>Публикация</ul>
 
-        <div className={`burger-menu-icon ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenuu}>          
+        <div className={`burger-menu-icon ${isMenuOpenMobile ? 'open' : ''}`} onClick={toggleMenuMobile}>          
           <span className="bm-span"></span>
           <span className="bm-span"></span>
           <span className="bm-span"></span>
         </div>
 
-        <div className={`burger-menu ${isMenuOpen ? 'open' : ''}`}>         
+        <div className={`burger-menu ${isMenuOpenMobile ? 'open' : ''}`}>         
         <ul>
            <li><Link to="/home"><FontAwesomeIcon icon={faHome} style={{color: "red"}} /> Главная</Link></li>
            <li><Link to="/about"><FontAwesomeIcon icon={faInfoCircle} /> О факультете</Link></li>
@@ -223,10 +345,6 @@ const showNotificationError = (message) => {
       <div className="postform-header">
       <div>
         <FaChevronLeft style={{position: "absolute", left: "0", top: "0", color: "white", fontSize: "25px"}} onClick={() => navigate(-1)} />
-      </div>
-      <div style={{marginTop: "70px"}} className="post-author">
-      <img src={userDetails.avatarUrl} alt="User Avatar" style={{ width: "45px", height: "45px", objectFit: "cover", borderRadius: "50%"  }} />
-      <span style={{color: "#e4dcdc", fontWeight: "bolder", marginLeft: "10px"}}>{userDetails.username}</span>
       </div>
       </div>
       <div className="post-form-container">
@@ -271,6 +389,7 @@ const showNotificationError = (message) => {
             <img src={userAvatarUrl} alt="" className="footer-avatar skeleton-media-avatars" />
           </Link>
         </motion.nav> 
+      </div>
       </div>
     </div>
   );

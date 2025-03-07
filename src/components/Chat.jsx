@@ -348,7 +348,7 @@ const Chat = () => {
       // Открываем меню для нового сообщения
       setSelectedMessageId(message.id);
       longPressTimer.current = null;
-    }, 1000); // 2 секунды
+    }, 500); // 0,5 секунды
   };
 
   const handleMessageMouseUp = () => {
@@ -512,6 +512,12 @@ const Chat = () => {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, 0);
   };
+
+  const handleKeyPress = (e) => {
+    if (e.key == 'Enter'){
+      handleSendMessage(e);
+    }
+  }
 
   const handleClearHistory = () => {
     const db = getDatabase();
@@ -1073,6 +1079,7 @@ const Chat = () => {
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Введите сообщение..."
             className="chat-input-field"
+            onKeyPress={handleKeyPress}
           />
           {editingMessageId ? (
             <button onClick={handleSaveEditedMessage} className="chat-send-button">
