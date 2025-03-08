@@ -256,7 +256,7 @@ const SearchStudents = () => {
   };
 
   return (
-    <div className="glav">
+    <div className="glava">
       <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <img style={{ width: "50px", height: "45px" }} src={ttulogo} alt="" />
@@ -322,7 +322,7 @@ const SearchStudents = () => {
           )}
         </div>
       </div>
-      <div className="chat-page" style={mainContentStyle}>
+      <div className="search-students-page" style={mainContentStyle}>
         <header>
           <nav className="header-nav" style={HeaderDesktop}>
             <ul className="header-ul">

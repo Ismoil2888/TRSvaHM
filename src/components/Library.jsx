@@ -84,13 +84,13 @@ const Library = ({ userId }) => {
   };
 
   const currentUserHeader = {
-    marginRight: isMenuOpen ? "400px" : "80px",
+    marginRight: isMenuOpen ? "400px" : "116px",
     marginBottom: isMenuOpen ? "11px" : "8px",
     transition: "margin 0.3s ease",
   };
 
   const HeaderDesktop = {
-    margin: isMenuOpen ? "12px" : "6px 35px",
+    margin: isMenuOpen ? "12px" : "6px 17px",
     transition: "margin 0.3s ease",
   };
 
@@ -578,7 +578,7 @@ const Library = ({ userId }) => {
                   );
                 })
               ) : (
-                <p style={{color: "lightgreen", fontSize: "22px"}}>Идёт загрузка книг, подождите.</p>
+                <p style={{color: "red", fontSize: "22px"}}>Книги не найдены.</p>
               )}
             </section>
           </div>

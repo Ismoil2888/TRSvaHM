@@ -63,7 +63,7 @@ const SearchPage = () => {
   };
 
   const currentUserHeader = {
-    marginRight: isMenuOpen ? "220px" : "55px",
+    marginRight: isMenuOpen ? "40px" : "30px",
     marginBottom: isMenuOpen ? "11px" : "8px",
     transition: "margin 0.3s ease",
   };

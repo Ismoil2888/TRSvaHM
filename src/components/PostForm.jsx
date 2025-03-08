@@ -24,6 +24,7 @@ const PostForm = () => {
   const navigate = useNavigate();
   // const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [userAvatarUrl, setUserAvatarUrl] = useState(null);
+  const [identificationStatus, setIdentificationStatus] = useState(null);
   const [notification, setNotification] = useState(""); // Для уведомления
   const [notificationType, setNotificationType] = useState(""); // Для типа уведомления
   const [isMobile, setIsMobile] = useState(false);
@@ -116,6 +117,22 @@ const showNotificationError = (message) => {
           });
         }
       });
+
+            const requestRef = dbRef(database, "requests");
+            onValue(requestRef, (snapshot) => {
+              const requests = snapshot.val();
+              const userRequest = Object.values(requests || {}).find(
+                (request) => request.email === user.email
+              );
+      
+              if (userRequest) {
+                setIdentificationStatus(
+                  userRequest.status === "accepted" ? "идентифицирован" : "не идентифицирован"
+                );
+              } else {
+                setIdentificationStatus("не идентифицирован");
+              }
+            });
     }
   }, []);
 
@@ -221,6 +238,18 @@ const showNotificationError = (message) => {
       transition: { duration: 0.8, type: 'spring', stiffness: 50 },
     },
   };
+
+  if (identificationStatus === "не идентифицирован") {
+    return (
+      <div className="not-identified-container">
+        <div className="not-identified">
+          <h2 className="not-identified-h2" data-text="T I K">T I K</h2>
+          <p style={{ color: "#008cb3", textAlign: "center", fontSize: "18px", marginTop: "15px" }}>Пройдите идентификацию, чтобы выкладывать посты!</p>
+          <p style={{ color: "skyblue", marginTop: "15px" }} onClick={() => navigate(-1)}>Назад</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="post-container">

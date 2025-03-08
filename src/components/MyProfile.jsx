@@ -292,11 +292,11 @@ const MyProfile = () => {
   const [notificationType, setNotificationType] = useState("");
   const [userAvatarUrl, setUserAvatarUrl] = useState(null);
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
-  const [identificationStatus, setIdentificationStatus] = useState("не идентифицирован");
+  const t = useTranslation();
+  const [identificationStatus, setIdentificationStatus] = useState(t('notident'));
   const menuRef = useRef(null);
   const [userUid, setUserUid] = useState(null);
   const navigate = useNavigate();
-  const t = useTranslation();
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(() => {
     // Восстанавливаем состояние из localStorage при инициализации

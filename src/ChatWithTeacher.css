@@ -151,15 +151,12 @@ object-fit: cover;
 
 
 
-
-
-
 /* ChatList.css */
 .chat-list-container {
   padding: 10px;
   width: 100%;
   background-color: #2c3e50;
-  height: 100%;
+  min-height: 702px;
 }
 
 @media (width > 700px) {
@@ -485,8 +482,7 @@ animation: fadeIn 0.2s ease;
 }
 
 .actions-modal-content {
-background: rgba(255, 255, 255, 0.139);
-backdrop-filter: blur(15px);
+background: rgb(255, 255, 255);
 padding: 20px;
 border-radius: 12px;
 width: 80%;
@@ -836,7 +832,8 @@ position: absolute;
 width: 220px;
 bottom: 40px;
 left: 0;
-background: white;
+background: rgba(255, 255, 255, 0.404);
+backdrop-filter: blur(15px);
 border-radius: 8px;
 box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 padding: 8px;

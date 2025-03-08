@@ -7,17 +7,19 @@ import {
   onValue,
   get,
   set,
-  push
+  query, orderByChild, equalTo
 } from "firebase/database";
 import { FaLock, FaPhone, FaUserEdit, FaChevronLeft, FaEllipsisV } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../UserProfile.css";
 import { motion } from 'framer-motion';
+import useTranslation from '../hooks/useTranslation';
 
 const UserProfile = () => {
   const { userId } = useParams();
   const [userData, setUserData] = useState(null);
-  const [identificationStatus, setIdentificationStatus] = useState("не идентифицирован");
+  const t = useTranslation();
+  const [identificationStatus, setIdentificationStatus] = useState(t('notident'));
   const [status, setStatus] = useState("offline");
   const [lastActive, setLastActive] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("./default-image.png");
@@ -26,9 +28,8 @@ const UserProfile = () => {
 
   useEffect(() => {
     const db = getDatabase();
-
-    // Получаем данные пользователя
     const userRef = databaseRef(db, `users/${userId}`);
+  
     onValue(userRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
@@ -36,9 +37,60 @@ const UserProfile = () => {
         setStatus(data.status || "offline");
         setLastActive(data.lastActive || "");
         setAvatarUrl(data.avatarUrl || "./default-image.png");
+  
+        // ПЕРЕНЕСИТЕ ЭТОТ КОД СЮДА
+        const requestRef = query(
+          databaseRef(db, "requests"),
+          orderByChild("email"),
+          equalTo(data.email || "") // Используем email из полученных данных
+        );
+  
+        onValue(requestRef, (requestSnapshot) => {
+          if (requestSnapshot.exists()) {
+            const requestData = Object.values(requestSnapshot.val())[0];
+            setIdentificationStatus(
+              requestData.status === "accepted" ? t('ident') : t('notident')
+            );
+          } else {
+            setIdentificationStatus(t('notident'));
+          }
+        });
       }
     });
-  }, [userId]);
+  }, [userId, t]);
+
+  // useEffect(() => {
+  //   const db = getDatabase();
+
+  //   // Получаем данные пользователя
+  //   const userRef = databaseRef(db, `users/${userId}`);
+  //   onValue(userRef, (snapshot) => {
+  //     const data = snapshot.val();
+  //     if (data) {
+  //       setUserData(data);
+  //       setStatus(data.status || "offline");
+  //       setLastActive(data.lastActive || "");
+  //       setAvatarUrl(data.avatarUrl || "./default-image.png");
+  //     }
+  //   });
+
+  //       // Получаем статус идентификации пользователя
+  //       const requestRef = query(
+  //         databaseRef(db, "requests"),
+  //         orderByChild("email"),
+  //         equalTo(userData?.email || "")
+  //       );
+  //       onValue(requestRef, (snapshot) => {
+  //         if (snapshot.exists()) {
+  //           const requestData = Object.values(snapshot.val())[0];
+  //           setIdentificationStatus(
+  //             requestData.status === "accepted" ? (t('ident')) : (t('notident'))
+  //           );
+  //         } else {
+  //           setIdentificationStatus(t('notident'));
+  //         }
+  //       });
+  // }, [userId]);
 
   const renderStatus = () => {
     return status === "online" ? (
@@ -210,14 +262,14 @@ const UserProfile = () => {
         <div className="up-info-title">
           <FaLock
             className={`up-info-icon ${
-              identificationStatus === "идентифицирован" ? "up-icon-verified" : "up-icon-unverified"
+              identificationStatus === t('ident') ? "up-icon-verified" : "up-icon-unverified"
             }`}
           />
           Идентификация
         </div>
         <div
           className={`up-info-content ${
-            identificationStatus === "идентифицирован" ? "up-status-verified" : "up-status-unverified"
+            identificationStatus === t('ident') ? "up-status-verified" : "up-status-unverified"
           }`}
         >
           {identificationStatus}
@@ -451,7 +503,7 @@ export default UserProfile;
 
 
 
-// оригинал
+//оригинал
 // import React, { useState, useEffect } from "react";
 // import { useParams } from "react-router-dom";
 // import { getDatabase, ref as databaseRef, onValue, query, orderByChild, equalTo } from "firebase/database";
