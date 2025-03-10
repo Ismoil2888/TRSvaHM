@@ -298,7 +298,7 @@ useEffect(() => {
           <FaChevronLeft style={{ color: "white", fontSize: "25px" }} onClick={() => navigate(-1)} />
           <h2 style={{ marginRight: "160px" }}>{t('mychats')}</h2>
         </div>
-        <ul className="chat-list">
+        <ul className="chat-list" style={{overflowY: "scroll"}}>
           {chatList.map((chat) => (
             <li key={chat.chatRoomId} className="chat-list-item" onContextMenu={(e) => {
               e.preventDefault();

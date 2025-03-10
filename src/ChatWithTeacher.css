@@ -156,7 +156,7 @@ object-fit: cover;
   padding: 10px;
   width: 100%;
   background-color: #2c3e50;
-  min-height: 702px;
+  min-height: 722px;
 }
 
 @media (width > 700px) {
@@ -170,18 +170,22 @@ object-fit: cover;
 }
 
 .chat-list-head{
+  width: 100%;
   gap: 15px;
   display: flex;
   align-items: center;
   justify-content: space-around;
   white-space: nowrap;
+  position: fixed;
+  top: 0;
+  background: #2c3e50e8;
 }
 
 .chat-list {
   list-style: none;
   padding: 0;
   margin: 0;
-  margin-top: 30px;
+  margin-top: 40px;
 }
 
 .chat-list-item {

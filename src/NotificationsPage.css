@@ -90,10 +90,185 @@
     color: #dddbdb;
   }
   
-  /* Стили для случая, когда уведомлений нет */
   .no-notifications {
     text-align: center;
     color: #888;
     font-size: 18px;
     padding: 20px;
   }  
+
+
+
+
+
+
+
+
+
+  /* Для UserProfile */
+.up-chat-button[disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Общие стили для карточек */
+.notification-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 1rem;
+  padding: 1.5rem;
+  transition: transform 0.2s ease;
+}
+
+.notification-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Шапка уведомления */
+.notification-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.notification-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 1rem;
+  object-fit: cover;
+  border: 2px solid #eee;
+}
+
+.clickable {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.clickable:hover {
+  opacity: 0.8;
+}
+
+.notification-meta {
+  flex-grow: 1;
+}
+
+.notification-title {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #2c3e50;
+}
+
+.notification-timestamp {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #95a5a6;
+}
+
+/* Тело уведомления */
+.notification-body {
+  padding-left: 20px; /* Выравнивание с учетом аватара */
+}
+
+.notification-text {
+  margin: 0;
+  color: #34495e;
+  line-height: 1.5;
+}
+
+.user-link {
+  color: #3498db;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.user-link:hover {
+  text-decoration: underline;
+}
+
+/* Кнопки действий */
+.notification-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.accept-button, .decline-button, .goto-chat-button {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.accept-button {
+  background: #2ecc71;
+  color: white;
+}
+
+.accept-button:hover {
+  background: #27ae60;
+}
+
+.decline-button {
+  background: #e74c3c;
+  color: white;
+}
+
+.decline-button:hover {
+  background: #c0392b;
+}
+
+.goto-chat-button {
+  background: #3498db;
+  color: white;
+  margin-top: 1rem;
+}
+
+.goto-chat-button:hover {
+  background: #2980b9;
+}
+
+.button-icon {
+  font-size: 1.1rem;
+}
+
+/* Пустое состояние */
+.no-notifications {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+}
+
+.empty-state {
+  text-align: center;
+  color: #95a5a6;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  color: #bdc3c7;
+}
+
+/* Анимации */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.notification-card {
+  animation: slideIn 0.3s ease forwards;
+}
