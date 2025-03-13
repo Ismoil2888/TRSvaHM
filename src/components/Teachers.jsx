@@ -334,6 +334,7 @@ import anonymAvatar from '../anonym2.jpg';
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
 import ttulogo from "../Ttulogo.png";
 import useTranslation from '../hooks/useTranslation';
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const Teachers = () => {
   const [teachers, setTeachers] = useState([]);
@@ -709,7 +710,7 @@ const Teachers = () => {
                 type="search"
                 placeholder="Поиск преподавателя..."
                 value={searchQuery}
-                onChange={handleSearchChange} // Добавляем обработчик изменения
+                onChange={handleSearchChange} // Добавляем обработчик изменения className="skeleton-media-avatars"
                 className="search-input"
               />
             </div>
@@ -720,7 +721,7 @@ const Teachers = () => {
               ) : (
                 filteredTeachers.map((teacher) => (
                   <div className="teacher-card" key={teacher.id}>
-                    <img src={teacher.photo || defaultTeacherImg} alt={`${teacher.name} ${teacher.surname}`} className="skeleton-media-avatars" />
+                    <LazyLoadImage src={teacher.photo || defaultTeacherImg} alt={`${teacher.name} ${teacher.surname}`} effect="opacity" />
                     <h3>{`${teacher.name} ${teacher.surname}`}</h3>
                     <p><strong>Предмет:</strong> {teacher.subject}</p>
                     <p><strong>Статус:</strong> {teacher.status}</p>
