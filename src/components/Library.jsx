@@ -16,6 +16,7 @@ import defaultAvatar from '../default-image.png';
 import anonymAvatar from '../anonym2.jpg';
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
 import ttulogo from "../Ttulogo.png";
+import useTranslation from '../hooks/useTranslation';
 
 const Library = ({ userId }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,7 +34,7 @@ const Library = ({ userId }) => {
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [actionMenuId, setActionMenuId] = useState(null);
   const actionMenuRef = useRef(null);
-
+  const t = useTranslation();
   const database = getDatabase();
   const navigate = useNavigate();
   const [identificationStatus, setIdentificationStatus] = useState(null);
@@ -481,7 +482,7 @@ const Library = ({ userId }) => {
 
             <img src={basiclogo} width="50px" alt="logo" style={{ marginLeft: "10px" }} />
 
-            <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>Библиотека</ul>
+            <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>{t('library')}</ul>
 
             <div className={`burger-menu-icon ${isMenuOpenMobile ? 'open' : ''}`} onClick={toggleMenuMobile}>
               <span className="bm-span"></span>

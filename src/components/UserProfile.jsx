@@ -987,7 +987,7 @@ const UserProfile = () => {
       <div className="up-info-card">
         <div className="up-info-title">
           <FaPhone className="up-info-icon" />
-          Номер телефона:
+          {t('telnumber')}:
         </div>
         <div className="up-info-content">{userData.phoneNumber || "Не указан"}</div>
       </div>
@@ -995,7 +995,7 @@ const UserProfile = () => {
       <div className="up-info-card">
         <div className="up-info-title">
           <FaUserEdit className="up-info-icon" />
-          О себе:
+          {t('about')}:
         </div>
         <div className="up-info-content">{userData.aboutMe || "Нет информации"}</div>
       </div>
@@ -1006,7 +1006,7 @@ const UserProfile = () => {
             className={`up-info-icon ${identificationStatus === t('ident') ? "up-icon-verified" : "up-icon-unverified"
               }`}
           />
-          Идентификация:
+          {t('identification')}:
         </div>
         <div
           className={`up-info-content ${identificationStatus === t('ident') ? "up-status-verified" : "up-status-unverified"
@@ -1016,17 +1016,17 @@ const UserProfile = () => {
         </div>
       </div>
       <div className="up-info-card">
-        <div className="up-info-title"><FaScroll className="up-info-icon" />Кафедра:</div>
+        <div className="up-info-title"><FaScroll className="up-info-icon" />{t('cathedra')}:</div>
         <div className="up-info-content"><p>{userFaculty}</p></div>
       </div>
 
       <div className="up-info-card" style={{display: "flex", flexDirection: "row", alignItems: "center", }}>
-        <div className="up-info-title"><FaUserGraduate className="up-info-icon" />Курс:</div>
+        <div className="up-info-title"><FaUserGraduate className="up-info-icon" />{t('course')}:</div>
         <div className="up-info-content" style={{marginLeft: "15px"}}>{userCourse}</div>
       </div>
 
       <div className="up-info-card">
-        <div className="up-info-title"><FaUsers className="up-info-icon" style={{fontSize: "20px"}} /> Группа:</div>
+        <div className="up-info-title"><FaUsers className="up-info-icon" style={{fontSize: "20px"}} /> {t('group')}:</div>
         <div className="up-info-content"><p>{userGroup}</p></div>
       </div>
 

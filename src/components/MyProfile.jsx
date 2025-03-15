@@ -672,17 +672,17 @@ const MyProfile = () => {
             </div>
 
                   <div className="info-section">
-                    <h3>Кафедра:</h3>
+                    <h3>{t('cathedra')}:</h3>
                     <p>{userFaculty}</p>
                   </div>
             
                   <div className="info-section" style={{display: "flex"}}>
-                    <h3>Курс:</h3>
+                    <h3>{t('course')}:</h3>
                     <p style={{fontSize: "18px", marginLeft: "15px"}}>{userCourse}</p>
                   </div>
             
                   <div className="info-section" style={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
-                    <h3>Группа:</h3>
+                    <h3>{t('group')}:</h3>
                     <p>{userGroup}</p>
                   </div>
           </div>

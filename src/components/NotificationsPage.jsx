@@ -302,7 +302,6 @@
 
 
 
-
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getDatabase, ref as dbRef, onValue, remove, push, update } from "firebase/database";
@@ -322,7 +321,6 @@ const NotificationsPage = () => {
   const currentUserId = auth.currentUser?.uid;
   const navigate = useNavigate();
   const t = useTranslation();
-  // const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentUserData, setCurrentUserData] = useState(null);
   const [unreadCount, setUnreadCount] = useState(0);
   const userId = auth.currentUser?.uid; // Текущий пользователь
@@ -401,105 +399,96 @@ const NotificationsPage = () => {
   const handleAcceptRequest = async (notification) => {
     const db = getDatabase();
     const currentUserId = auth.currentUser?.uid;
-
-    // Обновляем статус запроса
-    const requestRef = dbRef(db, `requests/${notification.senderId}_${currentUserId}`);
-    await update(requestRef, { status: "accepted" });
-
+    if (!currentUserId) return;
+  
+    const requestKey = `${notification.senderId}_${currentUserId}`;
+    const requestRef = dbRef(db, `requests/${requestKey}`);
+  
+    // Обновляем запрос (добавляем pairId для корректной работы)
+    await update(requestRef, { status: "accepted", pairId: requestKey });
+  
     // Удаляем уведомление
     await remove(dbRef(db, `notifications/${currentUserId}/${notification.id}`));
-
+  
     // Отправляем уведомление отправителю
     const senderNotification = {
       type: "request_accepted",
       receiverId: currentUserId,
       receiverName: currentUserData.username,
-      receiverAvatar: currentUserData.avatarUrl || "./default-image.png",
+      receiverAvatar: currentUserData.avatarUrl || defaultAvatar,
       timestamp: new Date().toISOString(),
     };
-
-    const senderNotificationsRef = dbRef(db, `notifications/${notification.senderId}`);
-    await push(senderNotificationsRef, senderNotification);
-  };
+  
+    await push(dbRef(db, `notifications/${notification.senderId}`), senderNotification);
+  };  
 
   const handleDeclineRequest = async (notification) => {
+    if (!currentUserId) return;
+  
     const db = getDatabase();
-    const currentUserId = auth.currentUser?.uid;
-
-    // Удаляем запрос
-    await remove(dbRef(db, `requests/${notification.senderId}_${currentUserId}`));
-
-    // Удаляем уведомление
-    await remove(dbRef(db, `notifications/${currentUserId}/${notification.id}`));
-  };
+  
+    try {
+      setNotifications((prev) => prev.filter((notif) => notif.id !== notification.id));
+  
+      await remove(dbRef(db, `requests/${notification.senderId}_${currentUserId}`));
+  
+      await remove(dbRef(db, `notifications/${currentUserId}/${notification.id}`));
+    } catch (error) {
+      console.error("Ошибка при отклонении запроса:", error);
+    }
+  };  
 
   useEffect(() => {
     if (!currentUserId) return;
-
+  
     const db = getDatabase();
     const notificationsRef = dbRef(db, `notifications/${currentUserId}`);
-
+  
     const unsubscribe = onValue(notificationsRef, (snapshot) => {
       const data = snapshot.val();
-
+  
       if (data) {
         const notificationsArray = Object.entries(data).map(([key, value]) => ({
           id: key,
           ...value,
         }));
-
-        setNotifications(
-          notificationsArray.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-        );
-      } else {
-        setNotifications([]); // Если данных нет, очищаем состояние
-      }
-    });
-
-    return () => unsubscribe(); // Убираем слушатель при размонтировании компонента
-  }, [currentUserId]);
-
-  useEffect(() => {
-    if (!currentUserId) return;
-
-    const db = getDatabase();
-    const notificationsRef = dbRef(db, `notifications/${currentUserId}`);
-
-    onValue(notificationsRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
+  
+        // Обновляем состояние так, чтобы новые уведомления появлялись сверху
+        setNotifications((prevNotifications) => {
+          const newNotifications = notificationsArray.filter(
+            (notif) => !prevNotifications.some((prev) => prev.id === notif.id)
+          );
+  
+          return [...newNotifications, ...prevNotifications].sort(
+            (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+          );
+        });
+  
+        // Помечаем уведомления как прочитанные сразу после их появления
         const updatedNotifications = {};
-        for (const key in data) {
-          updatedNotifications[key] = {
-            ...data[key],
-            isRead: true,
-          };
-        }
-
-        // Обновляем уведомления в базе данных
+        notificationsArray.forEach((notif) => {
+          updatedNotifications[notif.id] = { ...notif, isRead: true };
+        });
+  
         update(notificationsRef, updatedNotifications).catch((error) => {
           console.error("Ошибка при обновлении статуса уведомлений:", error);
         });
       }
     });
-
-    // Сбрасываем локальный счетчик непрочитанных уведомлений
-    setUnreadCount(0);
-  }, [currentUserId]);
+  
+    return () => unsubscribe();
+  }, [currentUserId]);  
 
   const handleDeleteNotification = (notificationId) => {
     if (!currentUserId || !notificationId) return;
-
-    const db = getDatabase();
-    const notificationRef = dbRef(db, `notifications/${currentUserId}/${notificationId}`);
-    remove(notificationRef)
-      .then(() => {
-        setNotifications((prev) => prev.filter((notif) => notif.id !== notificationId));
-      })
+    const database = getDatabase();
+    setNotifications((prev) => prev.filter((notif) => notif.id !== notificationId)); // ✅ Сначала обновляем локально
+  
+    remove(dbRef(database, `notifications/${currentUserId}/${notificationId}`)) // Потом удаляем в Firebase
       .catch((error) => {
         console.error("Ошибка при удалении уведомления:", error);
       });
-  };
+  };  
 
   return (
     <div className="glava">
@@ -613,26 +602,26 @@ const NotificationsPage = () => {
                         className="notification-avatar clickable"
                         onClick={() => goToProfile(notification.senderId)}
                       />
+                      <p className="notification-timestamp">
+                        {new Date(notification.timestamp).toLocaleString()}
+                      </p>
+                    </div>
+
+                    <div className="notification-body">
                       <div className="notification-meta">
                         <h3 className="notification-title">
                           Новый запрос на переписку
                         </h3>
-                        <p className="notification-timestamp">
-                          {new Date(notification.timestamp).toLocaleString()}
-                        </p>
+                        <button
+                          className="delete-notification-button"
+                          onClick={() => handleDeleteNotification(notification.id)}
+                        >
+                          &times;
+                        </button>
                       </div>
-                      <button
-                        className="notification-close"
-                        onClick={() => handleDeleteNotification(notification.id)}
-                      >
-                        &times;
-                      </button>
-                    </div>
-                    
-                    <div className="notification-body">
                       <p className="notification-text">
                         Пользователь{' '}
-                        <span 
+                        <span
                           className="user-link"
                           onClick={() => goToProfile(notification.senderId)}
                         >
@@ -640,9 +629,9 @@ const NotificationsPage = () => {
                         </span>{' '}
                         хочет начать с вами диалог
                       </p>
-                      
+
                       <div className="notification-actions">
-                        <button 
+                        <button
                           className="accept-button"
                           onClick={() => handleAcceptRequest(notification)}
                         >
@@ -665,12 +654,20 @@ const NotificationsPage = () => {
                 {notification.type === "request_accepted" && (
                   <div className="notification-success">
                     <div className="notification-header">
-                      <img
-                        src={notification.receiverAvatar || defaultAvatar}
-                        alt="Avatar"
-                        className="notification-avatar clickable"
-                        onClick={() => goToProfile(notification.receiverId)}
-                      />
+                      <div className="notification-meta">
+                        <img
+                          src={notification.receiverAvatar || defaultAvatar}
+                          alt="Avatar"
+                          className="notification-avatar clickable"
+                          onClick={() => goToProfile(notification.receiverId)}
+                        />
+                        <button
+                          className="delete-notification-button"
+                          onClick={() => handleDeleteNotification(notification.id)}
+                        >
+                          &times;
+                        </button>
+                      </div>
                       <div className="notification-meta">
                         <h3 className="notification-title">
                           Запрос принят
@@ -682,7 +679,7 @@ const NotificationsPage = () => {
                     </div>
                     <div className="notification-body">
                       <p className="notification-text">
-                        <span 
+                        <span
                           className="user-link"
                           onClick={() => goToProfile(notification.receiverId)}
                         >
@@ -690,7 +687,7 @@ const NotificationsPage = () => {
                         </span>{' '}
                         принял(а) ваш запрос на переписку
                       </p>
-                      <button 
+                      <button
                         className="goto-chat-button"
                         onClick={() => navigate(`/profile/${notification.receiverId}`)}
                       >
@@ -704,28 +701,36 @@ const NotificationsPage = () => {
                 {['comment', 'like'].includes(notification.type) && (
                   <>
                     <div className="notification-header">
-                      <img
-                        src={notification.avatarUrl || defaultAvatar}
-                        alt="Avatar"
-                        className="notification-avatar clickable"
-                        onClick={() => goToProfile(notification.userId)}
-                      />
-                      <div className="notification-meta">
-                        <h3 className="notification-title">
-                          {notification.type === 'comment' 
-                            ? 'Новый комментарий' 
-                            : 'Новый лайк'}
-                        </h3>
+                      <div>
+                        <img
+                          src={notification.avatarUrl || defaultAvatar}
+                          alt="Avatar"
+                          className="notification-avatar clickable"
+                          onClick={() => goToProfile(notification.userId)}
+                        />
                         <p className="notification-timestamp">
-                          {new Date(notification.timestamp).toLocaleString()}
+                          {notification.timestamp}
                         </p>
                       </div>
                     </div>
                     <div className="notification-body">
+                      <div className="notification-meta">
+                      <h3 className="notification-title">
+                        {notification.type === 'comment'
+                          ? 'Новый комментарий'
+                          : 'Новый лайк'}
+                      </h3>
+                      <button
+                          className="delete-notification-button"
+                          onClick={() => handleDeleteNotification(notification.id)}
+                        >
+                          &times;
+                        </button>
+                        </div>
                       <p className="notification-text">
                         {notification.type === 'comment' ? (
                           <>
-                            <span 
+                            <span
                               className="user-link"
                               onClick={() => goToProfile(notification.userId)}
                             >
@@ -735,7 +740,7 @@ const NotificationsPage = () => {
                           </>
                         ) : (
                           <>
-                            <span 
+                            <span
                               className="user-link"
                               onClick={() => goToProfile(notification.userId)}
                             >

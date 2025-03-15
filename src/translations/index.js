@@ -8,7 +8,7 @@ export const translations = {
       editprofile: "Профилро таҳрир кардан",
       telnumber: "Рақами телефон",
       about: "Дар бораи худам",
-      identification: "Худро муайян кунед",
+      identification: "Муайянкунӣ",
       email: "Почтаи электронӣ",
       settings: "Танзимот",
       confidentiality: "Махфият",
@@ -40,6 +40,12 @@ export const translations = {
       mychats: "Чатҳои ман",
       //HomePage
       main: "Асосӣ",
+      //MyProfile, UserProfile
+      cathedra: "Кафедра",
+      course: "Курс",
+      group: "Гурӯҳ",
+      //Library
+      library: "Китобхона"
     },
     russian: {
         //AuthDetails
@@ -82,6 +88,12 @@ export const translations = {
       mychats: "Мои чаты",
       //HomePage
       main: "Главная",
+      //MyProfile, UserProfile
+      cathedra: "Кафедра",
+      course: "Курс",
+      group: "Группа",
+      //Library
+      library: "Библиотека"
     },
     english: {
         //AuthDetails
@@ -124,5 +136,11 @@ export const translations = {
       mychats: "My chats",
       //HomePage
       main: "Main",
+      //MyProfile, UserProfile
+      cathedra: "Cathedra",
+      course: "Course",
+      group: "Group",
+      //Library
+      library: "Librariy"
     }
   };
