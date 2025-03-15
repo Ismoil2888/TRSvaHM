@@ -69,21 +69,22 @@
   
   /* Info card styling */
   .up-info-card {
-    background-color: #ffffff;
-    color: #333;
+    /* background-color: #ffffffa1; */
     border-radius: 10px;
+    background-color: #214051;
     width: 320px;
     padding: 15px;
-    margin: 10px 0;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #a9a9a9;
   }
   
   .up-info-title {
     font-size: 1em;
     font-weight: bold;
-    color: #0a3d62;
+    /* color: #0a3d62; */
+    color: #ffffff;
     display: flex;
     align-items: center;
   }
@@ -94,7 +95,8 @@
   
   .up-info-content {
     font-size: 0.95em;
-    color: #10ac84;
+    color: #cfdae3;
+    font-weight: 500;
   }
   
   .up-icon-verified {
@@ -115,5 +117,5 @@
 
   .up-chat-button{
     width: 300px;
-    margin-top: 15px;
+    margin-bottom: 15px;
   }

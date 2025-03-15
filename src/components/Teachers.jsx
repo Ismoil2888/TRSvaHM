@@ -710,7 +710,7 @@ const Teachers = () => {
                 type="search"
                 placeholder="Поиск преподавателя..."
                 value={searchQuery}
-                onChange={handleSearchChange} // Добавляем обработчик изменения className="skeleton-media-avatars"
+                onChange={handleSearchChange} // Добавляем обработчик изменения
                 className="search-input"
               />
             </div>
@@ -721,7 +721,7 @@ const Teachers = () => {
               ) : (
                 filteredTeachers.map((teacher) => (
                   <div className="teacher-card" key={teacher.id}>
-                    <LazyLoadImage src={teacher.photo || defaultTeacherImg} alt={`${teacher.name} ${teacher.surname}`} effect="opacity" />
+                    <LazyLoadImage src={teacher.photo || defaultTeacherImg} alt={`${teacher.name} ${teacher.surname}`} className="skeleton-media-avatars" />
                     <h3>{`${teacher.name} ${teacher.surname}`}</h3>
                     <p><strong>Предмет:</strong> {teacher.subject}</p>
                     <p><strong>Статус:</strong> {teacher.status}</p>

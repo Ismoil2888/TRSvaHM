@@ -1220,7 +1220,7 @@ input[type="file"] {
           z-index: 9999;
           /* background-color: rgba(201, 199, 199, 0.3); */
           backdrop-filter: blur(10px);
-          width: 350px;
+          max-width: 340px;
           height: 60px;
           animation: fadeInOut 3s ease-in-out;
         }

@@ -1034,9 +1034,9 @@ const AuthDetails = () => {
 const [showCourseList, setShowCourseList] = useState(false);
 const [showGroupList, setShowGroupList] = useState(false);
 
-const faculties = ["Информационных технологий", "Экономики", "Юридический", "Механико-математический"];
+const cathedra = ["Системахои Автоматикунонидашудаи Идоракуни", "Шабакахои Алока Ва Системахои Комутатсиони", "Технологияхои Иттилооти Ва Хифзи Маълумот", "Автоматонии Равандхои Технологи Ва Истехсолот", "Информатика Ва Техникаи Хисоббарор"];
 const courses = ["1", "2", "3", "4"];
-const groups = ["ИТ-101", "ИТ-202", "ЭК-301", "ЮР-401", "ММ-501"];
+const groups = ["1-530102 - АСКИ", "1-400101 - ТБТИ", "1-450103-02 - ШАваТИ", "1-400102-04 - ТИваХМ", "1-98010101-03 - ТИваХМ", "1-98010101-05 - ТИваХМ", "1-530101 - АРТваИ", "1-530107 - АРТваИ", "1-400301-02 - АРТваИ", "1-400301-05 - АРТваИ", "1-080101-07 - ИваТХ"];
 
   const [isMobile, setIsMobile] = useState(false);
   const t = useTranslation();
@@ -1175,13 +1175,6 @@ const groupDropdownRef = useRef(null);
           setShowGroupList(false);
         }
       };
-  
-    // const handleClickOutside = (e) => {
-    //   if (menuRef.current && !menuRef.current.contains(e.target)) {
-    //     setShowMenu(false);
-    //   }
-    // };
-    // document.addEventListener("mousedown", handleClickOutside);
 
     const listen = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -1701,12 +1694,12 @@ const groupDropdownRef = useRef(null);
             setShowGroupList(false);
           }}
         >
-          {studentInfo.faculty || "Выберите факультет"}
+          {studentInfo.faculty || "Выберите кафедру"}
           <span className={`arrow-auth ${showFacultyList ? "up-auth" : "down-auth"}`}></span>
         </div>
         {showFacultyList && (
           <div className="dropdown-list-auth">
-            {faculties.map((faculty) => (
+            {cathedra.map((faculty) => (
               <div
                 key={faculty}
                 className="dropdown-item-auth"

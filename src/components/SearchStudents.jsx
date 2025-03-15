@@ -13,6 +13,7 @@ import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPho
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
 import ttulogo from "../Ttulogo.png";
 import useTranslation from '../hooks/useTranslation';
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const SearchStudents = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -73,14 +74,14 @@ const SearchStudents = () => {
     transition: "margin 0.3s ease",
   };
 
-  const currentUserHeader = {
-    marginRight: isMenuOpen ? "220px" : "40px",
-    marginBottom: isMenuOpen ? "11px" : "8px",
+  const HeaderDesktop = {
+    margin: isMenuOpen ? "11.8px 192px" : "6px 60px",
     transition: "margin 0.3s ease",
   };
 
-  const HeaderDesktop = {
-    margin: isMenuOpen ? "11.8px 192px" : "6px 75px",
+  const currentUserHeader = {
+    marginRight: isMenuOpen ? "40px" : "30px",
+    marginBottom: isMenuOpen ? "11px" : "8px",
     transition: "margin 0.3s ease",
   };
 
@@ -324,23 +325,24 @@ const SearchStudents = () => {
       </div>
       <div className="search-students-page" style={mainContentStyle}>
         <header>
-          <nav className="header-nav" style={HeaderDesktop}>
-            <ul className="header-ul">
-              <li><Link to="/home">Главная</Link></li>
-              <li><Link to="/about">О факультете</Link></li>
-              <li><Link to="/teachers">Преподаватели</Link></li>
-            </ul>
-            <Link to="/myprofile">
-              <div className="currentUserHeader" style={currentUserHeader}>
-                <img
-                  src={userDetails.avatarUrl || "./default-image.png"}
-                  alt="User Avatar"
-                  className="user-avatar"
-                />
-                <span style={{ fontSize: "20px", color: "lightgreen"}}>{userDetails.username}</span>
-              </div>
-            </Link>
-          </nav>
+            <nav className="header-nav" style={HeaderDesktop}>
+              <ul className="header-ul">
+                <li><Link to="/home">Главная</Link></li>
+                <li><Link to="/about">О факультете</Link></li>
+                <li><Link to="/teachers">Преподаватели</Link></li>
+              </ul>
+              <Link to="/myprofile">
+                <div className="currentUserHeader" style={currentUserHeader}>
+                  <img
+                    src={userDetails.avatarUrl || "./default-image.png"}
+                    alt="User Avatar"
+                    className="user-avatar"
+                    style={{width: "35px", height: "35px"}}
+                  />
+                  <span style={{ fontSize: "20px", color: "lightgreen"}}>{userDetails.username}</span>
+                </div>
+              </Link>
+            </nav>
 
           <div className="header-nav-2">
 
@@ -408,7 +410,7 @@ const SearchStudents = () => {
                       className="chat-page-chat-item"
                     >
                       <div style={{ display: "flex", alignItems: "center" }}>
-                        <img src={user.avatarUrl || "./default-image.png"} alt={user.username} className="chat-page-avatarka skeleton-media-avatars" />
+                        <LazyLoadImage src={user.avatarUrl || "./default-image.png"} alt={user.username} className="chat-page-avatarka skeleton-media-avatars" />
                         <div
                           className="chat-page-chat-info"
                           onClick={() => goToProfileFromHistory(user.uid)}
@@ -433,7 +435,7 @@ const SearchStudents = () => {
             {searchResults.length > 0 ? (
               searchResults.map((user) => (
                 <div key={user.uid} className="chat-page-chat-item" onClick={() => goToProfile(user.uid)}>
-                  <img src={user.avatarUrl || "./default-image.png"} alt={user.username} className="chat-page-avatarka" />
+                  <LazyLoadImage src={user.avatarUrl || "./default-image.png"} alt={user.username} className="chat-page-avatarka skeleton-media-avatars" />
                   <div className="chat-page-chat-info">
                     <h3 style={{ color: "white" }}>{user.username}</h3>
                     <p>{user.aboutMe || "Информация не указана"}</p>

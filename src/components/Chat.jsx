@@ -15,7 +15,7 @@ import {
 import { auth } from "../firebase";
 import "../ChatWithTeacher.css";
 import CryptoJS from 'crypto-js';
-import { FiBookmark, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch, FiFile, FiImage } from "react-icons/fi";
+import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch, FiFile, FiImage } from "react-icons/fi";
 import basiclogo from "../basic-logo.png";
 import ttulogo from "../Ttulogo.png";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -591,7 +591,7 @@ const Chat = () => {
 
         <nav className="menu-items">
           <Link to="/" className="menu-item">
-            <FiBookmark className="menu-icon" />
+            <FiHome className="menu-icon" />
             {isMenuOpen && <span>Новости</span>}
           </Link>
           <Link to="/searchpage" className="menu-item">
