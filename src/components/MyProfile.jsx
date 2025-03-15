@@ -266,7 +266,7 @@ import { getDatabase, ref as databaseRef, onValue, update, query, orderByChild, 
 import React, { useEffect, useState, useRef } from "react";
 import { auth, database } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
-import { FaEllipsisV, FaArrowLeft, FaLock, FaRegAddressBook, FaUser } from "react-icons/fa";
+import { FaEllipsisV, FaArrowLeft, FaLock, FaRegAddressBook, FaUsers, FaScroll, FaUserGraduate } from "react-icons/fa";
 import { FcAbout } from "react-icons/fc";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPhone, faUserCog, faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -296,6 +296,11 @@ const MyProfile = () => {
   const [identificationStatus, setIdentificationStatus] = useState(t('notident'));
   const menuRef = useRef(null);
   const [userUid, setUserUid] = useState(null);
+
+    const [userFaculty, setUserFaculty] = useState("не известно");
+    const [userCourse, setUserCourse] = useState("не известно");
+    const [userGroup, setUserGroup] = useState("не известно");
+
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(() => {
@@ -373,60 +378,76 @@ const MyProfile = () => {
   }, [navigate]);
 
   useEffect(() => {
+    // Добавляем обработчик клика вне меню
     document.addEventListener("mousedown", handleClickOutside);
-
-    const listen = onAuthStateChanged(auth, (user) => {
+  
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
         setAuthUser(user);
-
-        const userRef = databaseRef(database, "users/" + user.uid);
-        onValue(userRef, (snapshot) => {
+        const userRef = databaseRef(database, `users/${user.uid}`);
+        const requestRef = query(databaseRef(database, "requests"), orderByChild("email"), equalTo(user.email));
+  
+        // Подписка на обновления пользователя
+        const unsubscribeUser = onValue(userRef, (snapshot) => {
           const data = snapshot.val();
           if (data) {
-            setUsername(data.username || "User");
-            setPhoneNumber(data.phoneNumber || t('addtelnumber'));
-            setStatus(data.status || "offline");
-            setLastActive(data.lastActive || "");
-            setAvatarUrl(data.avatarUrl || "./default-image.png");
-            setAboutMe(data.aboutMe || t('infonot'));
+            setUsername((prev) => (prev !== data.username ? data.username || "User" : prev));
+            setPhoneNumber((prev) => (prev !== data.phoneNumber ? data.phoneNumber || t('addtelnumber') : prev));
+            setStatus((prev) => (prev !== data.status ? data.status || "offline" : prev));
+            setLastActive((prev) => (prev !== data.lastActive ? data.lastActive || "" : prev));
+            setAvatarUrl((prev) => (prev !== data.avatarUrl ? data.avatarUrl || "./default-image.png" : prev));
+            setAboutMe((prev) => (prev !== data.aboutMe ? data.aboutMe || t('infonot') : prev));
           }
         });
-
-        const requestRef = query(
-          databaseRef(database, "requests"),
-          orderByChild("email"),
-          equalTo(user.email)
-        );
-        onValue(requestRef, (snapshot) => {
+  
+        // Подписка на статус идентификации
+        const unsubscribeRequest = onValue(requestRef, (snapshot) => {
           if (snapshot.exists()) {
             const requestData = Object.values(snapshot.val())[0];
-            setIdentificationStatus(
-              requestData.status === "accepted" ? (t('ident')) : (t('notident'))
-            );
+            const newStatus = requestData.status === "accepted" ? t('ident') : t('notident');
+            const newFaculty = requestData.faculty || "не известно";
+            const newCourse = requestData.course || "не известно";
+            const newGroup = requestData.group || "не известно";
+  
+            // Обновляем только если данные действительно изменились
+            setIdentificationStatus((prev) => (prev !== newStatus ? newStatus : prev));
+            setUserFaculty((prev) => (prev !== newFaculty ? newFaculty : prev));
+            setUserCourse((prev) => (prev !== newCourse ? newCourse : prev));
+            setUserGroup((prev) => (prev !== newGroup ? newGroup : prev));
           } else {
             setIdentificationStatus(t('notident'));
+            setUserFaculty("не известно");
+            setUserCourse("не известно");
+            setUserGroup("не известно");
           }
         });
-
+  
+        // Устанавливаем статус пользователя как "онлайн"
         update(userRef, { status: "online" });
-
-        document.addEventListener("visibilitychange", () => {
+  
+        // Обновляем статус при сворачивании или выходе пользователя
+        const handleVisibilityChange = () => {
           if (document.visibilityState === "hidden") {
-            update(userRef, {
-              status: "offline",
-              lastActive: new Date().toLocaleString(),
-            });
+            update(userRef, { status: "offline", lastActive: new Date().toLocaleString() });
           } else {
             update(userRef, { status: "online" });
           }
-        });
-
-        window.addEventListener("beforeunload", () => {
-          update(userRef, {
-            status: "offline",
-            lastActive: new Date().toLocaleString(),
-          });
-        });
+        };
+  
+        const handleBeforeUnload = () => {
+          update(userRef, { status: "offline", lastActive: new Date().toLocaleString() });
+        };
+  
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        window.addEventListener("beforeunload", handleBeforeUnload);
+  
+        // Очистка подписок при размонтировании
+        return () => {
+          unsubscribeUser();
+          unsubscribeRequest();
+          document.removeEventListener("visibilitychange", handleVisibilityChange);
+          window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
       } else {
         setAuthUser(null);
         setUsername("");
@@ -435,12 +456,12 @@ const MyProfile = () => {
         setAvatarUrl("./default-image.png");
       }
     });
-
+  
     return () => {
+      unsubscribeAuth(); // ✅ Корректная отписка от onAuthStateChanged()
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
 
   const [isMenuOpenMobile, setIsMenuOpenMobile] = useState(false);
 
@@ -649,6 +670,21 @@ const MyProfile = () => {
                 </div>
               </div>
             </div>
+
+                  <div className="info-section">
+                    <h3>Кафедра:</h3>
+                    <p>{userFaculty}</p>
+                  </div>
+            
+                  <div className="info-section" style={{display: "flex"}}>
+                    <h3>Курс:</h3>
+                    <p style={{fontSize: "18px", marginLeft: "15px"}}>{userCourse}</p>
+                  </div>
+            
+                  <div className="info-section" style={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
+                    <h3>Группа:</h3>
+                    <p>{userGroup}</p>
+                  </div>
           </div>
 
         <div style={{width: "100%", display: "flex", alignItems: "center", justifyContent: "center"}}>

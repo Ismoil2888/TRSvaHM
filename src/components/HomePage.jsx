@@ -1371,7 +1371,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { getDatabase, ref as dbRef, onValue, get, push, set, update, remove } from "firebase/database";
 import { auth, database } from "../firebase";
 import defaultAvatar from "../default-image.png";
-import basiclogo from "../basic-logo.png";
 import ttulogo from "../Ttulogo.png";
 import "../App.css";
 import "../PostForm.css";
@@ -1654,19 +1653,33 @@ const showNotificationError = (message) => {
 
   const openCommentModal = (postId) => {
     setCommentModal({ isOpen: true, postId });
-
-    const database = getDatabase();
-    const commentsRef = dbRef(database, `postComments/${postId}`);
-    onValue(commentsRef, (snapshot) => {
+  
+    const db = getDatabase();
+    const commentsRef = dbRef(db, `postComments/${postId}`);
+  
+    const unsubscribe = onValue(commentsRef, (snapshot) => {
       const data = snapshot.val();
-      if (data) {
-        const loadedComments = Object.keys(data).map((id) => ({ id, ...data[id] }));
-        setComments(loadedComments);
-      } else {
-        setComments([]);
-      }
+      setComments(data ? Object.keys(data).map((id) => ({ id, ...data[id] })) : []);
     });
-  };
+  
+    return () => unsubscribe(); // ✅ Теперь подписка удаляется
+  };  
+
+  // const openCommentModal = (postId) => {
+  //   setCommentModal({ isOpen: true, postId });
+
+  //   const database = getDatabase();
+  //   const commentsRef = dbRef(database, `postComments/${postId}`);
+  //   onValue(commentsRef, (snapshot) => {
+  //     const data = snapshot.val();
+  //     if (data) {
+  //       const loadedComments = Object.keys(data).map((id) => ({ id, ...data[id] }));
+  //       setComments(loadedComments);
+  //     } else {
+  //       setComments([]);
+  //     }
+  //   });
+  // };
 
   const closeCommentModal = () => {
     setCommentModal({ isOpen: false, postId: null });

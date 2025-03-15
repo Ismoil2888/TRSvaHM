@@ -1016,17 +1016,17 @@ const UserProfile = () => {
         </div>
       </div>
       <div className="up-info-card">
-        <div className="up-info-title"><div><FaScroll className="up-info-icon" />Кафедра:</div></div>
+        <div className="up-info-title"><FaScroll className="up-info-icon" />Кафедра:</div>
         <div className="up-info-content"><p>{userFaculty}</p></div>
       </div>
 
-      <div className="up-info-card">
-        <div className="up-info-title"><div><FaUserGraduate className="up-info-icon" />Курс:</div></div>
-        <div className="up-info-content"><p>{userCourse}</p></div>
+      <div className="up-info-card" style={{display: "flex", flexDirection: "row", alignItems: "center", }}>
+        <div className="up-info-title"><FaUserGraduate className="up-info-icon" />Курс:</div>
+        <div className="up-info-content" style={{marginLeft: "15px"}}>{userCourse}</div>
       </div>
 
       <div className="up-info-card">
-        <div className="up-info-title"><div><FaUsers className="up-info-icon" style={{fontSize: "20px"}} /> Группа:</div></div>
+        <div className="up-info-title"><FaUsers className="up-info-icon" style={{fontSize: "20px"}} /> Группа:</div>
         <div className="up-info-content"><p>{userGroup}</p></div>
       </div>
 

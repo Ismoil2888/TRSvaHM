@@ -75,8 +75,9 @@
     width: 320px;
     padding: 15px;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    /* align-items: center; */
+    /* justify-content: space-between; */
+    flex-direction: column;
     border-bottom: 1px solid #a9a9a9;
   }
   
