@@ -1117,7 +1117,7 @@ const Library = ({ userId }) => {
             <Link to="/myprofile">
               <div className="currentUserHeader" style={currentUserHeader}>
                 <img
-                  src={userAvatarUrl || "./default-image.png"}
+                  src={userDetails.avatarUrl || "./default-image.png"}
                   alt="User Avatar"
                   className="user-avatar"
                   style={{ width: "35px", height: "35px" }}
@@ -1317,7 +1317,7 @@ const Library = ({ userId }) => {
             <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>
             <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon active-icon" /></Link>
             <Link to="/myprofile">
-              <img src={userAvatarUrl} alt="" className="footer-avatar skeleton-media-avatars" />
+              <img src={userDetails.avatarUrl} alt="" className="footer-avatar skeleton-media-avatars" />
             </Link>
           </motion.nav>
         </div>
