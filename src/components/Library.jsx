@@ -1196,7 +1196,7 @@ const Library = ({ userId }) => {
     id="department-select"
     value={activeDepartment}
     onChange={(e) => setActiveDepartment(e.target.value)}
-    style={{ padding: "10px", borderRadius: "5px", border: "1px solid #ccc" }}
+    style={{ padding: "10px", borderRadius: "15px", border: "1px solid #ccc" }}
   >
     {departments.map((dept, index) => (
       <option key={index} value={dept}>{dept}</option>

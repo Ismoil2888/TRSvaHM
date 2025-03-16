@@ -5,7 +5,7 @@
     background-image: url('cyber-background.jpg');
     background-size: cover;
     background-position: center;
-    height: 400px;
+    height: 340px;
     width: 100%;
     position: relative; /* Установка контекста для абсолютного позиционирования */
 }
@@ -18,7 +18,7 @@
     font-size: 2em;
     margin: 0;
     position: absolute;
-    bottom: 100px;
+    bottom: 50px;
     left: 50%;
     transform: translateX(-50%); /* Центрирование по горизонтали */
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Тень для текста */
@@ -32,7 +32,7 @@
 .teachers-section {
     background-color: #1e2c39;
     color: #e0e0e0;
-    padding: 40px 0;
+    padding: 10px 0;
     width: 100%;
 }
 
@@ -103,11 +103,11 @@
 }
 
 .search-bar input{
-    width: 80%;
+    width: 60%;
     height: 40px;
-    border-radius: 25px;
+    border-radius: 15px;
     padding: 15px;
-    font-size: 20px;
+    font-size: 14px;
     border: none;
 }
 

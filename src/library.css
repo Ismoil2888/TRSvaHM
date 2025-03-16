@@ -50,7 +50,7 @@ nav ul li a {
     transform: translate(-50%, -50%);
     font-weight: bold; /* Корректное смещение для точного центрирования */
     font-size: 50px;              /* Размер текста (можно изменить по необходимости) */
-    color: rgba(0, 0, 0, 0.1);     /* Светлый полупрозрачный цвет для эффекта водяного знака */
+    color: rgba(167, 161, 161, 0.1);     /* Светлый полупрозрачный цвет для эффекта водяного знака */
     z-index: 0;                  /* Расположение за остальными элементами */
     white-space: nowrap;     
 }
@@ -530,8 +530,13 @@ nav ul li a {
 
 .department-dropdown{
   display: flex;
+  align-items: center;
   flex-direction: column;
   gap: 15px;
+}
+
+.notfound-text{
+  margin-top: 50px;
 }
 
 
@@ -560,6 +565,7 @@ nav ul li a {
   position: absolute;
   left: 117%;
   width: 100%;
+  margin-top: 20px;
 }
 }
 
