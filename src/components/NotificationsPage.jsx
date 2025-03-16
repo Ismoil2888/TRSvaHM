@@ -315,6 +315,7 @@ import basiclogo from "../basic-logo.png";
 import ttulogo from "../Ttulogo.png";
 import "../NotificationsPage.css";
 import useTranslation from '../hooks/useTranslation';
+import { motion } from 'framer-motion';
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
@@ -479,15 +480,37 @@ const NotificationsPage = () => {
     return () => unsubscribe();
   }, [currentUserId]);  
 
+  // const handleDeleteNotification = (notificationId) => {
+  //   if (!currentUserId || !notificationId) return;
+  //   const database = getDatabase();
+  //   setNotifications((prev) => prev.filter((notif) => notif.id !== notificationId)); // ✅ Сначала обновляем локально
+  
+  //   remove(dbRef(database, `notifications/${currentUserId}/${notificationId}`)) // Потом удаляем в Firebase
+  //     .catch((error) => {
+  //       console.error("Ошибка при удалении уведомления:", error);
+  //     });
+  // };  
+
   const handleDeleteNotification = (notificationId) => {
     if (!currentUserId || !notificationId) return;
     const database = getDatabase();
-    setNotifications((prev) => prev.filter((notif) => notif.id !== notificationId)); // ✅ Сначала обновляем локально
   
-    remove(dbRef(database, `notifications/${currentUserId}/${notificationId}`)) // Потом удаляем в Firebase
-      .catch((error) => {
-        console.error("Ошибка при удалении уведомления:", error);
-      });
+    // Найдем элемент в DOM
+    const notificationElement = document.getElementById(`notification-${notificationId}`);
+    if (notificationElement) {
+      notificationElement.classList.add("fade-out"); // 🔥 Добавляем анимацию
+    }
+  
+    // ⏳ Ждем завершения анимации перед удалением из состояния
+    setTimeout(() => {
+      setNotifications((prev) => prev.filter((notif) => notif.id !== notificationId));
+  
+      // Удаляем из Firebase
+      remove(dbRef(database, `notifications/${currentUserId}/${notificationId}`))
+        .catch((error) => {
+          console.error("Ошибка при удалении уведомления:", error);
+        });
+    }, 300); // ⏳ Ждем 300 мс (длительность анимации)
   };  
 
   return (
@@ -591,7 +614,7 @@ const NotificationsPage = () => {
         <main className="notifications-content">
           {notifications.length > 0 ? (
             notifications.map((notification) => (
-              <div key={notification.id} className="notification-card">
+              <div key={notification.id} id={`notification-${notification.id}`} className="notification-card ani">
                 {/* Уведомление о запросе на переписку */}
                 {notification.type === "conversation_request" && (
                   <>

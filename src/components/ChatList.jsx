@@ -222,7 +222,7 @@ useEffect(() => {
   };
 
   return (
-    <div className="glava">
+    <div className="glava" style={{height: "100%"}}>
       <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <img style={{ width: "50px", height: "45px" }} src={ttulogo} alt="" />

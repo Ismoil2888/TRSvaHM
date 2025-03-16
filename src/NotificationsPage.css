@@ -26,8 +26,10 @@
     max-width: 6000px;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
     gap: 15px;
-    margin-top: 80px;
+    padding-top: 350px;
   }
   
   /* Карточки уведомлений */
@@ -48,21 +50,15 @@
   }
   
   /* Уведомления в целом */
-  .notification-card {
-    max-width: 800px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #6ba8fe;
-    border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 15px;
+  .ani {
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+      /* animation: slideIn 0.3s ease forwards; */
   }
   
-  .notification-card:hover {
+  .ani:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 12px rgba(255, 255, 255, 0.15);
   }  
   
   .notification-avatar {
@@ -116,17 +112,18 @@
   display: flex;
   align-items: center;
   justify-content: left;
+  width: 350px;
   gap: 15px;
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  margin-bottom: 1rem;
+  margin: 15px;
+  padding: 15px;
   transition: transform 0.2s ease;
-  animation: slideIn 0.3s ease forwards;
 }
 
 .notification-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-10px);
 }
 
 /* Шапка уведомления */
@@ -170,11 +167,6 @@
   margin: 0;
   font-size: 0.85rem;
   color: #95a5a6;
-}
-
-/* Тело уведомления */
-.notification-body {
-  /* padding-left: 20px;  */
 }
 
 .notification-text {
@@ -275,4 +267,19 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+.fade-out {
+  animation: fadeOut 0.3s ease-out forwards;
 }

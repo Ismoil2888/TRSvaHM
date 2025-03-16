@@ -661,4 +661,5 @@ width: 90%; */
 .glava{
   display: flex;
   background-color: #1e2c39;
+  height: 100vh;
 }

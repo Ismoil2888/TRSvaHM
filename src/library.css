@@ -43,6 +43,18 @@ nav ul li a {
   padding-bottom: 50px;
 }
 
+.back-text{
+    position: fixed;              /* Фиксированное позиционирование относительно окна браузера */
+    top: 50%;                     /* Центрирование по вертикали */
+    left: 50%;                    /* Центрирование по горизонтали */
+    transform: translate(-50%, -50%);
+    font-weight: bold; /* Корректное смещение для точного центрирования */
+    font-size: 50px;              /* Размер текста (можно изменить по необходимости) */
+    color: rgba(0, 0, 0, 0.1);     /* Светлый полупрозрачный цвет для эффекта водяного знака */
+    z-index: 0;                  /* Расположение за остальными элементами */
+    white-space: nowrap;     
+}
+
 .search-filter {
     margin: 20px auto;
     display: flex;
@@ -516,6 +528,12 @@ nav ul li a {
   background: #f0f0f0;
 }
 
+.department-dropdown{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
 
 @keyframes anim{
   0%, 10%, 100%{
@@ -531,6 +549,17 @@ nav ul li a {
 @media (width > 940px) {
   .library-body {
     height: 100vh;
+}
+
+.library-header{
+  width: 100%;
+  margin-left: 80%;
+}
+
+.notfound-text{
+  position: absolute;
+  left: 117%;
+  width: 100%;
 }
 }
 
