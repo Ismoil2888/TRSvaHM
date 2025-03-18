@@ -1336,10 +1336,6 @@ const Teachers = () => {
           </div>
         )}
 
-        <footer className="footer-desktop">
-          <p>&copy; 2025 Факультет Кибербезопасности. Все права защищены.</p>
-        </footer>
-
         <div style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <motion.nav variants={navbarVariants} initial="hidden" animate="visible" className="footer-nav">
             <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon" /></Link>

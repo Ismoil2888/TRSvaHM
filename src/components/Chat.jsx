@@ -564,7 +564,7 @@ const Chat = () => {
   }, []);
 
   return (
-    <div className="glava">
+    <div className="glava" style={{height: "100%"}}>
       {notification && (
         <div className={`notification ${notificationType}`}>
           {notification}
