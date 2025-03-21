@@ -1963,10 +1963,11 @@ const showNotificationError = (message) => {
         </div>
 
         <nav className="menu-items">
-          <Link to="/" className="menu-item">
+          <Link to="/" className="menu-item" style={{paddingRight: "15px"}}>
             <FiHome className="menu-icon" style={{borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px"}}/>
             {isMenuOpen && <span>Главная</span>}
           </Link>
+          <div className="menu-find-block">
           <Link to="/searchpage" className="menu-item">
              <FiSearch className="menu-icon" />
              {isMenuOpen && <span>Поиск</span>}
@@ -1979,10 +1980,12 @@ const showNotificationError = (message) => {
              <FiBookOpen className="menu-icon" />
              {isMenuOpen && <span>Библиотека</span>}
           </Link>
+          </div>
           <Link to="/myprofile" className="menu-item">
             <FiUser className="menu-icon" />
             {isMenuOpen && <span>Профиль</span>}
           </Link>
+          <div className="menu-find-block">
           <Link to="/chats" className="menu-item">
             <FiMessageSquare className="menu-icon" />
             {isMenuOpen && <span>Сообщения</span>}
@@ -1991,6 +1994,7 @@ const showNotificationError = (message) => {
             <FiBell className="menu-icon" />
             {isMenuOpen && <span>Уведомления</span>}
           </Link>
+          </div>
           <Link to="/authdetails" className="menu-item">
             <FiSettings className="menu-icon" />
             {isMenuOpen && <span>Настройки</span>}
@@ -1998,11 +2002,10 @@ const showNotificationError = (message) => {
         </nav>
 
         <div className="logo-and-tik">
+        TRSvaHM
         {isMenuOpen &&
-        <div style={{textAlign: "center", color: "grey"}}>
-        <p>Технологияхои раками</p>
-        <p>систмахо</p>
-        <p>ва Хифзи маълумот</p>
+        <div>
+        <p>&copy; 2025 Все права защищены.</p>
         </div>
         }
         </div>
@@ -2325,9 +2328,9 @@ const showNotificationError = (message) => {
   </section>
 </main>
 
-      <footer className="footer-desktop">
+      {/* <footer className="footer-desktop">
         <p>&copy; 2025 Факультет Кибербезопасности. Все права защищены.</p>
-      </footer>
+      </footer> */}
 
 <div style={{width: "100%", display: "flex", alignItems: "center", justifyContent: "center"}}>
         <motion.nav 

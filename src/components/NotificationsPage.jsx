@@ -514,21 +514,21 @@ const NotificationsPage = () => {
   };  
 
   return (
-    <div className="glava">
-      <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
+    <div className="glava" style={{height: "100%"}}>
+    <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
-          <img style={{ width: "50px", height: "45px" }} src={ttulogo} alt="" />
+        <img style={{width: "50px", height: "45px"}} src={ttulogo} alt="" />
           {isMenuOpen ? (
             <>
               <h2>TTU</h2>
-              <FiChevronLeft
-                className="toggle-menu"
+              <FiChevronLeft 
+                className="toggle-menu" 
                 onClick={toggleMenuDesktop}
               />
             </>
           ) : (
-            <FiChevronRight
-              className="toggle-menu"
+            <FiChevronRight 
+              className="toggle-menu" 
               onClick={toggleMenuDesktop}
             />
           )}
@@ -536,33 +536,37 @@ const NotificationsPage = () => {
 
         <nav className="menu-items">
           <Link to="/" className="menu-item">
-            <FiHome className="menu-icon" />
+            <FiHome className="menu-icon"/>
             {isMenuOpen && <span>Главная</span>}
           </Link>
+          <div className="menu-find-block">
           <Link to="/searchpage" className="menu-item">
-            <FiSearch className="menu-icon" />
-            {isMenuOpen && <span>Поиск</span>}
+             <FiSearch className="menu-icon" />
+             {isMenuOpen && <span>Поиск</span>}
           </Link>
           <Link to="/teachers" className="menu-item">
-            <FiUserCheck className="menu-icon" />
-            {isMenuOpen && <span>Преподаватели</span>}
+             <FiUserCheck className="menu-icon" />
+             {isMenuOpen && <span>Преподаватели</span>}
           </Link>
           <Link to="/library" className="menu-item">
-            <FiBookOpen className="menu-icon" />
-            {isMenuOpen && <span>Библиотека</span>}
+             <FiBookOpen className="menu-icon" />
+             {isMenuOpen && <span>Библиотека</span>}
           </Link>
+          </div>
           <Link to="/myprofile" className="menu-item">
             <FiUser className="menu-icon" />
             {isMenuOpen && <span>Профиль</span>}
           </Link>
+          <div className="menu-find-block">
           <Link to="/chats" className="menu-item">
             <FiMessageSquare className="menu-icon" />
             {isMenuOpen && <span>Сообщения</span>}
           </Link>
           <Link to="/notifications" className="menu-item">
-            <FiBell className="menu-icon" style={{ borderBottom: "1px solid rgb(200, 255, 0)", borderRadius: "15px", padding: "5px" }} />
+            <FiBell className="menu-icon" style={{borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px"}} />
             {isMenuOpen && <span>Уведомления</span>}
           </Link>
+          </div>
           <Link to="/authdetails" className="menu-item">
             <FiSettings className="menu-icon" />
             {isMenuOpen && <span>Настройки</span>}
@@ -570,14 +574,12 @@ const NotificationsPage = () => {
         </nav>
 
         <div className="logo-and-tik">
-          <img
-            src={basiclogo}
-            alt="logo"
-            className="tiklogo"
-          />
-          {isMenuOpen && (
-            <span style={{ fontSize: "35px", fontWeight: "bold", color: "#9daddf" }}>TIK</span>
-          )}
+        TRSvaHM
+        {isMenuOpen &&
+        <div>
+        <p>&copy; 2025 Все права защищены.</p>
+        </div>
+        }
         </div>
       </div>
       <div className="notifications-page" style={mainContentStyle}>

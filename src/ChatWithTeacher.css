@@ -3,6 +3,23 @@
   flex-direction: column;
   font-family: Arial, sans-serif;
   width: 100%;
+  height: 100%;
+}
+
+.chat-background{
+  width: 100%;
+  height: 100%;
+  background-image: url(/src/backforchat3.jpg);
+  background-position: center;
+  position: fixed;
+  z-index: 0;
+}
+
+.chat-background-blur{
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(50px);
+  position: fixed;
 }
 
 .chat-messages{
@@ -12,8 +29,10 @@
   min-height: 90%;
   display: flex;
   flex-direction: column;
-  background-color: #f4f4f8;
+  z-index: 0;
+  /* background-color: #f4f4f8; */
 }
+
 
 .chat-message {
   display: flex;
