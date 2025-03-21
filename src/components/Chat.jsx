@@ -639,7 +639,7 @@ const Chat = () => {
       </div>
       <div className="chat-container" style={mainContentStyle}>
         <div className="chat-background"></div>
-        <div className="chat-background-blur"></div>
+        {/* <div className="chat-background-blur"></div> */}
         <div className="chat-header">
           <FaChevronLeft
             style={{ marginLeft: "10px", color: "white", fontSize: "25px" }}
