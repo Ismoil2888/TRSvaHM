@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.8a86a0bf.css",
-    "main.js": "/static/js/main.2d216332.js",
+    "main.css": "/static/css/main.2602bfd5.css",
+    "main.js": "/static/js/main.314ac627.js",
     "static/js/453.54a84d69.chunk.js": "/static/js/453.54a84d69.chunk.js",
     "static/media/Ttulogo.png": "/static/media/Ttulogo.9f1ba24657d744625136.png",
     "static/media/basic-logo.png": "/static/media/basic-logo.b85a726a2b7cef73406c.png",
@@ -15,15 +15,14 @@
     "static/media/Каримзода.jpg": "/static/media/Каримзода.b54d0bd401d25ad38939.jpg",
     "static/media/anonym2.jpg": "/static/media/anonym2.a2039a21efea645c43e1.jpg",
     "static/media/book-icon.png": "/static/media/book-icon.0420ae430b803a32c888.png",
-    "static/media/backforchat3.jpg": "/static/media/backforchat3.000050f63effd837d80e.jpg",
     "static/media/edit-icon.png": "/static/media/edit-icon.e492a56b8c19c7656365.png",
     "index.html": "/index.html",
-    "main.8a86a0bf.css.map": "/static/css/main.8a86a0bf.css.map",
-    "main.2d216332.js.map": "/static/js/main.2d216332.js.map",
+    "main.2602bfd5.css.map": "/static/css/main.2602bfd5.css.map",
+    "main.314ac627.js.map": "/static/js/main.314ac627.js.map",
     "453.54a84d69.chunk.js.map": "/static/js/453.54a84d69.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.8a86a0bf.css",
-    "static/js/main.2d216332.js"
+    "static/css/main.2602bfd5.css",
+    "static/js/main.314ac627.js"
   ]
 }
