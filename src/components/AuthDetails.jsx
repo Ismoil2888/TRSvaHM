@@ -996,7 +996,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaEllipsisV, FaTimes, FaPen, FaArrowLeft, FaLock, FaEye, FaEyeSlash, FaRegAddressBook } from "react-icons/fa"; // Иконка карандаша
 import imageCompression from 'browser-image-compression';
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
-import basiclogo from "../basic-logo.png";
 import ttulogo from "../Ttulogo.png";
 import { LanguageContext } from '../contexts/LanguageContext';
 import { translations } from '../translations';
@@ -1022,14 +1021,14 @@ const AuthDetails = () => {
   const [isPhoneModalOpen, setIsPhoneModalOpen] = useState(false); // Состояние для модального окна телефона
   const [newPhoneNumber, setNewPhoneNumber] = useState("+992"); // Для хранения нового номера телефона
   const menuRef = useRef(null);
-
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
-
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'standard');
+  const [showThemeModal, setShowThemeModal] = useState(false);
   const [showFacultyList, setShowFacultyList] = useState(false);
 const [showCourseList, setShowCourseList] = useState(false);
 const [showGroupList, setShowGroupList] = useState(false);
@@ -1186,12 +1185,23 @@ const groupDropdownRef = useRef(null);
           const data = snapshot.val();
           if (data) {
             setUsername(data.username || "User");
-            // setPhoneNumber(data.phoneNumber || "+Введите номер телефона");
             setPhoneNumber(data.phoneNumber ? data.phoneNumber : t('addtelnumber'));
+
+                      // Проверяем статус преподавателя ДО остальных обновлений
+          if (data.role === 'teacher') {
+            setIdentificationStatus(t('ident'));
+            setStatus(data.status || "online");
+            setLastActive(data.lastActive || "");
+            setAvatarUrl(data.avatarUrl || "./default-image.png");
+            setAboutMe(data.aboutMe || t('infonot'));
+            return; // Прерываем выполнение для преподавателей
+          }
+            // Только для обычных пользователей продолжаем
             setStatus(data.status || "offline");
             setLastActive(data.lastActive || "");
             setAvatarUrl(data.avatarUrl || "./default-image.png");
             setAboutMe(data.aboutMe || t('infonot'));
+            setIdentificationStatus(t('notident'));
           }
         });
 
@@ -1256,7 +1266,7 @@ const groupDropdownRef = useRef(null);
       listen();
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [t]);
 
   const handlePhoneModalOpen = () => {
     setNewPhoneNumber(phoneNumber === t('addtelnumber') ? "+992" : phoneNumber);
@@ -1409,7 +1419,6 @@ const groupDropdownRef = useRef(null);
     }
   };
 
-
   const userSignOut = () => {
     const userRef = databaseRef(database, 'users/' + authUser.uid);
     update(userRef, {
@@ -1479,6 +1488,47 @@ const groupDropdownRef = useRef(null);
     } catch (error) {
       setPasswordError("Текущий пароль неверный.");
     }
+  };
+
+  const themes = {
+    standard: {
+      '--bg-color': '#1e2c39',
+      '--text-color': '#ffffff',
+      '--primary-color': '#2c3e50',
+      // Добавьте другие переменные для стандартной темы
+    },
+    light: {
+      '--bg-color': '#d8e7ea',
+      '--text-color': '#000000',
+      '--primary-color': '#bdcfe0',
+      // Добавьте другие переменные для светлой темы
+    },
+    dark: {
+      '--bg-color': '#0f0f0f',
+      '--text-color': '#ffffff',
+      '--primary-color': '#000',
+      // Добавьте другие переменные для тёмной темы
+    }
+  };
+  
+  // Функция для применения выбранной темы
+  const applyTheme = (themeName) => {
+    const theme = themes[themeName];
+    Object.keys(theme).forEach(variable => {
+      document.documentElement.style.setProperty(variable, theme[variable]);
+    });
+  };
+
+  // Применяем тему при загрузке или при смене темы
+  useEffect(() => {
+    applyTheme(theme);
+  }, [theme]);
+
+  // Обработчик смены темы
+  const handleThemeChange = (selectedTheme) => {
+    setTheme(selectedTheme);
+    localStorage.setItem('theme', selectedTheme);
+    setShowThemeModal(false);
   };
 
   return (
@@ -1670,10 +1720,10 @@ const groupDropdownRef = useRef(null);
 
             <div className="info-section">
               <div className="ident-block-basic" onClick={handleOpenForm}>
-                <div className="ident-block1">
-                  <h3>{t('identification')}</h3>
-                  <p>{identificationStatus}</p>
-                </div>
+              <div className="ident-block1">
+  <h3>{t('identification')}</h3>
+  <p>{identificationStatus}</p>
+</div>
                 <div className="ident-block2">
                   <FaLock style={{ color: identificationStatus === t('ident') ? '#0AFFFF' : 'red' }} />
                 </div>
@@ -1794,7 +1844,40 @@ const groupDropdownRef = useRef(null);
             <div className="settings">
               <h3>{t('settings')}</h3>
               <ul>
-                <li>{t('confidentiality')}</li>
+              <li onClick={() => setShowThemeModal(true)}>Тема</li>
+
+  {/* Модальное окно для выбора темы */}
+  {showThemeModal && (
+        <div
+          className="modal-backdrop-theme"
+          onClick={() => setShowThemeModal(false)}
+          style={{
+            position: 'fixed',
+            top: 0, left: 0, right: 0, bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            zIndex: 1000
+          }}
+        >
+          <div
+            className="modal-content-theme"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: '#fff',
+              padding: '20px',
+              borderRadius: '8px',
+              minWidth: '250px',
+              textAlign: 'center'
+            }}
+          >
+            <h3 style={{color: "grey"}}>Выберите тему</h3>
+            <button onClick={() => handleThemeChange('standard')}>Стандартная</button>
+            <button onClick={() => handleThemeChange('light')}>Светлая</button>
+            <button onClick={() => handleThemeChange('dark')}>Темная</button>
+          </div>
+        </div>
+      )}
+
                 <div className="edit-password" onClick={openPasswordModal}>
                   <li>{t('password')}</li>
                   <FaPen />

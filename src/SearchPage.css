@@ -6,10 +6,12 @@
     align-items: center;
     overflow: hidden;
     width: 100%;
+    color: #bdcfe0;
   }
 
   .search-page{
-    background: #1e2c39;
+    /* background: #1e2c39; */
+    background: var(--bg-color);
     height: 100vh;
     display: flex;
     flex-direction: column;

@@ -685,7 +685,7 @@ import {
   push,
   query, orderByChild, equalTo
 } from "firebase/database";
-import { FaLock, FaPhone, FaUserEdit, FaChevronLeft, FaEllipsisV, FaScroll, FaUserGraduate, FaUsers } from "react-icons/fa";
+import { FaLock, FaPhone, FaUserEdit, FaChevronLeft, FaEllipsisV, FaScroll, FaUserGraduate, FaUsers, FaBook } from "react-icons/fa";
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
 import { useNavigate, Link } from "react-router-dom";
 import "../UserProfile.css";
@@ -704,51 +704,54 @@ const UserProfile = () => {
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
   const navigate = useNavigate();
   const [requestStatus, setRequestStatus] = useState("none");
-
+  const [role, setRole] = useState("");
+  const [teacherTitle, setTeacherTitle] = useState("");
+  const [teacherCathedra, setTeacherCathedra] = useState("");
+  const [TeacherSubject, setTeacherSubject] = useState("");
   // В начале UserProfile.jsx, например после объявления существующих useState:
   const [userFaculty, setUserFaculty] = useState("не известно");
   const [userCourse, setUserCourse] = useState("не известно");
   const [userGroup, setUserGroup] = useState("не известно");
 
-    const [isMobile, setIsMobile] = useState(false);
-    const [isMenuOpen, setIsMenuOpen] = useState(() => {
-      // Восстанавливаем состояние из localStorage при инициализации
-      const savedState = localStorage.getItem('isMenuOpen');
-      return savedState ? JSON.parse(savedState) : true;
-    });
-  
-    // Сохраняем состояние в localStorage при изменении
-    useEffect(() => {
-      localStorage.setItem('isMenuOpen', JSON.stringify(isMenuOpen));
-    }, [isMenuOpen]);
-  
-    // Обработчик изменения размера окна
-    useEffect(() => {
-      const checkMobile = () => {
-        const mobile = window.innerWidth < 700;
-        setIsMobile(mobile);
-        if (mobile) {
-          setIsMenuOpen(false);
-        } else {
-          // Восстанавливаем состояние только для десктопа
-          const savedState = localStorage.getItem('isMenuOpen');
-          setIsMenuOpen(savedState ? JSON.parse(savedState) : true);
-        }
-      };
-  
-      checkMobile();
-      window.addEventListener('resize', checkMobile);
-      return () => window.removeEventListener('resize', checkMobile);
-    }, []);
-  
-    // Модифицированная функция переключения меню
-    const toggleMenuDesktop = () => {
-      setIsMenuOpen(prev => {
-        const newState = !prev;
-        localStorage.setItem('isMenuOpen', JSON.stringify(newState));
-        return newState;
-      });
+  const [isMobile, setIsMobile] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(() => {
+    // Восстанавливаем состояние из localStorage при инициализации
+    const savedState = localStorage.getItem('isMenuOpen');
+    return savedState ? JSON.parse(savedState) : true;
+  });
+
+  // Сохраняем состояние в localStorage при изменении
+  useEffect(() => {
+    localStorage.setItem('isMenuOpen', JSON.stringify(isMenuOpen));
+  }, [isMenuOpen]);
+
+  // Обработчик изменения размера окна
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 700;
+      setIsMobile(mobile);
+      if (mobile) {
+        setIsMenuOpen(false);
+      } else {
+        // Восстанавливаем состояние только для десктопа
+        const savedState = localStorage.getItem('isMenuOpen');
+        setIsMenuOpen(savedState ? JSON.parse(savedState) : true);
+      }
     };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Модифицированная функция переключения меню
+  const toggleMenuDesktop = () => {
+    setIsMenuOpen(prev => {
+      const newState = !prev;
+      localStorage.setItem('isMenuOpen', JSON.stringify(newState));
+      return newState;
+    });
+  };
 
 
   useEffect(() => {
@@ -825,6 +828,12 @@ const UserProfile = () => {
         setStatus(data.status || "offline");
         setLastActive(data.lastActive || "");
         setAvatarUrl(data.avatarUrl || "./default-image.png");
+        setRole(data.role || "");
+        setTeacherCathedra(data.cathedra || "не известно");
+        setTeacherSubject(data.subject || "не известно");
+        if (data.role === "teacher") {
+          setTeacherTitle(data.runk || "Не указано");
+        }
       }
     });
 
@@ -982,57 +991,57 @@ const UserProfile = () => {
 
   return (
     <div className="up-profile-container">
-         <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
+      <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
-        <img style={{width: "50px", height: "45px"}} src={ttulogo} alt="" />
+          <img style={{ width: "50px", height: "45px" }} src={ttulogo} alt="" />
           {isMenuOpen ? (
             <>
               <h2>TTU</h2>
-              <FiChevronLeft 
-                className="toggle-menu" 
+              <FiChevronLeft
+                className="toggle-menu"
                 onClick={toggleMenuDesktop}
               />
             </>
           ) : (
-            <FiChevronRight 
-              className="toggle-menu" 
+            <FiChevronRight
+              className="toggle-menu"
               onClick={toggleMenuDesktop}
             />
           )}
         </div>
 
         <nav className="menu-items">
-          <Link to="/" className="menu-item" style={{paddingRight: "15px"}}>
-            <FiHome className="menu-icon"/>
+          <Link to="/" className="menu-item" style={{ paddingRight: "15px" }}>
+            <FiHome className="menu-icon" />
             {isMenuOpen && <span>Главная</span>}
           </Link>
           <div className="menu-find-block">
-          <Link to="/searchpage" className="menu-item">
-             <FiSearch className="menu-icon" />
-             {isMenuOpen && <span>Поиск</span>}
-          </Link>
-          <Link to="/teachers" className="menu-item">
-             <FiUserCheck className="menu-icon" />
-             {isMenuOpen && <span>Преподаватели</span>}
-          </Link>
-          <Link to="/library" className="menu-item">
-             <FiBookOpen className="menu-icon" />
-             {isMenuOpen && <span>Библиотека</span>}
-          </Link>
+            <Link to="/searchpage" className="menu-item">
+              <FiSearch className="menu-icon" />
+              {isMenuOpen && <span>Поиск</span>}
+            </Link>
+            <Link to="/teachers" className="menu-item">
+              <FiUserCheck className="menu-icon" />
+              {isMenuOpen && <span>Преподаватели</span>}
+            </Link>
+            <Link to="/library" className="menu-item">
+              <FiBookOpen className="menu-icon" />
+              {isMenuOpen && <span>Библиотека</span>}
+            </Link>
           </div>
           <Link to="/myprofile" className="menu-item">
             <FiUser className="menu-icon" />
             {isMenuOpen && <span>Профиль</span>}
           </Link>
           <div className="menu-find-block">
-          <Link to="/chats" className="menu-item">
-            <FiMessageSquare className="menu-icon" style={{borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px"}} />
-            {isMenuOpen && <span>Сообщения</span>}
-          </Link>
-          <Link to="/notifications" className="menu-item">
-            <FiBell className="menu-icon" />
-            {isMenuOpen && <span>Уведомления</span>}
-          </Link>
+            <Link to="/chats" className="menu-item">
+              <FiMessageSquare className="menu-icon" style={{ borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px" }} />
+              {isMenuOpen && <span>Сообщения</span>}
+            </Link>
+            <Link to="/notifications" className="menu-item">
+              <FiBell className="menu-icon" />
+              {isMenuOpen && <span>Уведомления</span>}
+            </Link>
           </div>
           <Link to="/authdetails" className="menu-item">
             <FiSettings className="menu-icon" />
@@ -1041,12 +1050,12 @@ const UserProfile = () => {
         </nav>
 
         <div className="logo-and-tik">
-        TRSvaHM
-        {isMenuOpen &&
-        <div>
-        <p>&copy; 2025 Все права защищены.</p>
-        </div>
-        }
+          TRSvaHM
+          {isMenuOpen &&
+            <div>
+              <p>&copy; 2025 Все права защищены.</p>
+            </div>
+          }
         </div>
       </div>
       <div className="up-profile-header">
@@ -1079,7 +1088,7 @@ const UserProfile = () => {
         </div>
       )}
 
-{requestStatus === "accepted" ? (
+      {requestStatus === "accepted" ? (
         <button className="up-chat-button" onClick={handleCreateChat}>
           Написать
         </button>
@@ -1091,6 +1100,20 @@ const UserProfile = () => {
         <button className="up-chat-button" onClick={handleSendRequest}>
           Отправить запрос на переписку
         </button>
+      )}
+
+      {role === "teacher" ? (
+        <>
+          <div style={{ marginBottom: "10px", color: "#bdcfe0" }}>
+            <h3>Преподаватель</h3>
+          </div>
+        </>
+      ) : (
+        <>
+          <div style={{ marginBottom: "10px", color: "#bdcfe0" }}>
+            <h3>Студент</h3>
+          </div>
+        </>
       )}
 
       <div className="up-info-card">
@@ -1109,7 +1132,7 @@ const UserProfile = () => {
         <div className="up-info-content">{userData.aboutMe || "Нет информации"}</div>
       </div>
 
-      <div className="up-info-card" style={{flexDirection: "column", alignItems: "flex-start"}}>
+      <div className="up-info-card" style={{ flexDirection: "column", alignItems: "flex-start" }}>
         <div className="up-info-title">
           <FaLock
             className={`up-info-icon ${identificationStatus === t('ident') ? "up-icon-verified" : "up-icon-unverified"
@@ -1124,20 +1147,42 @@ const UserProfile = () => {
           {identificationStatus}
         </div>
       </div>
-      <div className="up-info-card">
-        <div className="up-info-title"><FaScroll className="up-info-icon" />{t('cathedra')}:</div>
-        <div className="up-info-content"><p>{userFaculty}</p></div>
-      </div>
 
-      <div className="up-info-card" style={{display: "flex", flexDirection: "row", alignItems: "center", }}>
-        <div className="up-info-title"><FaUserGraduate className="up-info-icon" />{t('course')}:</div>
-        <div className="up-info-content" style={{marginLeft: "15px"}}>{userCourse}</div>
-      </div>
+      {role === "teacher" ? (
+        <>
+          <div className="up-info-card">
+            <div className="up-info-title"><FaScroll className="up-info-icon" />{t('cathedra')}:</div>
+            <div className="up-info-content"><p>{teacherCathedra}</p></div>
+          </div>
 
-      <div className="up-info-card">
-        <div className="up-info-title"><FaUsers className="up-info-icon" style={{fontSize: "20px"}} /> {t('group')}:</div>
-        <div className="up-info-content"><p>{userGroup}</p></div>
-      </div>
+          <div className="up-info-card" style={{ display: "flex", flexDirection: "row" }}>
+            <div className="up-info-title"><FaUserGraduate className="up-info-icon" />Звание:</div>
+            <div className="up-info-content"><p style={{ marginLeft: "15px" }}>{teacherTitle}</p></div>
+          </div>
+
+          <div className="up-info-card" style={{ display: "flex", flexDirection: "row" }}>
+            <div className="up-info-title"><FaBook className="up-info-icon" />Предмет:</div>
+            <div className="up-info-content"><p style={{ marginLeft: "15px" }}>{TeacherSubject}</p></div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="up-info-card">
+            <div className="up-info-title"><FaScroll className="up-info-icon" />{t('cathedra')}:</div>
+            <div className="up-info-content"><p>{userFaculty}</p></div>
+          </div>
+
+          <div className="up-info-card" style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+            <div className="up-info-title"><FaUserGraduate className="up-info-icon" />{t('course')}:</div>
+            <div className="up-info-content" style={{ marginLeft: "15px" }}>{userCourse}</div>
+          </div>
+
+          <div className="up-info-card" style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+            <div className="up-info-title"><FaUsers className="up-info-icon" style={{ fontSize: "20px" }} /> {t('group')}:</div>
+            <div className="up-info-content" style={{ marginLeft: "15px" }}><p>{userGroup}</p></div>
+          </div>
+        </>
+      )}
 
     </div>
   );

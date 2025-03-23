@@ -296,10 +296,15 @@ const MyProfile = () => {
   const [identificationStatus, setIdentificationStatus] = useState(t('notident'));
   const menuRef = useRef(null);
   const [userUid, setUserUid] = useState(null);
+  const [role, setRole] = useState("");
+  const [teacherTitle, setTeacherTitle] = useState("");
+  const [teacherCathedra, setTeacherCathedra] = useState("");
+  const [TeacherSubject, setTeacherSubject] = useState("");
+  const [TeacherLogin, setTeacherLogin] = useState("");
 
-    const [userFaculty, setUserFaculty] = useState("не известно");
-    const [userCourse, setUserCourse] = useState("не известно");
-    const [userGroup, setUserGroup] = useState("не известно");
+  const [userFaculty, setUserFaculty] = useState("не известно");
+  const [userCourse, setUserCourse] = useState("не известно");
+  const [userGroup, setUserGroup] = useState("не известно");
 
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
@@ -308,6 +313,16 @@ const MyProfile = () => {
     const savedState = localStorage.getItem('isMenuOpen');
     return savedState ? JSON.parse(savedState) : true;
   });
+
+  const teacherData = {
+    name: username, // или разделите имя и фамилию, если они хранятся отдельно
+    subject: TeacherSubject,   // если есть соответствующее поле
+    photo: avatarUrl,
+    cathedra: teacherCathedra,
+    runk: teacherTitle,
+    email: TeacherLogin,
+    // можно добавить другие поля по необходимости
+  };  
 
   // Сохраняем состояние в localStorage при изменении
   useEffect(() => {
@@ -380,13 +395,13 @@ const MyProfile = () => {
   useEffect(() => {
     // Добавляем обработчик клика вне меню
     document.addEventListener("mousedown", handleClickOutside);
-  
+
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
         setAuthUser(user);
         const userRef = databaseRef(database, `users/${user.uid}`);
         const requestRef = query(databaseRef(database, "requests"), orderByChild("email"), equalTo(user.email));
-  
+
         // Подписка на обновления пользователя
         const unsubscribeUser = onValue(userRef, (snapshot) => {
           const data = snapshot.val();
@@ -397,9 +412,16 @@ const MyProfile = () => {
             setLastActive((prev) => (prev !== data.lastActive ? data.lastActive || "" : prev));
             setAvatarUrl((prev) => (prev !== data.avatarUrl ? data.avatarUrl || "./default-image.png" : prev));
             setAboutMe((prev) => (prev !== data.aboutMe ? data.aboutMe || t('infonot') : prev));
+            setRole(data.role || "");
+            setTeacherCathedra(data.cathedra || "не известно");
+            setTeacherSubject(data.subject || "");
+            setTeacherLogin(data.email || "");
+            if (data.role === "teacher") {
+              setTeacherTitle(data.runk || "Не указано");
+            }
           }
         });
-  
+
         // Подписка на статус идентификации
         const unsubscribeRequest = onValue(requestRef, (snapshot) => {
           if (snapshot.exists()) {
@@ -408,7 +430,7 @@ const MyProfile = () => {
             const newFaculty = requestData.faculty || "не известно";
             const newCourse = requestData.course || "не известно";
             const newGroup = requestData.group || "не известно";
-  
+
             // Обновляем только если данные действительно изменились
             setIdentificationStatus((prev) => (prev !== newStatus ? newStatus : prev));
             setUserFaculty((prev) => (prev !== newFaculty ? newFaculty : prev));
@@ -421,10 +443,10 @@ const MyProfile = () => {
             setUserGroup("не известно");
           }
         });
-  
+
         // Устанавливаем статус пользователя как "онлайн"
         update(userRef, { status: "online" });
-  
+
         // Обновляем статус при сворачивании или выходе пользователя
         const handleVisibilityChange = () => {
           if (document.visibilityState === "hidden") {
@@ -433,14 +455,14 @@ const MyProfile = () => {
             update(userRef, { status: "online" });
           }
         };
-  
+
         const handleBeforeUnload = () => {
           update(userRef, { status: "offline", lastActive: new Date().toLocaleString() });
         };
-  
+
         document.addEventListener("visibilitychange", handleVisibilityChange);
         window.addEventListener("beforeunload", handleBeforeUnload);
-  
+
         // Очистка подписок при размонтировании
         return () => {
           unsubscribeUser();
@@ -456,7 +478,7 @@ const MyProfile = () => {
         setAvatarUrl("./default-image.png");
       }
     });
-  
+
     return () => {
       unsubscribeAuth(); // ✅ Корректная отписка от onAuthStateChanged()
       document.removeEventListener("mousedown", handleClickOutside);
@@ -485,57 +507,57 @@ const MyProfile = () => {
 
   return (
     <div className="my-profile-container">
-    <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
+      <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
-        <img style={{width: "50px", height: "45px"}} src={ttulogo} alt="" />
+          <img style={{ width: "50px", height: "45px" }} src={ttulogo} alt="" />
           {isMenuOpen ? (
             <>
               <h2>TTU</h2>
-              <FiChevronLeft 
-                className="toggle-menu" 
+              <FiChevronLeft
+                className="toggle-menu"
                 onClick={toggleMenuDesktop}
               />
             </>
           ) : (
-            <FiChevronRight 
-              className="toggle-menu" 
+            <FiChevronRight
+              className="toggle-menu"
               onClick={toggleMenuDesktop}
             />
           )}
         </div>
 
         <nav className="menu-items">
-          <Link to="/" className="menu-item" style={{paddingRight: "15px"}}>
-            <FiHome className="menu-icon"/>
+          <Link to="/" className="menu-item" style={{ paddingRight: "15px" }}>
+            <FiHome className="menu-icon" />
             {isMenuOpen && <span>Главная</span>}
           </Link>
           <div className="menu-find-block">
-          <Link to="/searchpage" className="menu-item">
-             <FiSearch className="menu-icon" />
-             {isMenuOpen && <span>Поиск</span>}
-          </Link>
-          <Link to="/teachers" className="menu-item">
-             <FiUserCheck className="menu-icon" />
-             {isMenuOpen && <span>Преподаватели</span>}
-          </Link>
-          <Link to="/library" className="menu-item">
-             <FiBookOpen className="menu-icon" />
-             {isMenuOpen && <span>Библиотека</span>}
-          </Link>
+            <Link to="/searchpage" className="menu-item">
+              <FiSearch className="menu-icon" />
+              {isMenuOpen && <span>Поиск</span>}
+            </Link>
+            <Link to="/teachers" className="menu-item">
+              <FiUserCheck className="menu-icon" />
+              {isMenuOpen && <span>Преподаватели</span>}
+            </Link>
+            <Link to="/library" className="menu-item">
+              <FiBookOpen className="menu-icon" />
+              {isMenuOpen && <span>Библиотека</span>}
+            </Link>
           </div>
           <Link to="/myprofile" className="menu-item">
-            <FiUser className="menu-icon" style={{borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px"}} />
+            <FiUser className="menu-icon" style={{ borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px" }} />
             {isMenuOpen && <span>Профиль</span>}
           </Link>
           <div className="menu-find-block">
-          <Link to="/chats" className="menu-item">
-            <FiMessageSquare className="menu-icon" />
-            {isMenuOpen && <span>Сообщения</span>}
-          </Link>
-          <Link to="/notifications" className="menu-item">
-            <FiBell className="menu-icon" />
-            {isMenuOpen && <span>Уведомления</span>}
-          </Link>
+            <Link to="/chats" className="menu-item">
+              <FiMessageSquare className="menu-icon" />
+              {isMenuOpen && <span>Сообщения</span>}
+            </Link>
+            <Link to="/notifications" className="menu-item">
+              <FiBell className="menu-icon" />
+              {isMenuOpen && <span>Уведомления</span>}
+            </Link>
           </div>
           <Link to="/authdetails" className="menu-item">
             <FiSettings className="menu-icon" />
@@ -544,12 +566,12 @@ const MyProfile = () => {
         </nav>
 
         <div className="logo-and-tik">
-        TRSvaHM
-        {isMenuOpen &&
-        <div>
-        <p>&copy; 2025 Все права защищены.</p>
-        </div>
-        }
+          TRSvaHM
+          {isMenuOpen &&
+            <div>
+              <p>&copy; 2025 Все права защищены.</p>
+            </div>
+          }
         </div>
       </div>
       <header className="head-line">
@@ -673,32 +695,54 @@ const MyProfile = () => {
               </div>
             </div>
 
-                  <div className="info-section">
-                    <h3>{t('cathedra')}:</h3>
-                    <p>{userFaculty}</p>
-                  </div>
-            
-                  <div className="info-section" style={{display: "flex"}}>
-                    <h3>{t('course')}:</h3>
-                    <p style={{fontSize: "17px", marginLeft: "15px"}}>{userCourse}</p>
-                  </div>
-            
-                  <div className="info-section" style={{display: "flex"}}>
-                    <h3>{t('group')}:</h3>
-                    <p style={{fontSize: "17px", marginLeft: "15px"}}>{userGroup}</p>
-                  </div>
+            {role === "teacher" ? (
+              <>
+                <div className="info-section">
+                  <h3>{t('cathedra')}:</h3>
+                  <p>{teacherCathedra}</p>
+                </div>
+
+                <div className="rsl" style={{ display: "flex" }}>
+                  <h3>Звание:</h3>
+                  <p style={{ fontSize: "17px", marginLeft: "15px" }}>{teacherTitle}</p>
+                </div>
+                <div className="rsl" style={{ display: "flex" }}>
+                  <h3>Предмет:</h3>
+                  <p style={{ fontSize: "17px", marginLeft: "15px" }}>{TeacherSubject}</p>
+                </div>
+                <div style={{marginTop: "15px"}}>
+                <Link to={`/teacher-profile/${userUid}`} state={{ teacher: teacherData }}>Перейти в личный Кабинет</Link>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="info-section">
+                  <h3>{t('cathedra')}:</h3>
+                  <p>{userFaculty}</p>
+                </div>
+                <div className="info-section" style={{ display: "flex" }}>
+                  <h3>{t('course')}:</h3>
+                  <p style={{ fontSize: "17px", marginLeft: "15px" }}>{userCourse}</p>
+                </div>
+                <div className="info-section" style={{ display: "flex" }}>
+                  <h3>{t('group')}:</h3>
+                  <p style={{ fontSize: "17px", marginLeft: "15px" }}>{userGroup}</p>
+                </div>
+              </>
+            )}
+
           </div>
 
-        <div style={{width: "100%", display: "flex", alignItems: "center", justifyContent: "center"}}>
-          <div className="footer-nav">
-            <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon" style={{}} /></Link>
-            <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon" /></Link>
-            <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>
-            <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
-            <Link to="/myprofile">
-              <img src={userAvatarUrl} alt="" className="footer-avatar skeleton-media-avatars active-icon" />
-            </Link>
-          </div>
+          <div style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div className="footer-nav">
+              <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon" style={{}} /></Link>
+              <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon" /></Link>
+              {role === "teacher" && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
+              <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
+              <Link to="/myprofile">
+                <img src={userAvatarUrl} alt="" className="footer-avatar skeleton-media-avatars active-icon" />
+              </Link>
+            </div>
           </div>
         </div>
       ) : (

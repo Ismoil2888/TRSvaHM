@@ -30,6 +30,7 @@ const SearchStudents = () => {
   const [userDetails, setUserDetails] = useState({ username: "", avatarUrl: "" });
   const [isMobile, setIsMobile] = useState(false);
   const t = useTranslation();
+  const [role, setRole] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(() => {
     // Восстанавливаем состояние из localStorage при инициализации
     const savedState = localStorage.getItem('isMenuOpen');
@@ -112,6 +113,7 @@ const SearchStudents = () => {
             username: data.username || "User",
             avatarUrl: data.avatarUrl || "./default-image.png",
           });
+          setRole(data.role || "");
         }
       });
     }
@@ -325,24 +327,24 @@ const SearchStudents = () => {
       </div>
       <div className="search-students-page" style={mainContentStyle}>
         <header>
-            <nav className="header-nav" style={HeaderDesktop}>
-              <ul className="header-ul">
-                <li><Link to="/home">Главная</Link></li>
-                <li><Link to="/about">О факультете</Link></li>
-                <li><Link to="/teachers">Преподаватели</Link></li>
-              </ul>
-              <Link to="/myprofile">
-                <div className="currentUserHeader" style={currentUserHeader}>
-                  <img
-                    src={userDetails.avatarUrl || "./default-image.png"}
-                    alt="User Avatar"
-                    className="user-avatar"
-                    style={{width: "35px", height: "35px"}}
-                  />
-                  <span style={{ fontSize: "20px", color: "lightgreen"}}>{userDetails.username}</span>
-                </div>
-              </Link>
-            </nav>
+          <nav className="header-nav" style={HeaderDesktop}>
+            <ul className="header-ul">
+              <li><Link to="/home">Главная</Link></li>
+              <li><Link to="/about">О факультете</Link></li>
+              <li><Link to="/teachers">Преподаватели</Link></li>
+            </ul>
+            <Link to="/myprofile">
+              <div className="currentUserHeader" style={currentUserHeader}>
+                <img
+                  src={userDetails.avatarUrl || "./default-image.png"}
+                  alt="User Avatar"
+                  className="user-avatar"
+                  style={{ width: "35px", height: "35px" }}
+                />
+                <span style={{ fontSize: "20px", color: "lightgreen" }}>{userDetails.username}</span>
+              </div>
+            </Link>
+          </nav>
 
           <div className="header-nav-2">
 
@@ -451,7 +453,7 @@ const SearchStudents = () => {
         <div className="footer-nav">
           <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon" /></Link>
           <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon  active-icon" style={{}} /></Link>
-          <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>
+          {role === "teacher" && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
           <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
           <Link to="/myprofile">
             <img src={userAvatarUrl} alt="" className="footer-avatar skeleton-media-avatars" />

@@ -48,14 +48,14 @@
 //       [postId]: true,
 //     }));
 //   };
-  
+
 //   const handleImageError = (postId) => {
 //     setImageLoadedStatus((prev) => ({
 //       ...prev,
 //       [postId]: true,
 //     }));
 //   };
-    
+
 //     // Функция для нейтральных уведомлений
 //     const showNotificationNeutral = (message) => {
 //       setNotificationType("neutral");
@@ -78,7 +78,7 @@
 //   useEffect(() => {
 //     const db = getDatabase();
 //     const user = auth.currentUser;
-  
+
 //     if (user) {
 //       const chatsRef = dbRef(db, `users/${user.uid}/chats`);
 //       const unsubscribeChats = onValue(chatsRef, (snapshot) => {
@@ -86,7 +86,7 @@
 //         if (chats) {
 //           const chatIds = Object.keys(chats);
 //           let totalUnreadCount = 0;
-  
+
 //           chatIds.forEach((chatId) => {
 //             const messagesRef = dbRef(db, `chatRooms/${chatId}/messages`);
 //             const unsubscribeMessages = onValue(messagesRef, (messagesSnapshot) => {
@@ -95,22 +95,22 @@
 //                 const unreadMessages = Object.values(messages).filter(
 //                   (msg) => !msg.seenBy?.includes(user.uid) && msg.senderId !== user.uid
 //                 );
-  
+
 //                 if (unreadMessages.length > 0) {
 //                   totalUnreadCount += 1;
 //                 }
 //               }
 //             });
-  
+
 //             return () => unsubscribeMessages();
 //           });
-  
+
 //           setUnreadChatsCount(totalUnreadCount);
 //         } else {
 //           setUnreadChatsCount(0);
 //         }
 //       });
-  
+
 //       return () => unsubscribeChats();
 //     }
 //   }, []);
@@ -135,7 +135,7 @@
 //   useEffect(() => {
 //     const db = getDatabase();
 //     const postsRef = dbRef(db, "posts");
-  
+
 //     const unsubscribe = onValue(postsRef, (snapshot) => {
 //       const postsData = snapshot.val();
 //       if (postsData) {
@@ -148,7 +148,7 @@
 //         setPosts(approvedPosts);
 //       }
 //     });
-  
+
 //     // Загрузка данных текущего пользователя
 //     const user = auth.currentUser;
 //     if (user) {
@@ -163,7 +163,7 @@
 //         }
 //       });
 //     }
-  
+
 //     return () => unsubscribe(); // Отписываемся от слушателя при размонтировании компонента
 //   }, []);
 
@@ -172,7 +172,7 @@
 //     const postRef = dbRef(db, `posts/${postId}`);
 //     const commentsRef = dbRef(db, `postComments/${postId}`);
 //     const likesRef = dbRef(db, `posts/${postId}/likes`);
-  
+
 //     // Удаляем пост, лайки и комментарии
 //     Promise.all([
 //       remove(postRef),
@@ -360,10 +360,10 @@
 //   useEffect(() => {
 //     const db = getDatabase();
 //     const user = auth.currentUser;
-  
+
 //     if (user) {
 //       const notificationsRef = dbRef(db, `notifications/${user.uid}`);
-  
+
 //       onValue(notificationsRef, (snapshot) => {
 //         const notifications = snapshot.val();
 //         if (notifications) {
@@ -386,7 +386,7 @@
 //     const handleClickOutside = (event) => {
 //       const isInsideMenu = actionMenuRef.current && actionMenuRef.current.contains(event.target);
 //       const isActionButton = event.target.closest(".action-menu button");
-      
+
 //       // Закрываем меню только если клик произошел за пределами actionMenu и не на кнопках
 //       if (!isInsideMenu && !isActionButton) {
 //         setActionMenuId(null);
@@ -421,7 +421,7 @@
 //       transition: { duration: 0.8, type: 'spring', stiffness: 50 },
 //     },
 //   };
-  
+
 //   // Модальное окно для отображения пользователей, поставивших лайк
 //   const [likesModal, setLikesModal] = useState({ isOpen: false, users: [] });
 
@@ -831,7 +831,7 @@
 //   useEffect(() => {
 //     const db = getDatabase();
 //     const postsRef = dbRef(db, "posts");
-  
+
 //     const unsubscribe = onValue(postsRef, (snapshot) => {
 //       const postsData = snapshot.val();
 //       if (postsData) {
@@ -844,7 +844,7 @@
 //         setPosts(approvedPosts);
 //       }
 //     });
-  
+
 //     const user = auth.currentUser;
 //     if (user) {
 //       const userRef = dbRef(db, `users/${user.uid}`);
@@ -858,7 +858,7 @@
 //         }
 //       });
 //     }
-  
+
 //     return () => unsubscribe();
 //   }, []);
 
@@ -867,7 +867,7 @@
 //     const postRef = dbRef(db, `posts/${postId}`);
 //     const commentsRef = dbRef(db, `postComments/${postId}`);
 //     const likesRef = dbRef(db, `posts/${postId}/likes`);
-  
+
 //     Promise.all([
 //       remove(postRef),
 //       remove(commentsRef),
@@ -1044,10 +1044,10 @@
 //   useEffect(() => {
 //     const db = getDatabase();
 //     const user = auth.currentUser;
-  
+
 //     if (user) {
 //       const notificationsRef = dbRef(db, `notifications/${user.uid}`);
-  
+
 //       onValue(notificationsRef, (snapshot) => {
 //         const notifications = snapshot.val();
 //         if (notifications) {
@@ -1070,7 +1070,7 @@
 //     const handleClickOutside = (event) => {
 //       const isInsideMenu = actionMenuRef.current && actionMenuRef.current.contains(event.target);
 //       const isActionButton = event.target.closest(".action-menu button");
-      
+
 //       if (!isInsideMenu && !isActionButton) {
 //         setActionMenuId(null);
 //       }
@@ -1094,7 +1094,7 @@
 //       document.removeEventListener("mousedown", handleClickOutside);
 //     };
 //   }, []);
-  
+
 //   const [likesModal, setLikesModal] = useState({ isOpen: false, users: [] });
 
 //   const openLikesModal = (postId) => {
@@ -1407,52 +1407,53 @@ const HomePage = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const navigate = useNavigate();
   const t = useTranslation();
+  const [role, setRole] = useState("");
   const [unreadChatsCount, setUnreadChatsCount] = useState(0);
   const [imageLoadedStatus, setImageLoadedStatus] = useState({});
   const [showAnonymousModal, setShowAnonymousModal] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-    const [isMenuOpen, setIsMenuOpen] = useState(() => {
-      // Восстанавливаем состояние из localStorage при инициализации
-      const savedState = localStorage.getItem('isMenuOpen');
-      return savedState ? JSON.parse(savedState) : true;
-    });
-  
-    // Сохраняем состояние в localStorage при изменении
-    useEffect(() => {
-      localStorage.setItem('isMenuOpen', JSON.stringify(isMenuOpen));
-    }, [isMenuOpen]);
-  
-    // Обработчик изменения размера окна
-    useEffect(() => {
-      const checkMobile = () => {
-        const mobile = window.innerWidth < 700;
-        setIsMobile(mobile);
-        if (mobile) {
-          setIsMenuOpen(false);
-        } else {
-          // Восстанавливаем состояние только для десктопа
-          const savedState = localStorage.getItem('isMenuOpen');
-          setIsMenuOpen(savedState ? JSON.parse(savedState) : true);
-        }
-      };
-  
-      checkMobile();
-      window.addEventListener('resize', checkMobile);
-      return () => window.removeEventListener('resize', checkMobile);
-    }, []);
-  
-    // Модифицированная функция переключения меню
-    const toggleMenuDesktop = () => {
-      setIsMenuOpen(prev => {
-        const newState = !prev;
-        localStorage.setItem('isMenuOpen', JSON.stringify(newState));
-        return newState;
-      });
+  const [isMenuOpen, setIsMenuOpen] = useState(() => {
+    // Восстанавливаем состояние из localStorage при инициализации
+    const savedState = localStorage.getItem('isMenuOpen');
+    return savedState ? JSON.parse(savedState) : true;
+  });
+
+  // Сохраняем состояние в localStorage при изменении
+  useEffect(() => {
+    localStorage.setItem('isMenuOpen', JSON.stringify(isMenuOpen));
+  }, [isMenuOpen]);
+
+  // Обработчик изменения размера окна
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 700;
+      setIsMobile(mobile);
+      if (mobile) {
+        setIsMenuOpen(false);
+      } else {
+        // Восстанавливаем состояние только для десктопа
+        const savedState = localStorage.getItem('isMenuOpen');
+        setIsMenuOpen(savedState ? JSON.parse(savedState) : true);
+      }
     };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Модифицированная функция переключения меню
+  const toggleMenuDesktop = () => {
+    setIsMenuOpen(prev => {
+      const newState = !prev;
+      localStorage.setItem('isMenuOpen', JSON.stringify(newState));
+      return newState;
+    });
+  };
 
   // Добавляем стиль для основного контента
   const mainContentStyle = {
-    marginLeft: isMenuOpen ? "360px" : "80px",
+    marginLeft: isMenuOpen ? "340px" : "80px",
     transition: "margin 0.3s ease",
   };
 
@@ -1473,7 +1474,7 @@ const HomePage = () => {
       [postId]: true,
     }));
   };
-  
+
   const handleImageError = (postId) => {
     setImageLoadedStatus((prev) => ({
       ...prev,
@@ -1481,35 +1482,35 @@ const HomePage = () => {
     }));
   };
 
-     // Функция для успешных уведомлений
-     const showNotification = (message) => {
-      setNotificationType("success");
-      setNotification(message);
-      setTimeout(() => {
-        setNotification("");
-        setNotificationType("");
-      }, 3000);
-    };
-    
-    // Функция для нейтральных уведомлений
-    const showNotificationNeutral = (message) => {
-      setNotificationType("neutral");
-      setNotification(message);
-      setTimeout(() => {
-        setNotification("");
-        setNotificationType("");
-      }, 300000);
-    };
+  // Функция для успешных уведомлений
+  const showNotification = (message) => {
+    setNotificationType("success");
+    setNotification(message);
+    setTimeout(() => {
+      setNotification("");
+      setNotificationType("");
+    }, 3000);
+  };
 
-// Функция для ошибочных уведомлений
-const showNotificationError = (message) => {
-  setNotificationType("error");
-  setNotification(message);
-  setTimeout(() => {
-    setNotification("");
-    setNotificationType("");
-  }, 3000);
-};
+  // Функция для нейтральных уведомлений
+  const showNotificationNeutral = (message) => {
+    setNotificationType("neutral");
+    setNotification(message);
+    setTimeout(() => {
+      setNotification("");
+      setNotificationType("");
+    }, 300000);
+  };
+
+  // Функция для ошибочных уведомлений
+  const showNotificationError = (message) => {
+    setNotificationType("error");
+    setNotification(message);
+    setTimeout(() => {
+      setNotification("");
+      setNotificationType("");
+    }, 3000);
+  };
 
   const goToProfile = (userId) => {
     navigate(`/profile/${userId}`);
@@ -1533,7 +1534,7 @@ const showNotificationError = (message) => {
   useEffect(() => {
     const db = getDatabase();
     const user = auth.currentUser;
-  
+
     if (user) {
       const chatsRef = dbRef(db, `users/${user.uid}/chats`);
       const unsubscribeChats = onValue(chatsRef, (snapshot) => {
@@ -1541,7 +1542,7 @@ const showNotificationError = (message) => {
         if (chats) {
           const chatIds = Object.keys(chats);
           let totalUnreadCount = 0;
-  
+
           chatIds.forEach((chatId) => {
             const messagesRef = dbRef(db, `chatRooms/${chatId}/messages`);
             const unsubscribeMessages = onValue(messagesRef, (messagesSnapshot) => {
@@ -1550,22 +1551,22 @@ const showNotificationError = (message) => {
                 const unreadMessages = Object.values(messages).filter(
                   (msg) => !msg.seenBy?.includes(user.uid) && msg.senderId !== user.uid
                 );
-  
+
                 if (unreadMessages.length > 0) {
                   totalUnreadCount += 1;
                 }
               }
             });
-  
+
             return () => unsubscribeMessages();
           });
-  
+
           setUnreadChatsCount(totalUnreadCount);
         } else {
           setUnreadChatsCount(0);
         }
       });
-  
+
       return () => unsubscribeChats();
     }
   }, []);
@@ -1590,7 +1591,7 @@ const showNotificationError = (message) => {
   useEffect(() => {
     const db = getDatabase();
     const postsRef = dbRef(db, "posts");
-  
+
     const unsubscribe = onValue(postsRef, (snapshot) => {
       const postsData = snapshot.val();
       if (postsData) {
@@ -1603,7 +1604,7 @@ const showNotificationError = (message) => {
         setPosts(approvedPosts);
       }
     });
-  
+
     // // Загрузка данных текущего пользователя
     const user = auth.currentUser;
     if (user) {
@@ -1615,10 +1616,11 @@ const showNotificationError = (message) => {
             username: data.username || "User",
             avatarUrl: data.avatarUrl || defaultAvatar,
           });
+          setRole(data.role || "");
         }
       });
     }
-  
+
     return () => unsubscribe(); // Отписываемся от слушателя при размонтировании компонента
   }, []);
 
@@ -1627,7 +1629,7 @@ const showNotificationError = (message) => {
     const postRef = dbRef(db, `posts/${postId}`);
     const commentsRef = dbRef(db, `postComments/${postId}`);
     const likesRef = dbRef(db, `posts/${postId}/likes`);
-  
+
     // Удаляем пост, лайки и комментарии
     Promise.all([
       remove(postRef),
@@ -1642,7 +1644,7 @@ const showNotificationError = (message) => {
       .catch((error) => {
         console.error("Ошибка удаления поста:", error);
       });
-  }; 
+  };
 
   const toggleTextExpansion = (postId) => {
     setExpandedPosts((prev) => ({
@@ -1653,17 +1655,17 @@ const showNotificationError = (message) => {
 
   const openCommentModal = (postId) => {
     setCommentModal({ isOpen: true, postId });
-  
+
     const db = getDatabase();
     const commentsRef = dbRef(db, `postComments/${postId}`);
-  
+
     const unsubscribe = onValue(commentsRef, (snapshot) => {
       const data = snapshot.val();
       setComments(data ? Object.keys(data).map((id) => ({ id, ...data[id] })) : []);
     });
-  
+
     return () => unsubscribe(); // ✅ Теперь подписка удаляется
-  };  
+  };
 
   // const openCommentModal = (postId) => {
   //   setCommentModal({ isOpen: true, postId });
@@ -1744,7 +1746,7 @@ const showNotificationError = (message) => {
 
   const handleAnonymousClick = () => {
     setShowAnonymousModal(true);
-  };  
+  };
 
   const handleEditComment = (commentId, commentText) => {
     setEditingCommentId(commentId);
@@ -1835,10 +1837,10 @@ const showNotificationError = (message) => {
   useEffect(() => {
     const db = getDatabase();
     const user = auth.currentUser;
-  
+
     if (user) {
       const notificationsRef = dbRef(db, `notifications/${user.uid}`);
-  
+
       onValue(notificationsRef, (snapshot) => {
         const notifications = snapshot.val();
         if (notifications) {
@@ -1861,7 +1863,7 @@ const showNotificationError = (message) => {
     const handleClickOutside = (event) => {
       const isInsideMenu = actionMenuRef.current && actionMenuRef.current.contains(event.target);
       const isActionButton = event.target.closest(".action-menu button");
-      
+
       // Закрываем меню только если клик произошел за пределами actionMenu и не на кнопках
       if (!isInsideMenu && !isActionButton) {
         setActionMenuId(null);
@@ -1896,7 +1898,7 @@ const showNotificationError = (message) => {
       transition: { duration: 0.8, type: 'spring', stiffness: 50 },
     },
   };
-  
+
   // Модальное окно для отображения пользователей, поставивших лайк
   const [likesModal, setLikesModal] = useState({ isOpen: false, users: [] });
 
@@ -1942,58 +1944,58 @@ const showNotificationError = (message) => {
   };
 
   return (
-    <div className="glava" style={{height: "100%"}}>
-       <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
+    <div className="glava" style={{ height: "100%" }}>
+      <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
-        <img style={{width: "50px", height: "45px"}} src={ttulogo} alt="" />
+          <img style={{ width: "50px", height: "45px" }} src={ttulogo} alt="" />
           {isMenuOpen ? (
             <>
               <h2>TTU</h2>
-              <FiChevronLeft 
-                className="toggle-menu" 
+              <FiChevronLeft
+                className="toggle-menu"
                 onClick={toggleMenuDesktop}
               />
             </>
           ) : (
-            <FiChevronRight 
-              className="toggle-menu" 
+            <FiChevronRight
+              className="toggle-menu"
               onClick={toggleMenuDesktop}
             />
           )}
         </div>
 
         <nav className="menu-items">
-          <Link to="/" className="menu-item" style={{paddingRight: "15px"}}>
-            <FiHome className="menu-icon" style={{borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px"}}/>
+          <Link to="/" className="menu-item" style={{ paddingRight: "15px" }}>
+            <FiHome className="menu-icon" style={{ borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px" }} />
             {isMenuOpen && <span>Главная</span>}
           </Link>
           <div className="menu-find-block">
-          <Link to="/searchpage" className="menu-item">
-             <FiSearch className="menu-icon" />
-             {isMenuOpen && <span>Поиск</span>}
-          </Link>
-          <Link to="/teachers" className="menu-item">
-             <FiUserCheck className="menu-icon" />
-             {isMenuOpen && <span>Преподаватели</span>}
-          </Link>
-          <Link to="/library" className="menu-item">
-             <FiBookOpen className="menu-icon" />
-             {isMenuOpen && <span>Библиотека</span>}
-          </Link>
+            <Link to="/searchpage" className="menu-item">
+              <FiSearch className="menu-icon" />
+              {isMenuOpen && <span>Поиск</span>}
+            </Link>
+            <Link to="/teachers" className="menu-item">
+              <FiUserCheck className="menu-icon" />
+              {isMenuOpen && <span>Преподаватели</span>}
+            </Link>
+            <Link to="/library" className="menu-item">
+              <FiBookOpen className="menu-icon" />
+              {isMenuOpen && <span>Библиотека</span>}
+            </Link>
           </div>
           <Link to="/myprofile" className="menu-item">
             <FiUser className="menu-icon" />
             {isMenuOpen && <span>Профиль</span>}
           </Link>
           <div className="menu-find-block">
-          <Link to="/chats" className="menu-item">
-            <FiMessageSquare className="menu-icon" />
-            {isMenuOpen && <span>Сообщения</span>}
-          </Link>
-          <Link to="/notifications" className="menu-item">
-            <FiBell className="menu-icon" />
-            {isMenuOpen && <span>Уведомления</span>}
-          </Link>
+            <Link to="/chats" className="menu-item">
+              <FiMessageSquare className="menu-icon" />
+              {isMenuOpen && <span>Сообщения</span>}
+            </Link>
+            <Link to="/notifications" className="menu-item">
+              <FiBell className="menu-icon" />
+              {isMenuOpen && <span>Уведомления</span>}
+            </Link>
           </div>
           <Link to="/authdetails" className="menu-item">
             <FiSettings className="menu-icon" />
@@ -2002,353 +2004,353 @@ const showNotificationError = (message) => {
         </nav>
 
         <div className="logo-and-tik">
-        TRSvaHM
-        {isMenuOpen &&
-        <div>
-        <p>&copy; 2025 Все права защищены.</p>
-        </div>
-        }
-        </div>
-      </div>
-    <div className="home-container" style={mainContentStyle}>
-      {notification && (
-        <div className={`notification ${notificationType}`}>
-          {notification}
-        </div>
-      )}
-
-      <header>
-        <nav className="header-nav" style={HeaderDesktop}>
-          <ul className="header-ul">
-            <li><Link to="/home">Главная</Link></li>
-            <li><Link to="/about">О факультете</Link></li>
-            <li><Link to="/teachers">Преподаватели</Link></li>
-          </ul>
-          <Link to="/myprofile">
-          <div className="currentUserHeader" style={currentUserHeader}>
-            <img 
-              src={userAvatarUrl || defaultAvatar} 
-              alt="User Avatar" 
-              className="user-avatar"
-              style={{width: "35px", height: "35px"}}
-            />
-            <span style={{fontSize: "20px", color: "lightgreen"}}>{userDetails.username}</span>
-          </div>
-          </Link>
-        </nav>
-
-        <div className="header-nav-2">
-
-          <Link to="/notifications">
-            <div style={{ position: "relative" }}>
-              <FontAwesomeIcon icon={faBell} style={{marginLeft: "15px"}} className="footer-icon" />
-              {unreadCount > 0 && (
-                <span className="notification-count">
-              {unreadCount}
-                </span>
-              )}
+          TRSvaHM
+          {isMenuOpen &&
+            <div>
+              <p>&copy; 2025 Все права защищены.</p>
             </div>
-          </Link>
-
-          <ul className="logo-app" style={{color: "#58a6ff", fontSize: "25px"}}>{t('main')}</ul>
-
-          <Link to="/chats">
-  <div style={{ position: "relative" }}>
-    <BsChatTextFill style={{ fontSize: "25px", marginRight: "15px", color: "white" }} />
-    {unreadChatsCount > 0 && (
-      <span className="notification-chat-count">
-        {unreadChatsCount}
-      </span>
-    )}
-  </div>
-</Link>
-          <div className={`burger-menu-icon ${isMenuOpenMobile ? 'open' : ''}`} onClick={toggleMenuMobile}>          
-            <span className="bm-span"></span>
-            <span className="bm-span"></span>
-            <span className="bm-span"></span>
-          </div>
-
-          <div className={`burger-menu ${isMenuOpenMobile ? 'open' : ''}`}>         
-          <ul>
-             <li><Link to="/home"><FontAwesomeIcon icon={faHome} style={{color: "red"}} /> Главная</Link></li>
-             <li><Link to="/about"><FontAwesomeIcon icon={faInfoCircle} /> О факультете</Link></li>
-             <li><Link to="/teachers"><FontAwesomeIcon icon={faChalkboardTeacher} /> Преподаватели</Link></li>
-             <li><Link to="/schedule"><FontAwesomeIcon icon={faCalendarAlt} /> Расписание</Link></li>
-             <li><Link to="/library"><FontAwesomeIcon icon={faBook} /> Библиотека</Link></li>
-             <li><Link to="/contacts"><FontAwesomeIcon icon={faPhone} /> Контакты</Link></li>
-             <li><Link to="/authdetails"><FontAwesomeIcon icon={faUserCog} /> Настройки Профиля</Link></li>
-          </ul>
-          </div>
-
+          }
         </div>
-      </header>
-
-
-      <main className="homepage-main" style={{ paddingTop: "80px", paddingBottom: "100px" }}>
-  <section id="posts">
-    {posts.length === 0 ? (
-            <motion.nav
-            variants={navbarVariants}
-            initial="hidden"
-            animate="visible"
-          >
-      <div className="no-posts-message">
-        <h2>Платформа для студентов факультета ТИК Таджикского Технического Университета</h2>
       </div>
-      </motion.nav>
-    ) : (
-      posts
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .map((post) => {
-          const likesCount = post.likes ? Object.keys(post.likes).length : 0;
-          const isLiked = post.likes && post.likes[userId];
-          return (
-            <div key={post.id} className="post-card">
-              <div className="post-header">
-                <div className="post-author">
-                  <img
-                    src={post.userAvatar || defaultAvatar}
-                    alt=""
-                    className="post-avatar skeleton-media-avatars"
-                    onClick={() => goToProfile(post.userId)}
-                    onError={(e) => {
-                      e.target.onerror = null; 
-                      e.target.src = "./default-image.png";
-                    }}
-                  />
-                  <span 
-                  className="post-username"
-                  onClick={() => goToProfile(post.userId)}
-                  >{post.userName}</span>
-                </div>
-                {post.userId === auth.currentUser?.uid && (
-                  <div className="three-dot-menu">
-                    <span onClick={() => toggleMenu(post.id)}>...</span>
-                    {menuPostId === post.id && (
-                      <div ref={menuRef} className="menu-options">
-                        <span>Изменить</span>
-                        <span onClick={() => handleDeletePost(post.id)}>Удалить</span>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
+      <div className="home-container" style={mainContentStyle}>
+        {notification && (
+          <div className={`notification ${notificationType}`}>
+            {notification}
+          </div>
+        )}
 
-              {post.mediaUrl && (
-  post.mediaUrl.endsWith(".mp4") ? (
-    <video controls src={post.mediaUrl} className="post-media" />
-  ) : (
-    <>
-      {!imageLoadedStatus[post.id] && (
-        <div className="skeleton-media" />
-      )}
-      <img 
-        src={post.mediaUrl}
-        alt="Post Media"
-        className="post-media"
-        style={{ display: imageLoadedStatus[post.id] ? 'block' : 'none' }}
-        onLoad={() => handleImageLoad(post.id)}
-        onError={() => handleImageError(post.id)}
-      />
-    </>
-  )
-)}
-
-              <div className="post-actions">
-                {isLiked ? (
-                  <FaHeart
-                    className="post-icon liked"
-                    onClick={() => handleLikeToggle(post.id)}
-                    style={{ color: "red" }}
-                  />
-                ) : (
-                  <FaRegHeart
-                    className="post-icon"
-                    onClick={() => handleLikeToggle(post.id)}
-                  />
-                )}
-                <FaRegComment 
-                  className="post-icon" 
-                  onClick={() => openCommentModal(post.id)} 
+        <header>
+          <nav className="header-nav" style={HeaderDesktop}>
+            <ul className="header-ul">
+              <li><Link to="/home">Главная</Link></li>
+              <li><Link to="/about">О факультете</Link></li>
+              <li><Link to="/teachers">Преподаватели</Link></li>
+            </ul>
+            <Link to="/myprofile">
+              <div className="currentUserHeader" style={currentUserHeader}>
+                <img
+                  src={userAvatarUrl || defaultAvatar}
+                  alt="User Avatar"
+                  className="user-avatar"
+                  style={{ width: "35px", height: "35px" }}
                 />
-                <FaRegBookmark className="post-icon" />
+                <span style={{ fontSize: "20px", color: "lightgreen" }}>{userDetails.username}</span>
               </div>
+            </Link>
+          </nav>
 
-              <p 
-                className="post-likes" 
-                onClick={() => openLikesModal(post.id)}
-                style={{ cursor: "pointer" }}
-              >
-                Нравится: {likesCount}
-              </p>
+          <div className="header-nav-2">
 
-              <p className="post-content">
-                <span className="post-username">{post.userName}</span>{" "}
-                {post.description.length > MAX_TEXT_LENGTH && !expandedPosts[post.id] ? (
-                  <>
-                    {post.description.slice(0, MAX_TEXT_LENGTH)} ...
-                    <span
-                      className="toggle-text"
-                      onClick={() => toggleTextExpansion(post.id)}
-                    >
-                      ещё
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    {post.description}
-                    {post.description.length > MAX_TEXT_LENGTH && (
-                      <span
-                        className="toggle-text"
-                        onClick={() => toggleTextExpansion(post.id)}
-                        style={{ marginLeft: "5px"}}
-                      >
-                        свернуть
-                      </span>
-                    )}
-                  </>
+            <Link to="/notifications">
+              <div style={{ position: "relative" }}>
+                <FontAwesomeIcon icon={faBell} style={{ marginLeft: "15px" }} className="footer-icon" />
+                {unreadCount > 0 && (
+                  <span className="notification-count">
+                    {unreadCount}
+                  </span>
                 )}
-              </p>
+              </div>
+            </Link>
 
-              <p 
-                style={{color: "grey", marginLeft: "10px", marginTop: "5px"}} 
-                onClick={() => openCommentModal(post.id)} 
+            <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>{t('main')}</ul>
+
+            <Link to="/chats">
+              <div style={{ position: "relative" }}>
+                <BsChatTextFill style={{ fontSize: "25px", marginRight: "15px", color: "white" }} />
+                {unreadChatsCount > 0 && (
+                  <span className="notification-chat-count">
+                    {unreadChatsCount}
+                  </span>
+                )}
+              </div>
+            </Link>
+            <div className={`burger-menu-icon ${isMenuOpenMobile ? 'open' : ''}`} onClick={toggleMenuMobile}>
+              <span className="bm-span"></span>
+              <span className="bm-span"></span>
+              <span className="bm-span"></span>
+            </div>
+
+            <div className={`burger-menu ${isMenuOpenMobile ? 'open' : ''}`}>
+              <ul>
+                <li><Link to="/home"><FontAwesomeIcon icon={faHome} style={{ color: "red" }} /> Главная</Link></li>
+                <li><Link to="/about"><FontAwesomeIcon icon={faInfoCircle} /> О факультете</Link></li>
+                <li><Link to="/teachers"><FontAwesomeIcon icon={faChalkboardTeacher} /> Преподаватели</Link></li>
+                <li><Link to="/schedule"><FontAwesomeIcon icon={faCalendarAlt} /> Расписание</Link></li>
+                <li><Link to="/library"><FontAwesomeIcon icon={faBook} /> Библиотека</Link></li>
+                <li><Link to="/contacts"><FontAwesomeIcon icon={faPhone} /> Контакты</Link></li>
+                <li><Link to="/authdetails"><FontAwesomeIcon icon={faUserCog} /> Настройки Профиля</Link></li>
+              </ul>
+            </div>
+
+          </div>
+        </header>
+
+
+        <main className="homepage-main" style={{ paddingTop: "80px", paddingBottom: "100px" }}>
+          <section id="posts">
+            {posts.length === 0 ? (
+              <motion.nav
+                variants={navbarVariants}
+                initial="hidden"
+                animate="visible"
               >
-                Посмотреть все комментарии ({post.commentCount || 0})
-              </p>
-
-              {commentModal.isOpen && commentModal.postId === post.id && (
-                <div className="comment-modal-overlay">
-                  <div className="comment-modal">
-                    <div className="modal-header">
-                      <h3>Комментарии</h3>
-                      <button className="close-modal" onClick={closeCommentModal}>
-                        &times;
-                      </button>
-                    </div>
-                    <div className="comments-list">
-                      {comments 
-                      .slice()
-                      .reverse()
-                      .map((comment) => (
-                        <div className="comment" key={comment.id}>
-                          <img 
-                            src={comment.avatarUrl || defaultAvatar} 
-                            alt={comment.username} 
-                            className="comment-avatar skeleton-media-avatars" 
-                            onClick={() => comment.userId ? goToProfile(comment.userId) : handleAnonymousClick()}
+                <div className="no-posts-message">
+                  <h2>Платформа для студентов факультета ТИК Таджикского Технического Университета</h2>
+                </div>
+              </motion.nav>
+            ) : (
+              posts
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                .map((post) => {
+                  const likesCount = post.likes ? Object.keys(post.likes).length : 0;
+                  const isLiked = post.likes && post.likes[userId];
+                  return (
+                    <div key={post.id} className="post-card">
+                      <div className="post-header">
+                        <div className="post-author">
+                          <img
+                            src={post.userAvatar || defaultAvatar}
+                            alt=""
+                            className="post-avatar skeleton-media-avatars"
+                            onClick={() => goToProfile(post.userId)}
                             onError={(e) => {
-                              e.target.onerror = null; 
+                              e.target.onerror = null;
                               e.target.src = "./default-image.png";
                             }}
                           />
-                          <div className="comment-content">
-                            <p
-                              className="comment-username"
-                              onClick={() => comment.userId ? goToProfile(comment.userId) : handleAnonymousClick()}
-                            >
-                              {comment.username}
-                            </p>
-                            <p className="comment-text">{comment.comment}</p>
-                            <span className="comment-timestamp">{comment.timestamp}</span>
-                          </div>
-                          <div ref={actionMenuRef} className="menu-icon-container">
-                            {(comment.userId === auth.currentUser?.uid || comment.anonymousOwnerId === auth.currentUser?.uid) && (
-                              <>
-                                <GoKebabHorizontal 
-                                  style={{fontSize: "20px", color: "grey"}} 
-                                  onClick={() => toggleActionMenu(comment.id)} 
-                                  className="action-icon"
-                                />
-                                {actionMenuId === comment.id && (
-                                  <div className={`action-menu show`}>
-                                    <button onClick={() => handleEditComment(comment.id, comment.comment)}>Изменить</button>
-                                    <button onClick={() => handleDeleteComment(comment.id)}>Удалить</button>
-                                  </div>
-                                )}
-                              </>
+                          <span
+                            className="post-username"
+                            onClick={() => goToProfile(post.userId)}
+                          >{post.userName}</span>
+                        </div>
+                        {post.userId === auth.currentUser?.uid && (
+                          <div className="three-dot-menu">
+                            <span onClick={() => toggleMenu(post.id)}>...</span>
+                            {menuPostId === post.id && (
+                              <div ref={menuRef} className="menu-options">
+                                <span>Изменить</span>
+                                <span onClick={() => handleDeletePost(post.id)}>Удалить</span>
+                              </div>
                             )}
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="new-comment">
-                      <input
-                        type="text"
-                        placeholder="Напишите комментарий..."
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                      />
-                      <button onClick={() => handleCommentSubmit(false)}>Отправить</button>
-                      <button onClick={() => handleCommentSubmit(true)}>Отправить анонимно</button>
-                    </div>
-                  </div>
-                </div>
-              )}
+                        )}
+                      </div>
 
-{showAnonymousModal && (
-  <div className="anonymous-modal-overlay" onClick={() => setShowAnonymousModal(false)}>
-    <div className="anonymous-modal">
-      <img style={{borderRadius: "50px"}} src={anonymAvatar} alt="Anonym" className="hacker-image" />
-      <p style={{color: "red"}}>Данные пользователя оставившего комментарий скрыты</p>
-      <button onClick={() => setShowAnonymousModal(false)}>Закрыть</button>
-    </div>
-  </div>
-)}
-
-              {likesModal.isOpen && (
-                <div className="like-modal-overlay">
-                  <div className="like-modal">
-                    <div className="like-modal-header">
-                      <h3>Лайкнувшие пользователи</h3>
-                      <button className="close-like-modal" onClick={closeLikesModal}>
-                        &times;
-                      </button>
-                    </div>
-                    <div className="like-modal-body">
-                      {likesModal.users.length > 0 ? (
-                        likesModal.users.map((user) => (
-                          <div key={user.userId} className="like-user">
-                            <img src={user.avatarUrl} alt={user.username} className="like-avatar skeleton-media-avatars" onClick={() => goToProfile(post.userId)} />
-                            <span className="like-username" onClick={() => goToProfile(user.userId)}>{user.username}</span>
-                          </div>
-                        ))
-                      ) : (
-                        <p style={{color: "grey"}}>Нет лайков для этого поста.</p>
+                      {post.mediaUrl && (
+                        post.mediaUrl.endsWith(".mp4") ? (
+                          <video controls src={post.mediaUrl} className="post-media" />
+                        ) : (
+                          <>
+                            {!imageLoadedStatus[post.id] && (
+                              <div className="skeleton-media" />
+                            )}
+                            <img
+                              src={post.mediaUrl}
+                              alt="Post Media"
+                              className="post-media"
+                              style={{ display: imageLoadedStatus[post.id] ? 'block' : 'none' }}
+                              onLoad={() => handleImageLoad(post.id)}
+                              onError={() => handleImageError(post.id)}
+                            />
+                          </>
+                        )
                       )}
-                    </div>
-                  </div>
-                </div>
-              )}
-              <p className="post-date">{new Date(post.createdAt).toLocaleString("ru-RU")}</p>
-            </div>
-          );
-        })
-    )}
-  </section>
-</main>
 
-      {/* <footer className="footer-desktop">
+                      <div className="post-actions">
+                        {isLiked ? (
+                          <FaHeart
+                            className="post-icon liked"
+                            onClick={() => handleLikeToggle(post.id)}
+                            style={{ color: "red" }}
+                          />
+                        ) : (
+                          <FaRegHeart
+                            className="post-icon"
+                            onClick={() => handleLikeToggle(post.id)}
+                          />
+                        )}
+                        <FaRegComment
+                          className="post-icon"
+                          onClick={() => openCommentModal(post.id)}
+                        />
+                        <FaRegBookmark className="post-icon" />
+                      </div>
+
+                      <p
+                        className="post-likes"
+                        onClick={() => openLikesModal(post.id)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        Нравится: {likesCount}
+                      </p>
+
+                      <p className="post-content">
+                        <span className="post-username">{post.userName}</span>{" "}
+                        {post.description.length > MAX_TEXT_LENGTH && !expandedPosts[post.id] ? (
+                          <>
+                            {post.description.slice(0, MAX_TEXT_LENGTH)} ...
+                            <span
+                              className="toggle-text"
+                              onClick={() => toggleTextExpansion(post.id)}
+                            >
+                              ещё
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            {post.description}
+                            {post.description.length > MAX_TEXT_LENGTH && (
+                              <span
+                                className="toggle-text"
+                                onClick={() => toggleTextExpansion(post.id)}
+                                style={{ marginLeft: "5px" }}
+                              >
+                                свернуть
+                              </span>
+                            )}
+                          </>
+                        )}
+                      </p>
+
+                      <p
+                        style={{ color: "grey", marginLeft: "10px", marginTop: "5px" }}
+                        onClick={() => openCommentModal(post.id)}
+                      >
+                        Посмотреть все комментарии ({post.commentCount || 0})
+                      </p>
+
+                      {commentModal.isOpen && commentModal.postId === post.id && (
+                        <div className="comment-modal-overlay">
+                          <div className="comment-modal">
+                            <div className="modal-header">
+                              <h3>Комментарии</h3>
+                              <button className="close-modal" onClick={closeCommentModal}>
+                                &times;
+                              </button>
+                            </div>
+                            <div className="comments-list">
+                              {comments
+                                .slice()
+                                .reverse()
+                                .map((comment) => (
+                                  <div className="comment" key={comment.id}>
+                                    <img
+                                      src={comment.avatarUrl || defaultAvatar}
+                                      alt={comment.username}
+                                      className="comment-avatar skeleton-media-avatars"
+                                      onClick={() => comment.userId ? goToProfile(comment.userId) : handleAnonymousClick()}
+                                      onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = "./default-image.png";
+                                      }}
+                                    />
+                                    <div className="comment-content">
+                                      <p
+                                        className="comment-username"
+                                        onClick={() => comment.userId ? goToProfile(comment.userId) : handleAnonymousClick()}
+                                      >
+                                        {comment.username}
+                                      </p>
+                                      <p className="comment-text">{comment.comment}</p>
+                                      <span className="comment-timestamp">{comment.timestamp}</span>
+                                    </div>
+                                    <div ref={actionMenuRef} className="menu-icon-container">
+                                      {(comment.userId === auth.currentUser?.uid || comment.anonymousOwnerId === auth.currentUser?.uid) && (
+                                        <>
+                                          <GoKebabHorizontal
+                                            style={{ fontSize: "20px", color: "grey" }}
+                                            onClick={() => toggleActionMenu(comment.id)}
+                                            className="action-icon"
+                                          />
+                                          {actionMenuId === comment.id && (
+                                            <div className={`action-menu show`}>
+                                              <button onClick={() => handleEditComment(comment.id, comment.comment)}>Изменить</button>
+                                              <button onClick={() => handleDeleteComment(comment.id)}>Удалить</button>
+                                            </div>
+                                          )}
+                                        </>
+                                      )}
+                                    </div>
+                                  </div>
+                                ))}
+                            </div>
+                            <div className="new-comment">
+                              <input
+                                type="text"
+                                placeholder="Напишите комментарий..."
+                                value={newComment}
+                                onChange={(e) => setNewComment(e.target.value)}
+                              />
+                              <button onClick={() => handleCommentSubmit(false)}>Отправить</button>
+                              <button onClick={() => handleCommentSubmit(true)}>Отправить анонимно</button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {showAnonymousModal && (
+                        <div className="anonymous-modal-overlay" onClick={() => setShowAnonymousModal(false)}>
+                          <div className="anonymous-modal">
+                            <img style={{ borderRadius: "50px" }} src={anonymAvatar} alt="Anonym" className="hacker-image" />
+                            <p style={{ color: "red" }}>Данные пользователя оставившего комментарий скрыты</p>
+                            <button onClick={() => setShowAnonymousModal(false)}>Закрыть</button>
+                          </div>
+                        </div>
+                      )}
+
+                      {likesModal.isOpen && (
+                        <div className="like-modal-overlay">
+                          <div className="like-modal">
+                            <div className="like-modal-header">
+                              <h3>Лайкнувшие пользователи</h3>
+                              <button className="close-like-modal" onClick={closeLikesModal}>
+                                &times;
+                              </button>
+                            </div>
+                            <div className="like-modal-body">
+                              {likesModal.users.length > 0 ? (
+                                likesModal.users.map((user) => (
+                                  <div key={user.userId} className="like-user">
+                                    <img src={user.avatarUrl} alt={user.username} className="like-avatar skeleton-media-avatars" onClick={() => goToProfile(post.userId)} />
+                                    <span className="like-username" onClick={() => goToProfile(user.userId)}>{user.username}</span>
+                                  </div>
+                                ))
+                              ) : (
+                                <p style={{ color: "grey" }}>Нет лайков для этого поста.</p>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      <p className="post-date">{new Date(post.createdAt).toLocaleString("ru-RU")}</p>
+                    </div>
+                  );
+                })
+            )}
+          </section>
+        </main>
+
+        {/* <footer className="footer-desktop">
         <p>&copy; 2025 Факультет Кибербезопасности. Все права защищены.</p>
       </footer> */}
 
-<div style={{width: "100%", display: "flex", alignItems: "center", justifyContent: "center"}}>
-        <motion.nav 
-          variants={navbarVariants} 
-          initial="hidden" 
-          animate="visible" 
-          className="footer-nav"
-        >
-          <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon active-icon" style={{ }} /></Link>
-          <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon" /></Link>
-          <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>
-          <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
-          <Link to="/myprofile">
-            <img src={userAvatarUrl} alt="" className="footer-avatar skeleton-media-avatars" />
-          </Link>
-        </motion.nav> 
+        <div style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <motion.nav
+            variants={navbarVariants}
+            initial="hidden"
+            animate="visible"
+            className="footer-nav"
+          >
+            <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon active-icon" style={{}} /></Link>
+            <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon" /></Link>
+            {role === "teacher" && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
+            <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
+            <Link to="/myprofile">
+              <img src={userAvatarUrl} alt="" className="footer-avatar skeleton-media-avatars" />
+            </Link>
+          </motion.nav>
+        </div>
       </div>
-    </div>
     </div>
   );
 };

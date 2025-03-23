@@ -16,6 +16,7 @@ import useTranslation from '../hooks/useTranslation';
 const SearchPage = () => {
   const [userDetails, setUserDetails] = useState({ username: "", avatarUrl: "" });
   const t = useTranslation();
+  const [role, setRole] = useState("");
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpenMobile, setIsMenuOpenMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(() => {
@@ -58,7 +59,7 @@ const SearchPage = () => {
   };
 
   const mainContentStyle = {
-    marginLeft: isMobile ? (isMenuOpen ? "360px" : "0px") : (isMenuOpen ? "360px" : "110px"),
+    marginLeft: isMobile ? (isMenuOpen ? "340px" : "0px") : (isMenuOpen ? "320px" : "110px"),
     transition: "margin 0.3s ease",
   };
 
@@ -87,6 +88,7 @@ const SearchPage = () => {
             username: data.username || "User",
             avatarUrl: data.avatarUrl || "./default-image.png",
           });
+          setRole(data.role || "");
         }
       });
     }
@@ -290,7 +292,7 @@ const SearchPage = () => {
                 >
                   <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon" style={{ }} /></Link>
                   <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon active-icon" /></Link>
-                  <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>
+                  {role === "teacher" && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
                   <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
                   <Link to="/myprofile">
                   <img src={userDetails.avatarUrl || "./default-image.png"} alt="User Avatar" className="footer-avatar" />

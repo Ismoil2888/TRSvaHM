@@ -639,7 +639,6 @@ const Chat = () => {
       </div>
       <div className="chat-container" style={mainContentStyle}>
         <div className="chat-background"></div>
-        {/* <div className="chat-background-blur"></div> */}
         <div className="chat-header">
           <FaChevronLeft
             style={{ marginLeft: "10px", color: "white", fontSize: "25px" }}
@@ -784,7 +783,7 @@ const Chat = () => {
                     }}
                   />
                   <div>
-                    <p className="chat-message-sender">{message.senderName}</p>
+                    <p style={{color: "#134474"}}>{message.senderName}</p>
                     {message.replyTo && (
                       <div className="message-reply">
                         <span>{message.replyTo.senderName}</span>

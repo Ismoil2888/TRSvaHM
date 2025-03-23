@@ -349,7 +349,7 @@
 //   }, []);
 
 //     const [isMenuOpenMobile, setIsMenuOpenMobile] = useState(false);
-  
+
 //     const toggleMenuMobile = () => {
 //       if (isMenuOpenMobile) {
 //         setTimeout(() => {
@@ -735,6 +735,7 @@ const Library = ({ userId }) => {
   const [actionMenuId, setActionMenuId] = useState(null);
   const actionMenuRef = useRef(null);
   const t = useTranslation();
+  const [role, setRole] = useState("");
   const database = getDatabase();
   const navigate = useNavigate();
   const [identificationStatus, setIdentificationStatus] = useState(null);
@@ -774,7 +775,7 @@ const Library = ({ userId }) => {
   };
 
   const mainContentStyle = {
-    marginLeft: isMobile ? (isMenuOpen ? "360px" : "0px") : (isMenuOpen ? "360px" : "98px"),
+    marginLeft: isMobile ? (isMenuOpen ? "360px" : "0px") : (isMenuOpen ? "340px" : "98px"),
     transition: "margin 0.3s ease",
   };
 
@@ -802,6 +803,38 @@ const Library = ({ userId }) => {
     "Информатика Ва Техникаи Хисоббарор"
   ];
   const [activeDepartment, setActiveDepartment] = useState(departments[0]);
+
+  //   // Загрузка пользовательских данных и статуса идентификации
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user) {
+      const requestRef = dbRef(database, "requests");
+      onValue(requestRef, (snapshot) => {
+        const requests = snapshot.val();
+        const userRequest = Object.values(requests || {}).find(
+          (request) => request.email === user.email
+        );
+
+        if (userRequest) {
+          setIdentificationStatus(
+            userRequest.status === "accepted" ? t('ident') : t('notident')
+          );
+        } else {
+          setIdentificationStatus(t('notident'));
+        }
+      });
+
+      const userRef = dbRef(database, `users/${user.uid}`);
+      onValue(userRef, (snapshot) => {
+        const userData = snapshot.val();
+        if (userData && userData.avatarUrl) {
+          setUserAvatarUrl(userData.avatarUrl);
+        } else {
+          setUserAvatarUrl(defaultAvatar);
+        }
+      });
+    }
+  }, [database]);
 
   // Функция загрузки книг
   useEffect(() => {
@@ -871,6 +904,7 @@ const Library = ({ userId }) => {
             username: data.username || "User",
             avatarUrl: data.avatarUrl || defaultAvatar,
           });
+          setRole(data.role || "");
         }
       });
     }
@@ -1046,63 +1080,75 @@ const Library = ({ userId }) => {
   };
 
   // Фильтрация книг по выбранной кафедре
-  const displayedBooks = searchQuery 
-  ? filteredBooks 
-  : filteredBooks.filter(book => book.cathedra === activeDepartment);
+  const displayedBooks = searchQuery
+    ? filteredBooks
+    : filteredBooks.filter(book => book.cathedra === activeDepartment);
+
+  if (identificationStatus === t('notident')) {
+    return (
+      <div className="not-identified-container">
+        <div className="not-identified">
+          <h2 className="not-identified-h2" data-text="T I K">T I K</h2>
+          <p style={{ color: "#008cb3", textAlign: "center", fontSize: "18px", marginTop: "15px" }}>Пройдите идентификацию, чтобы пользоваться библиотекой!</p>
+          <p style={{ color: "skyblue", marginTop: "15px" }} onClick={() => navigate(-1)}>Назад</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="glava" style={{height: "100vh"}}>
-   <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
+    <div className="glava" style={{ height: "100vh" }}>
+      <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
-        <img style={{width: "50px", height: "45px"}} src={ttulogo} alt="" />
+          <img style={{ width: "50px", height: "45px" }} src={ttulogo} alt="" />
           {isMenuOpen ? (
             <>
               <h2>TTU</h2>
-              <FiChevronLeft 
-                className="toggle-menu" 
+              <FiChevronLeft
+                className="toggle-menu"
                 onClick={toggleMenuDesktop}
               />
             </>
           ) : (
-            <FiChevronRight 
-              className="toggle-menu" 
+            <FiChevronRight
+              className="toggle-menu"
               onClick={toggleMenuDesktop}
             />
           )}
         </div>
 
         <nav className="menu-items">
-          <Link to="/" className="menu-item" style={{paddingRight: "15px"}}>
-            <FiHome className="menu-icon"/>
+          <Link to="/" className="menu-item" style={{ paddingRight: "15px" }}>
+            <FiHome className="menu-icon" />
             {isMenuOpen && <span>Главная</span>}
           </Link>
           <div className="menu-find-block">
-          <Link to="/searchpage" className="menu-item">
-             <FiSearch className="menu-icon" />
-             {isMenuOpen && <span>Поиск</span>}
-          </Link>
-          <Link to="/teachers" className="menu-item">
-             <FiUserCheck className="menu-icon" />
-             {isMenuOpen && <span>Преподаватели</span>}
-          </Link>
-          <Link to="/library" className="menu-item">
-             <FiBookOpen className="menu-icon" style={{borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px" }} />
-             {isMenuOpen && <span>Библиотека</span>}
-          </Link>
+            <Link to="/searchpage" className="menu-item">
+              <FiSearch className="menu-icon" />
+              {isMenuOpen && <span>Поиск</span>}
+            </Link>
+            <Link to="/teachers" className="menu-item">
+              <FiUserCheck className="menu-icon" />
+              {isMenuOpen && <span>Преподаватели</span>}
+            </Link>
+            <Link to="/library" className="menu-item">
+              <FiBookOpen className="menu-icon" style={{ borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px" }} />
+              {isMenuOpen && <span>Библиотека</span>}
+            </Link>
           </div>
           <Link to="/myprofile" className="menu-item">
             <FiUser className="menu-icon" />
             {isMenuOpen && <span>Профиль</span>}
           </Link>
           <div className="menu-find-block">
-          <Link to="/chats" className="menu-item">
-            <FiMessageSquare className="menu-icon" />
-            {isMenuOpen && <span>Сообщения</span>}
-          </Link>
-          <Link to="/notifications" className="menu-item">
-            <FiBell className="menu-icon" />
-            {isMenuOpen && <span>Уведомления</span>}
-          </Link>
+            <Link to="/chats" className="menu-item">
+              <FiMessageSquare className="menu-icon" />
+              {isMenuOpen && <span>Сообщения</span>}
+            </Link>
+            <Link to="/notifications" className="menu-item">
+              <FiBell className="menu-icon" />
+              {isMenuOpen && <span>Уведомления</span>}
+            </Link>
           </div>
           <Link to="/authdetails" className="menu-item">
             <FiSettings className="menu-icon" />
@@ -1111,16 +1157,16 @@ const Library = ({ userId }) => {
         </nav>
 
         <div className="logo-and-tik">
-        TRSvaHM
-        {isMenuOpen &&
-        <div>
-        <p>&copy; 2025 Все права защищены.</p>
-        </div>
-        }
+          TRSvaHM
+          {isMenuOpen &&
+            <div>
+              <p>&copy; 2025 Все права защищены.</p>
+            </div>
+          }
         </div>
       </div>
-      <div className="glav-cotainer" style={mainContentStyle}>
-      <p className="back-text">Библиотека</p>
+      <div className="glav-container" style={mainContentStyle}>
+        <p className="back-text">Библиотека</p>
         <header>
           <nav className="header-nav" style={HeaderDesktop}>
             <ul className="header-ul">
@@ -1203,20 +1249,20 @@ const Library = ({ userId }) => {
               </div>
 
               <div className="department-dropdown" style={{ margin: "20px 0", textAlign: "center" }}>
-  <label htmlFor="department-select" style={{ marginRight: "10px", fontWeight: "bold", color: "white" }}>
-    Выберите кафедру:
-  </label>
-  <select 
-    id="department-select"
-    value={activeDepartment}
-    onChange={(e) => setActiveDepartment(e.target.value)}
-    style={{ padding: "10px", borderRadius: "15px", border: "1px solid #ccc" }}
-  >
-    {departments.map((dept, index) => (
-      <option key={index} value={dept}>{dept}</option>
-    ))}
-  </select>
-</div>
+                <label htmlFor="department-select" style={{ marginRight: "10px", fontWeight: "bold", color: "white" }}>
+                  Выберите кафедру:
+                </label>
+                <select
+                  id="department-select"
+                  value={activeDepartment}
+                  onChange={(e) => setActiveDepartment(e.target.value)}
+                  style={{ padding: "10px", borderRadius: "15px", border: "1px solid #ccc" }}
+                >
+                  {departments.map((dept, index) => (
+                    <option key={index} value={dept}>{dept}</option>
+                  ))}
+                </select>
+              </div>
             </section>
 
             <section className="book-grid">
@@ -1328,7 +1374,7 @@ const Library = ({ userId }) => {
           <motion.nav variants={navbarVariants} initial="hidden" animate="visible" className="footer-nav">
             <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon" /></Link>
             <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon" /></Link>
-            <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>
+            {role === "teacher" && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
             <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon active-icon" /></Link>
             <Link to="/myprofile">
               <img src={userDetails.avatarUrl} alt="" className="footer-avatar skeleton-media-avatars" />

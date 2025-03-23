@@ -6,7 +6,8 @@
   justify-content: center;
   padding: 20px;
   height: 100vh;
-  background-color: #f9f9f9;
+  /* background-color: #1e2c39; */
+  background-color: var(--bg-color);
   width: 100%;
   overflow-x: hidden;
   box-sizing: border-box;
@@ -15,9 +16,9 @@
 /* Заголовок */
 .tch-profile-container h2 {
   font-size: 2rem;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   text-align: center;
-  color: #333;
+  color: #b7b7b7;
 }
 
 /* Основная информация и книги */
@@ -36,28 +37,45 @@
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  /* max-width: 100%; */
   width: 300px !important;
-  text-align: center;
+  /* text-align: center; */
 }
 
 .tch-profile-info img {
-  width: 150px;
-  height: 150px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  margin-bottom: 20px;
   object-fit: cover;
   border: 3px solid #ccc;
+}
+
+.teach-img-name-surname{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #98989867;
+  border-radius: 25px;
+  padding: 5px;
 }
 
 .tch-profile-info p {
   font-size: 1rem;
   margin: 10px 0;
   color: #333;
+  background: #98989867;
+  border-radius: 25px;
+  padding: 10px;
+  font-size: 15px;
 }
 
 .tch-profile-info p strong {
-  color: #4CAF50;
+  color: #369494;
+}
+
+.back-button{
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 /* Список книг и кнопки */

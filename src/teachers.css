@@ -1,5 +1,6 @@
 .tch-hero {
-    background-color: #1e2c39;
+    /* background-color: #1e2c39; */
+    background: var(--bg-color);
     padding: 10px 0; /* Отступы сверху и снизу */
     text-align: center;
     background-image: url('cyber-background.jpg');
@@ -12,6 +13,8 @@
 
 .glav-container{
   width: 100%;
+  height: 100vh;
+  background: var(--bg-color);
 }
 
 .tch-hero h1 {
@@ -30,7 +33,8 @@
     padding-top: 20px;
 }
 .teachers-section {
-    background-color: #1e2c39;
+    /* background-color: #1e2c39; */
+    background: var(--bg-color);
     color: #e0e0e0;
     padding: 10px 0;
     width: 100%;
@@ -51,9 +55,9 @@
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     margin: 20px;
+    gap: 15px;
     padding: 15px;
     width: 300px;
-    text-align: center;
     transition: transform 0.2s;
     position: relative;
     cursor: pointer;
@@ -72,14 +76,37 @@
 }
 
 .teacher-card h3 {
-    color: #1f6feb;
+    color: #495bb6;
+    font-weight: 500;
     margin-bottom: 10px;
+    background: #98989867;
+    border-radius: 25px;
+    padding: 5px;
+    padding-left: 15px;
 }
 
 .teacher-card p {
     font-size: 16px;
     line-height: 1.4;
-    color: #579d21;
+    background: #98989867;
+    color: #333;
+    border-radius: 25px;
+    padding: 10px;
+    padding-left: 15px;
+    margin-top: 5px;
+}
+
+.teacher-card strong{
+  color: #369494;
+}
+
+.gototeachprofile{
+  color: #3b6c70;
+  text-align: center;
+  margin-top: 5px;
+  background: #98989839;
+  border-radius: 25px;
+  padding: 5px;
 }
 
 .description {
@@ -342,6 +369,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 5px;
 }
 
 .comment-count {

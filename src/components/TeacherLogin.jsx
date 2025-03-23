@@ -1,98 +1,117 @@
 // import React, { useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
 // import { getDatabase, ref as dbRef, onValue, push, set } from 'firebase/database';
-// import { getStorage, ref as storageReference, uploadBytes, getDownloadURL } from 'firebase/storage';
-// import "../TeacherLogin.css";
+// import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+// import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+// import imageCompression from 'browser-image-compression';
+// import '../TeacherLogin.css';
+// import useTranslation from '../hooks/useTranslation';
 
 // const TeacherLogin = () => {
 //   const [isRegistering, setIsRegistering] = useState(false);
+//   const [loading, setLoading] = useState(false);
 //   const [error, setError] = useState('');
-
-//   // Состояния для входа
 //   const [login, setLogin] = useState('');
 //   const [password, setPassword] = useState('');
-
-//   // Состояния для регистрации
 //   const [regData, setRegData] = useState({
-//     name: '',
-//     surname: '',
-//     subject: '',
-//     login: '',
-//     password: '',
-//     photo: null, // опционально, можно загрузить фото преподавателя
+//     name: '', surname: '', subject: '', login: '', password: '',
+//     photo: null, cathedra: '', runk: ''
 //   });
 
+//   const t = useTranslation();
 //   const navigate = useNavigate();
+//   const auth = getAuth();
+//   const database = getDatabase();
 
-//   // Функция входа
-//   const handleLogin = () => {
-//     setError('');
-//     const database = getDatabase();
-//     const teachersRef = dbRef(database, 'teachers');
-
-//     onValue(
-//       teachersRef,
-//       (snapshot) => {
-//         const teachersData = snapshot.val();
-//         if (teachersData) {
-//           // Ищем преподавателя по логину и паролю (используем Object.entries, чтобы получить ключ как id)
-//           const found = Object.entries(teachersData).find(
-//             ([key, teacher]) => teacher.login === login && teacher.password === password
-//           );
-
-//           if (found) {
-//             const [teacherId, teacher] = found;
-//             teacher.id = teacherId;
-//             // При успешном входе переходим в личный кабинет преподавателя
-//             navigate(`/teacher-profile/${teacherId}`, { state: { teacher } });
-//           } else {
-//             setError('Неверный логин или пароль.');
-//           }
-//         } else {
-//           setError('Нет зарегистрированных преподавателей.');
-//         }
-//       },
-//       { onlyOnce: true }
-//     );
+//   const compressImage = async (file) => {
+//     try {
+//       return await imageCompression(file, {
+//         maxSizeMB: 1,
+//         maxWidthOrHeight: 1920,
+//         useWebWorker: true,
+//       });
+//     } catch (err) {
+//       console.error('Ошибка сжатия:', err);
+//       return file;
+//     }
 //   };
 
-//   // Функция регистрации (с возможностью загрузки фото)
-//   const handleRegister = async () => {
+//   const handleLogin = () => {
 //     setError('');
-//     // Проверяем, что все поля заполнены
-//     if (!regData.name || !regData.surname || !regData.subject || !regData.login || !regData.password) {
-//       setError('Пожалуйста, заполните все поля для регистрации.');
-//       return;
-//     }
-
-//     const database = getDatabase();
 //     const teachersRef = dbRef(database, 'teachers');
-//     const newTeacherRef = push(teachersRef);
-//     let teacherData = { ...regData };
+//     setLoading(true);
 
-//     // Если выбрано фото, загружаем его в Firebase Storage
-//     if (regData.photo) {
-//       const storage = getStorage();
-//       const photoRef = storageReference(storage, `teachers/${regData.photo.name}`);
-//       try {
-//         const snapshot = await uploadBytes(photoRef, regData.photo);
-//         const url = await getDownloadURL(snapshot.ref);
-//         teacherData.photo = url;
-//       } catch (err) {
-//         console.error('Ошибка загрузки фото:', err);
-//         setError('Ошибка загрузки фото.');
-//         return;
-//       }
+//     onValue(teachersRef, (snapshot) => {
+//       const teachers = snapshot.val();
+//       if (teachers) {
+//         const entry = Object.entries(teachers).find(
+//           ([, t]) => t.login === login && t.password === password
+//         );
+//         if (entry) {
+//           const [teacherId, teacher] = entry;
+//           navigate(`/teacher-profile/${teacherId}`, { state: { teacher: { ...teacher, id: teacherId } } });
+//         } else setError('Неверный логин или пароль.');
+//       } else setError('Нет зарегистрированных преподавателей.');
+//       setLoading(false);
+//     }, { onlyOnce: true });
+//   };
+
+//   const validateRegData = () => {
+//     const required = ['name', 'surname', 'subject', 'login', 'password', 'cathedra', 'runk'];
+//     for (let field of required) {
+//       if (!regData[field]) return `Заполните поле: ${field}`;
 //     }
+//     return '';
+//   };
+
+//   const handleRegister = async () => {
+//     const validationError = validateRegData();
+//     if (validationError) return setError(validationError);
+
+//     setLoading(true);
+//     setError('');
 
 //     try {
-//       await set(newTeacherRef, teacherData);
-//       teacherData.id = newTeacherRef.key;
-//       // После регистрации сразу перенаправляем в личный кабинет
-//       navigate(`/teacher-profile/${newTeacherRef.key}`, { state: { teacher: teacherData } });
+//       const { user } = await createUserWithEmailAndPassword(auth, regData.login, regData.password);
+//       let teacherData = { ...regData };
+
+//       if (teacherData.photo) {
+//         const compressed = await compressImage(teacherData.photo);
+//         const storage = getStorage();
+//         const photoRef = storageRef(storage, `teachers/${compressed.name}`);
+//         await uploadBytes(photoRef, compressed);
+//         teacherData.photo = await getDownloadURL(photoRef);
+//       }
+
+//       await set(dbRef(database, `teachers/${user.uid}`), teacherData);
+//       await set(dbRef(database, `users/${user.uid}`), {
+//         username: `${regData.name} ${regData.surname}`,
+//         avatarUrl: teacherData.photo || './default-image.png',
+//         teachidentstatus: 'identified',
+//         role: 'teacher',
+//         email: regData.login,
+//         cathedra: regData.cathedra,
+//         subject: regData.subject,
+//         runk: regData.runk,
+//         registeredAt: new Date().toISOString()
+//       });
+
+//       const requestRef = push(dbRef(database, 'requests'));
+//       await set(requestRef, {
+//         senderId: user.uid,
+//         receiverId: user.uid,
+//         status: 'accepted',
+//         pairId: `${user.uid}_${user.uid}`,
+//         email: regData.login,
+//         timestamp: new Date().toISOString(),
+//       });
+
+//       navigate(`/teacher-profile/${user.uid}`, { state: { teacher: teacherData } });
 //     } catch (err) {
+//       setError(err.message);
 //       console.error('Ошибка регистрации:', err);
-//       setError('Ошибка регистрации.');
+//     } finally {
+//       setLoading(false);
 //     }
 //   };
 
@@ -120,9 +139,43 @@
 //             value={regData.subject}
 //             onChange={(e) => setRegData({ ...regData, subject: e.target.value })}
 //           />
+//           {/* Выпадающий список для выбора кафедры */}
+//           <select
+//             value={regData.cathedra}
+//             onChange={(e) => setRegData({ ...regData, cathedra: e.target.value })}
+//           >
+//             <option value="">Выберите кафедру</option>
+//             <option value="Системахои Автоматикунонидашудаи Идоракуни">
+//               Системахои Автоматикунонидашудаи Идоракуни
+//             </option>
+//             <option value="Шабакахои Алока Ва Системахои Комутатсиони">
+//               Шабакахои Алока Ва Системахои Комутатсиони
+//             </option>
+//             <option value="Технологияхои Иттилооти Ва Хифзи Маълумот">
+//               Технологияхои Иттилооти Ва Хифзи Маълумот
+//             </option>
+//             <option value="Автоматонии Равандхои Технологи Ва Истехсолот">
+//               Автоматонии Равандхои Технологи Ва Истехсолот
+//             </option>
+//             <option value="Информатика Ва Техникаи Хисоббарор">
+//               Информатика Ва Техникаи Хисоббарор
+//             </option>
+//           </select>
+//           {/* Выпадающий список для выбора звания */}
+//           <select
+//             value={regData.runk}
+//             onChange={(e) => setRegData({ ...regData, runk: e.target.value })}
+//           >
+//             <option value="">Выберите звание</option>
+//             <option value="Асистент">Асистент</option>
+//             <option value="Старший">Старший</option>
+//             <option value="Доцент">Доцент</option>
+//             <option value="Доцент2">Доцент2</option>
+//             <option value="Доктор наук">Доктор наук</option>
+//           </select>
 //           <input
 //             type="text"
-//             placeholder="Логин"
+//             placeholder="Логин (email)"
 //             value={regData.login}
 //             onChange={(e) => setRegData({ ...regData, login: e.target.value })}
 //           />
@@ -132,6 +185,7 @@
 //             value={regData.password}
 //             onChange={(e) => setRegData({ ...regData, password: e.target.value })}
 //           />
+//           <p>Ваше фото:</p>
 //           <input
 //             type="file"
 //             accept="image/*"
@@ -153,7 +207,7 @@
 //           {error && <p className="error-message">{error}</p>}
 //           <input
 //             type="text"
-//             placeholder="Логин"
+//             placeholder="Логин (email)"
 //             value={login}
 //             onChange={(e) => setLogin(e.target.value)}
 //           />
@@ -183,243 +237,167 @@
 
 
 
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getDatabase, ref as dbRef, onValue, push, set } from 'firebase/database';
-import { getStorage, ref as storageReference, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import imageCompression from 'browser-image-compression';
-import "../TeacherLogin.css";
+import '../TeacherLogin.css';
+import useTranslation from '../hooks/useTranslation';
 
 const TeacherLogin = () => {
   const [isRegistering, setIsRegistering] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
-  // Состояния для входа
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
-
-  // Состояния для регистрации
   const [regData, setRegData] = useState({
-    name: '',
-    surname: '',
-    subject: '',
-    login: '',
-    password: '',
-    photo: null, // опционально, можно загрузить фото преподавателя
-    cathedra: '', // новое поле "Кафедра"
-    status: '',   // новое поле "Статус"
+    name: '', surname: '', subject: '', login: '', password: '',
+    photo: null, cathedra: '', runk: ''
   });
 
+  const t = useTranslation();
   const navigate = useNavigate();
+  const auth = getAuth();
+  const database = getDatabase();
 
-  // Функция для сжатия изображения
   const compressImage = async (file) => {
-    const options = {
-      maxSizeMB: 1,
-      maxWidthOrHeight: 1920,
-      useWebWorker: true,
-    };
     try {
-      const compressedFile = await imageCompression(file, options);
-      return compressedFile;
-    } catch (error) {
-      console.log("Ошибка при сжатии изображения:", error);
+      return await imageCompression(file, {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+      });
+    } catch (err) {
+      console.error('Ошибка сжатия:', err);
       return file;
     }
   };
 
-  // Функция входа
   const handleLogin = () => {
     setError('');
-    const database = getDatabase();
     const teachersRef = dbRef(database, 'teachers');
+    setLoading(true);
 
-    onValue(
-      teachersRef,
-      (snapshot) => {
-        const teachersData = snapshot.val();
-        if (teachersData) {
-          // Ищем преподавателя по логину и паролю (используем Object.entries для получения ключа как id)
-          const found = Object.entries(teachersData).find(
-            ([key, teacher]) => teacher.login === login && teacher.password === password
-          );
-
-          if (found) {
-            const [teacherId, teacher] = found;
-            teacher.id = teacherId;
-            // При успешном входе переходим в личный кабинет преподавателя
-            navigate(`/teacher-profile/${teacherId}`, { state: { teacher } });
-          } else {
-            setError('Неверный логин или пароль.');
-          }
-        } else {
-          setError('Нет зарегистрированных преподавателей.');
-        }
-      },
-      { onlyOnce: true }
-    );
+    onValue(teachersRef, (snapshot) => {
+      const teachers = snapshot.val();
+      if (teachers) {
+        const entry = Object.entries(teachers).find(
+          ([, t]) => t.login === login && t.password === password
+        );
+        if (entry) {
+          const [teacherId, teacher] = entry;
+          navigate(`/teacher-profile/${teacherId}`, { state: { teacher: { ...teacher, id: teacherId } } });
+        } else setError('Неверный логин или пароль.');
+      } else setError('Нет зарегистрированных преподавателей.');
+      setLoading(false);
+    }, { onlyOnce: true });
   };
 
-  // Функция регистрации (с возможностью загрузки фото)
+  const validateRegData = () => {
+    const required = ['name', 'surname', 'subject', 'login', 'password', 'cathedra', 'runk'];
+    for (let field of required) {
+      if (!regData[field]) return `Заполните поле: ${field}`;
+    }
+    return '';
+  };
+
   const handleRegister = async () => {
+    const validationError = validateRegData();
+    if (validationError) return setError(validationError);
+
+    setLoading(true);
     setError('');
-    // Проверяем, что все поля заполнены
-    if (
-      !regData.name ||
-      !regData.surname ||
-      !regData.subject ||
-      !regData.login ||
-      !regData.password ||
-      !regData.cathedra ||
-      !regData.status
-    ) {
-      setError('Пожалуйста, заполните все поля для регистрации.');
-      return;
-    }
-
-    const database = getDatabase();
-    const teachersRef = dbRef(database, 'teachers');
-    const newTeacherRef = push(teachersRef);
-    let teacherData = { ...regData };
-
-    // Если выбрано фото, сначала сжимаем и загружаем его в Firebase Storage
-    if (regData.photo) {
-      const storage = getStorage();
-      try {
-        const compressedPhoto = await compressImage(regData.photo);
-        const photoRef = storageReference(storage, `teachers/${compressedPhoto.name}`);
-        await uploadBytes(photoRef, compressedPhoto);
-        const url = await getDownloadURL(photoRef);
-        teacherData.photo = url;
-      } catch (err) {
-        console.error('Ошибка загрузки фото:', err);
-        setError('Ошибка загрузки фото.');
-        return;
-      }
-    }
 
     try {
-      await set(newTeacherRef, teacherData);
-      teacherData.id = newTeacherRef.key;
-      // После регистрации сразу перенаправляем в личный кабинет
-      navigate(`/teacher-profile/${newTeacherRef.key}`, { state: { teacher: teacherData } });
+      const { user } = await createUserWithEmailAndPassword(auth, regData.login, regData.password);
+      let teacherData = { ...regData };
+
+      if (teacherData.photo) {
+        const compressed = await compressImage(teacherData.photo);
+        const storage = getStorage();
+        const photoRef = storageRef(storage, `teachers/${compressed.name}`);
+        await uploadBytes(photoRef, compressed);
+        teacherData.photo = await getDownloadURL(photoRef);
+      }
+
+      await set(dbRef(database, `teachers/${user.uid}`), teacherData);
+      await set(dbRef(database, `users/${user.uid}`), {
+        username: `${regData.name} ${regData.surname}`,
+        avatarUrl: teacherData.photo || './default-image.png',
+        teachidentstatus: 'identified',
+        role: 'teacher',
+        email: regData.login,
+        cathedra: regData.cathedra,
+        subject: regData.subject,
+        runk: regData.runk,
+        registeredAt: new Date().toISOString()
+      });
+
+      const requestRef = push(dbRef(database, 'requests'));
+      await set(requestRef, {
+        senderId: user.uid,
+        receiverId: user.uid,
+        status: 'accepted',
+        pairId: `${user.uid}_${user.uid}`,
+        email: regData.login,
+        timestamp: new Date().toISOString(),
+      });
+
+      navigate(`/teacher-profile/${user.uid}`, { state: { teacher: teacherData } });
     } catch (err) {
+      setError(err.message);
       console.error('Ошибка регистрации:', err);
-      setError('Ошибка регистрации.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
+    <div className="reg-teach-basic-container">
     <div className="tch-login-container">
+      <h2>{isRegistering ? 'Регистрация преподавателя' : 'Вход в личный кабинет преподавателя'}</h2>
+      {error && <p className="error-message">{error}</p>}
+      {loading && <p className="loading-message">Загрузка...</p>}
+
       {isRegistering ? (
         <>
-          <h2 style={{ color: "black" }}>Регистрация преподавателя</h2>
-          {error && <p className="error-message">{error}</p>}
-          <input
-            type="text"
-            placeholder="Имя"
-            value={regData.name}
-            onChange={(e) => setRegData({ ...regData, name: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Фамилия"
-            value={regData.surname}
-            onChange={(e) => setRegData({ ...regData, surname: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Предмет"
-            value={regData.subject}
-            onChange={(e) => setRegData({ ...regData, subject: e.target.value })}
-          />
-          {/* Новое поле "Кафедра" с выбором из списка */}
-          <select
-            value={regData.cathedra}
-            onChange={(e) => setRegData({ ...regData, cathedra: e.target.value })}
-          >
+          <input placeholder="Имя" value={regData.name} onChange={e => setRegData({ ...regData, name: e.target.value })} />
+          <input placeholder="Фамилия" value={regData.surname} onChange={e => setRegData({ ...regData, surname: e.target.value })} />
+          <input placeholder="Предмет" value={regData.subject} onChange={e => setRegData({ ...regData, subject: e.target.value })} />
+          <select value={regData.cathedra} onChange={e => setRegData({ ...regData, cathedra: e.target.value })}>
             <option value="">Выберите кафедру</option>
-            <option value="Системахои Автоматикунонидашудаи Идоракуни">
-              Системахои Автоматикунонидашудаи Идоракуни
-            </option>
-            <option value="Шабакахои Алока Ва Системахои Комутатсиони">
-              Шабакахои Алока Ва Системахои Комутатсиони
-            </option>
-            <option value="Технологияхои Иттилооти Ва Хифзи Маълумот">
-              Технологияхои Иттилооти Ва Хифзи Маълумот
-            </option>
-            <option value="Автоматонии Равандхои Технологи Ва Истехсолот">
-              Автоматонии Равандхои Технологи Ва Истехсолот
-            </option>
-            <option value="Информатика Ва Техникаи Хисоббарор">
-              Информатика Ва Техникаи Хисоббарор
-            </option>
+            <option value="Системахои Автоматикунонидашудаи Идоракуни">Системахои Автоматикунонидашудаи Идоракуни</option>
+            <option value="Шабакахои Алока Ва Системахои Комутатсиони">Шабакахои Алока Ва Системахои Комутатсиони</option>
+            <option value="Технологияхои Иттилооти Ва Хифзи Маълумот">Технологияхои Иттилооти Ва Хифзи Маълумот</option>
+            <option value="Автоматонии Равандхои Технологи Ва Истехсолот">Автоматонии Равандхои Технологи Ва Истехсолот</option>
+            <option value="Информатика Ва Техникаи Хисоббарор">Информатика Ва Техникаи Хисоббарор</option>
           </select>
-          {/* Новое поле "Статус" с выбором из списка */}
-          <select
-            value={regData.status}
-            onChange={(e) => setRegData({ ...regData, status: e.target.value })}
-          >
-            <option value="">Выберите статус</option>
+          <select value={regData.runk} onChange={e => setRegData({ ...regData, runk: e.target.value })}>
+            <option value="">Выберите звание</option>
             <option value="Асистент">Асистент</option>
             <option value="Старший">Старший</option>
             <option value="Доцент">Доцент</option>
             <option value="Доцент2">Доцент2</option>
             <option value="Доктор наук">Доктор наук</option>
           </select>
-          <input
-            type="text"
-            placeholder="Логин"
-            value={regData.login}
-            onChange={(e) => setRegData({ ...regData, login: e.target.value })}
-          />
-          <input
-            type="password"
-            placeholder="Пароль"
-            value={regData.password}
-            onChange={(e) => setRegData({ ...regData, password: e.target.value })}
-          />
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) =>
-              setRegData({ ...regData, photo: e.target.files[0] })
-            }
-          />
-          <button onClick={handleRegister}>Зарегистрироваться</button>
-          <p className="toggle-auth">
-            Уже есть аккаунт?{" "}
-            <span onClick={() => setIsRegistering(false)} style={{ color: 'blue', cursor: 'pointer' }}>
-              Войти
-            </span>
-          </p>
+          <input placeholder="Email" value={regData.login} onChange={e => setRegData({ ...regData, login: e.target.value })} />
+          <input type="password" placeholder="Пароль" value={regData.password} onChange={e => setRegData({ ...regData, password: e.target.value })} />
+          <p>Ваше фото:</p>
+          <input type="file" accept="image/*" onChange={e => setRegData({ ...regData, photo: e.target.files[0] })} />
+          <button onClick={handleRegister} disabled={loading}>Зарегистрироваться</button>
+          <p className="toggle-auth">Уже есть аккаунт? <span onClick={() => setIsRegistering(false)} style={{ color: '#00e5ff', cursor: 'pointer' }}>Войти</span></p>
         </>
       ) : (
         <>
-          <h2 style={{ color: "black" }}>Вход в личный кабинет преподавателя</h2>
-          {error && <p className="error-message">{error}</p>}
-          <input
-            type="text"
-            placeholder="Логин"
-            value={login}
-            onChange={(e) => setLogin(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Пароль"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button onClick={handleLogin}>Войти</button>
-          <p className="toggle-auth">
-            Нет аккаунта?{" "}
-            <span onClick={() => setIsRegistering(true)} style={{ color: 'blue', cursor: 'pointer' }}>
-              Зарегистрироваться
-            </span>
-          </p>
+          <input placeholder="Email" value={login} onChange={e => setLogin(e.target.value)} />
+          <input type="password" placeholder="Пароль" value={password} onChange={e => setPassword(e.target.value)} />
+          <button onClick={handleLogin} disabled={loading}>Войти</button>
+          <p className="toggle-auth">Нет аккаунта? <span onClick={() => setIsRegistering(true)} style={{ color: '#00e5ff', cursor: 'pointer' }}>Зарегистрироваться</span></p>
         </>
       )}
+    </div>
     </div>
   );
 };
