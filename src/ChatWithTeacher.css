@@ -166,7 +166,7 @@ object-fit: cover;
   padding: 10px;
   width: 100%;
   /* background-color: #2c3e50; */
-  background: var(--bg-color);
+  background: var(--bg-container-color);
   min-height: 722px;
 }
 
@@ -183,14 +183,16 @@ object-fit: cover;
 .chat-list-head{
   width: 100%;
   gap: 15px;
+  padding-bottom: 10px;
   display: flex;
   align-items: center;
   justify-content: space-around;
   white-space: nowrap;
   position: fixed;
   top: 0;
+  left: 0;
   /* background: #2c3e50e8; */
-  background: var(--primary-color);
+  background: var(--bg-content-color);
 }
 
 .chat-list {

@@ -1000,6 +1000,7 @@ import ttulogo from "../Ttulogo.png";
 import { LanguageContext } from '../contexts/LanguageContext';
 import { translations } from '../translations';
 import useTranslation from '../hooks/useTranslation';
+import { applyTheme, themes } from "../theme"; 
 
 const AuthDetails = () => {
   const [authUser, setAuthUser] = useState(null);
@@ -1490,44 +1491,10 @@ const groupDropdownRef = useRef(null);
     }
   };
 
-  const themes = {
-    standard: {
-      '--bg-color': '#1e2c39',
-      '--text-color': '#ffffff',
-      '--primary-color': '#2c3e50',
-      // Добавьте другие переменные для стандартной темы
-    },
-    light: {
-      '--bg-color': '#d8e7ea',
-      '--text-color': '#000000',
-      '--primary-color': '#bdcfe0',
-      // Добавьте другие переменные для светлой темы
-    },
-    dark: {
-      '--bg-color': '#0f0f0f',
-      '--text-color': '#ffffff',
-      '--primary-color': '#000',
-      // Добавьте другие переменные для тёмной темы
-    }
-  };
-  
-  // Функция для применения выбранной темы
-  const applyTheme = (themeName) => {
-    const theme = themes[themeName];
-    Object.keys(theme).forEach(variable => {
-      document.documentElement.style.setProperty(variable, theme[variable]);
-    });
-  };
-
-  // Применяем тему при загрузке или при смене темы
-  useEffect(() => {
-    applyTheme(theme);
-  }, [theme]);
-
-  // Обработчик смены темы
   const handleThemeChange = (selectedTheme) => {
     setTheme(selectedTheme);
     localStorage.setItem('theme', selectedTheme);
+    applyTheme(selectedTheme);
     setShowThemeModal(false);
   };
 

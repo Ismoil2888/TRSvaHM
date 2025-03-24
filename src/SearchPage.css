@@ -1,5 +1,6 @@
 .search-students-page {
-    background: #1e2c39;
+    /* background: #1e2c39; */
+    background: var(--bg-container-color);
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -11,7 +12,7 @@
 
   .search-page{
     /* background: #1e2c39; */
-    background: var(--bg-color);
+    background: var(--bg-container-color);
     height: 100vh;
     display: flex;
     flex-direction: column;

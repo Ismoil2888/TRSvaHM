@@ -71,6 +71,11 @@ const ChatList = () => {
     transition: "margin 0.3s ease",
   };
 
+  const HeaderDesktop = {
+    margin: isMenuOpen ? "0px 80px" : "0px 17px",
+    transition: "margin 0.3s ease",
+  };
+
   // Функция для успешных уведомлений
   const showNotification = (message) => {
     setNotificationType("success");
@@ -296,7 +301,7 @@ useEffect(() => {
             {notification}
           </div>
         )} {/* Уведомление */}
-        <div className="chat-list-head">
+        <div className="chat-list-head" style={HeaderDesktop}>
           <FaChevronLeft style={{ color: "white", fontSize: "25px" }} onClick={() => navigate(-1)} />
           <h2 style={{ marginRight: "160px" }}>{t('mychats')}</h2>
         </div>

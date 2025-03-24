@@ -64,7 +64,7 @@ const NotificationsPage = () => {
   };
 
   const mainContentStyle = {
-    marginLeft: isMobile ? (isMenuOpen ? "360px" : "0px") : (isMenuOpen ? "340px" : "150px"),
+    marginLeft: isMobile ? (isMenuOpen ? "360px" : "0px") : (isMenuOpen ? "340px" : "110px"),
     transition: "margin 0.3s ease",
   };
 

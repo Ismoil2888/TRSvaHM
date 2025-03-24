@@ -31,12 +31,19 @@ import NotificationsPage from "./components/NotificationsPage";
 import Chat from "./components/Chat";
 import ChatList from "./components/ChatList";
 import { LanguageProvider } from './contexts/LanguageContext';
+import { applyTheme } from "./theme";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // состояние для загрузки
   const [showPWAInstallPrompt, setShowPWAInstallPrompt] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+useEffect(() => {
+  // Считываем сохранённую тему или задаём стандартную
+  const savedTheme = localStorage.getItem('theme') || 'standard';
+  applyTheme(savedTheme);
+}, []);
 
   // Проверка PWA
   useEffect(() => {

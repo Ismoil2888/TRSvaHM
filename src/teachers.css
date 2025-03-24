@@ -1,6 +1,6 @@
 .tch-hero {
     /* background-color: #1e2c39; */
-    background: var(--bg-color);
+    background: var(--bg-container-color);
     padding: 10px 0; /* Отступы сверху и снизу */
     text-align: center;
     background-image: url('cyber-background.jpg');
@@ -14,7 +14,7 @@
 .glav-container{
   width: 100%;
   height: 100vh;
-  background: var(--bg-color);
+  background: var(--bg-container-color);
 }
 
 .tch-hero h1 {
@@ -34,7 +34,7 @@
 }
 .teachers-section {
     /* background-color: #1e2c39; */
-    background: var(--bg-color);
+    background: var(--bg-container-color);
     color: #e0e0e0;
     padding: 10px 0;
     width: 100%;

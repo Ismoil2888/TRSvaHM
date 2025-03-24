@@ -89,6 +89,7 @@
     border-radius: 8px;
     margin-bottom: 20px;
     width: 97%;
+    color: var(--text-color);
   }
   
   .post-header {
@@ -108,7 +109,8 @@
   
   .post-username {
     font-weight: bold;
-    color: white;
+    /* color: white; */
+    color: var(--text-color);
   }
   
   .post-media {
@@ -127,7 +129,8 @@
   
   .post-icon {
     font-size: 24px;
-    color: white;
+    /* color: white; */
+    color: var(--text-color);
   }
   
   .post-likes {
@@ -383,7 +386,7 @@ width: 90%; */
   top: 0;
   height: 100vh;
   /* background: #2c3e50; */
-  background: var(--primary-color);
+  background: var(--bg-content-color);
   box-shadow: 2px 0 10px rgba(0,0,0,0.1);
   z-index: 99999;
   transition: width 0.3s ease;

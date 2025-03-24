@@ -85,7 +85,7 @@ header nav ul li {
 
 .home-container{
   /* background: #1e2c39; */
-  background: var(--bg-color);
+  background: var(--bg-container-color);
   color: #c9d1d9;
   width: 100%;
 }
@@ -176,7 +176,8 @@ footer {
     width: 95%;
     height: 35px;
     padding: 15px 0;
-    background-color: #2c3e5098;
+    /* background-color: #2c3e5098; */
+    background-color: var(--bg-footer-color);
     border-radius: 25px;
     backdrop-filter: blur(15px);
     color: #fff;
@@ -186,7 +187,8 @@ footer {
 
   .footer-icon {
     font-size: 24px;
-    color: #ffffff;
+    /* color: #ffffff; */
+    color: var(--text-color);
     transition: color 0.3s;
   }
 
@@ -659,7 +661,7 @@ header nav ul li a:hover::before {
           flex-direction: column;
           align-items: center;
           /* background-color: #1e2c39; */
-          background-color: var(--bg-color);
+          background-color: var(--bg-container-color);
         }
         
         .profile-content {
@@ -667,7 +669,7 @@ header nav ul li a:hover::before {
           /* height: 700px; */
           max-width: 500px;
           /* background-color: #2c3e50; */
-          background: var(--primary-color);
+          background: var(--bg-content-color);
           /* color: white; */
           color: var(--text-color);
           padding: 20px 30px;
@@ -675,7 +677,8 @@ header nav ul li a:hover::before {
         }
 
         .profile-content h3{
-          color: white;
+          /* color: white; */
+          color: var(--text-color);
         }
         
         .profile-header {
@@ -1713,8 +1716,7 @@ color: transparent;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* background: linear-gradient(to left top, #2c3e50f3, #2c3e50); */
-  background: var(--primary-color);
+  background: var(--bg-header-color);
 }
 
   .menu{
