@@ -1811,7 +1811,7 @@ const groupDropdownRef = useRef(null);
             <div className="settings">
               <h3>{t('settings')}</h3>
               <ul>
-              <li onClick={() => setShowThemeModal(true)}>Тема</li>
+              <li onClick={() => setShowThemeModal(true)}>{t('mode')}</li>
 
   {/* Модальное окно для выбора темы */}
   {showThemeModal && (

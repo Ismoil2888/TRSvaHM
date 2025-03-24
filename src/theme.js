@@ -2,6 +2,7 @@ export const themes = {
     standard: {
       '--bg-container-color': '#1e2c39',
       '--bg-header-color': 'linear-gradient(to left top, #2c3e50f3, #2c3e50)',
+      '--bg-sidebar-color': '#2c3e50',
       '--text-color': '#ffffff',
       '--bg-content-color': '#2c3e50',
       '--bg-footer-color': '#2c3e5098'
@@ -9,6 +10,7 @@ export const themes = {
     light: {
       '--bg-container-color': '#ffffff',
       '--bg-header-color': 'linear-gradient(to left top, #ede3e3ea, #ede3e3)',
+      '--bg-sidebar-color': '#c8cacb',
       '--text-color': '#000000',
       '--bg-content-color': '',
       '--bg-footer-color': '#ede3e38f'
@@ -16,6 +18,7 @@ export const themes = {
     dark: {
       '--bg-container-color': '#1e1e1e',
       '--bg-header-color': 'linear-gradient(to left top, #333333ed, #333)',
+      '--bg-sidebar-color': '#333',
       '--text-color': '#ffffff',
       '--bg-content-color': '#333',
       '--bg-footer-color': '#33333398'

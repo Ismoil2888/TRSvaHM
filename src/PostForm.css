@@ -386,7 +386,7 @@ width: 90%; */
   top: 0;
   height: 100vh;
   /* background: #2c3e50; */
-  background: var(--bg-content-color);
+  background: var(--bg-sidebar-color);
   box-shadow: 2px 0 10px rgba(0,0,0,0.1);
   z-index: 99999;
   transition: width 0.3s ease;

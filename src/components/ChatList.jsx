@@ -72,7 +72,7 @@ const ChatList = () => {
   };
 
   const HeaderDesktop = {
-    margin: isMenuOpen ? "0px 80px" : "0px 17px",
+    margin: isMenuOpen ? "0px 80px" : "0px",
     transition: "margin 0.3s ease",
   };
 

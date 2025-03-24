@@ -24,6 +24,7 @@ export const translations = {
       ident: "Муайян карда шудааст",
       status: "онлайн",
       wasonline: "онлайн буд",
+      mode: "Режим",
       //NotificationsPage
       dontnotifications: "Шумо ҳоло ягон огоҳинома надоред",
       //SearchPage
@@ -72,6 +73,7 @@ export const translations = {
       ident: "идентифицирован",
       status: "в сети",
       wasonline: "был(а) в сети",
+      mode: "Режим",
       //NotificationsPage
       dontnotifications: "У вас пока нет уведомлений",
       //SearchPage
@@ -120,6 +122,7 @@ export const translations = {
       ident: "Identified",
       status: "Online",
       wasonline: "Was online",
+      mode: "Mode",
       //NotificationsPage
       dontnotifications: "You don't have any notifications yet",
       //SearchPage

@@ -183,7 +183,7 @@ object-fit: cover;
 .chat-list-head{
   width: 100%;
   gap: 15px;
-  padding-bottom: 10px;
+  padding-bottom: 5px;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -192,14 +192,14 @@ object-fit: cover;
   top: 0;
   left: 0;
   /* background: #2c3e50e8; */
-  background: var(--bg-content-color);
+  background: var(--bg-header-color);
 }
 
 .chat-list {
   list-style: none;
   padding: 0;
   margin: 0;
-  margin-top: 40px;
+  margin-top: 45px;
 }
 
 .chat-list-item {
