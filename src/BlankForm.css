@@ -128,6 +128,13 @@
     left: 5%;
   }
 
+  @media (width > 700px) {
+    .notification{
+      position: absolute;
+      left: 500px;
+    }
+  }
+
   .notification.success {
     background-color: rgba(0, 255, 157, 0.3); 
     color: rgb(255, 255, 255);

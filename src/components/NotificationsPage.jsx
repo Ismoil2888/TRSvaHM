@@ -279,7 +279,7 @@ const NotificationsPage = () => {
               <FaArrowLeft />
             </Link>
 
-            <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>Уведомления</ul>
+            <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>{t('notifications')}</ul>
 
             <div className={`burger-menu-icon ${isMenuOpenMobile ? 'open' : ''}`} onClick={toggleMenuMobile}>
               <span className="bm-span"></span>

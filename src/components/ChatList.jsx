@@ -290,7 +290,7 @@ useEffect(() => {
         TRSvaHM
         {isMenuOpen &&
         <div>
-        <p className="txt">&copy; 2025 Все права защищены.</p>
+        <p className="txt">&copy; 2025 {t("rights")}.</p>
         </div>
         }
         </div>

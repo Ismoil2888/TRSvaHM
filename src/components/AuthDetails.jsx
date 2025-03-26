@@ -1500,6 +1500,11 @@ const groupDropdownRef = useRef(null);
 
   return (
     <div className="profile-container">
+         {notification && (
+            <div className={`notification ${notificationType}`}>
+              {notification}
+            </div>
+          )} {/* Уведомление */}
     <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
         <img style={{width: "50px", height: "45px"}} src={ttulogo} alt="" />
@@ -1562,19 +1567,13 @@ const groupDropdownRef = useRef(null);
         TRSvaHM
         {isMenuOpen &&
         <div>
-        <p className="txt">&copy; 2025 Все права защищены.</p>
+        <p className="txt">&copy; 2025 {t("rights")}.</p>
         </div>
         }
         </div>
       </div>
       {authUser ? (
         <div className="profile-content">
-          {notification && (
-            <div className={`notification ${notificationType}`}>
-              {notification}
-            </div>
-          )} {/* Уведомление */}
-
           <div className="profile-header">
 
             <Link className="back-button white-icon" onClick={() => navigate(-1)}>

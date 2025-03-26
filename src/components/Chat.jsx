@@ -19,6 +19,7 @@ import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight,
 import basiclogo from "../basic-logo.png";
 import ttulogo from "../Ttulogo.png";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import useTranslation from '../hooks/useTranslation';
 
 const Chat = () => {
   const { chatRoomId } = useParams();
@@ -49,6 +50,7 @@ const Chat = () => {
   const QUICK_EMOJIS = ['👍', '❤️', '😄', '😡', '🎉'];
   const [showFullEmojiPicker, setShowFullEmojiPicker] = useState(false);
   const [selectedEmojiMessageId, setSelectedEmojiMessageId] = useState(null);
+  const t = useTranslation();
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(() => {
     // Восстанавливаем состояние из localStorage при инициализации
@@ -632,7 +634,7 @@ const Chat = () => {
         TRSvaHM
         {isMenuOpen &&
         <div>
-        <p className="txt">&copy; 2025 Все права защищены.</p>
+        <p className="txt">&copy; 2025 {t("rights")}.</p>
         </div>
         }
         </div>

@@ -388,69 +388,76 @@ const About = () => {
 
   return (
     <div style={mainContentStyle}>
-      <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
+       <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <img style={{ width: "50px", height: "45px" }} src={ttulogo} alt="" />
           {isMenuOpen ? (
             <>
               <h2>TTU</h2>
-              <FiChevronLeft className="toggle-menu" onClick={toggleMenuDesktop} />
+              <FiChevronLeft
+                className="toggle-menu"
+                onClick={toggleMenuDesktop}
+              />
             </>
           ) : (
-            <FiChevronRight className="toggle-menu" onClick={toggleMenuDesktop} />
+            <FiChevronRight
+              className="toggle-menu"
+              onClick={toggleMenuDesktop}
+            />
           )}
         </div>
+
         <nav className="menu-items">
-          <Link to="/" className="menu-item">
-            <FiHome className="menu-icon" style={{ color: "lightgreen" }} />
-            {isMenuOpen && <span>Главная</span>}
+          <Link to="/" className="menu-item" style={{ paddingRight: "15px" }}>
+            <FiHome className="menu-icon" style={{ color: "orange" }} />
+            {isMenuOpen && <span className="txt">Главная</span>}
           </Link>
           <div className="menu-find-block">
             <Link to="/searchpage" className="menu-item">
               <FiSearch className="menu-icon" />
-              {isMenuOpen && <span>Поиск</span>}
+              {isMenuOpen && <span className="txt">Поиск</span>}
             </Link>
             <Link to="/teachers" className="menu-item">
               <FiUserCheck className="menu-icon" />
-              {isMenuOpen && <span>Преподаватели</span>}
+              {isMenuOpen && <span className="txt">Преподаватели</span>}
             </Link>
             <Link to="/library" className="menu-item">
               <FiBookOpen className="menu-icon" />
-              {isMenuOpen && <span>Библиотека</span>}
+              {isMenuOpen && <span className="txt">Библиотека</span>}
             </Link>
           </div>
           <Link to="/myprofile" className="menu-item">
             <FiUser className="menu-icon" />
-            {isMenuOpen && <span>Профиль</span>}
+            {isMenuOpen && <span className="txt">Профиль</span>}
           </Link>
           <div className="menu-find-block">
             <Link to="/chats" className="menu-item">
               <FiMessageSquare className="menu-icon" />
-              {isMenuOpen && <span>Сообщения</span>}
+              {isMenuOpen && <span className="txt">Сообщения</span>}
             </Link>
             <Link to="/notifications" className="menu-item">
               <FiBell className="menu-icon" />
-              {isMenuOpen && <span>Уведомления</span>}
+              {isMenuOpen && <span className="txt">Уведомления</span>}
             </Link>
           </div>
           <Link to="/authdetails" className="menu-item">
             <FiSettings className="menu-icon" />
-            {isMenuOpen && <span>Настройки</span>}
+            {isMenuOpen && <span className="txt">Настройки</span>}
           </Link>
         </nav>
+
         <div className="logo-and-tik">
           TRSvaHM
-          {isMenuOpen && (
+          {isMenuOpen &&
             <div>
-              <p>&copy; 2025 Все права защищены.</p>
+              <p className="txt">&copy; 2025 Все права защищены.</p>
             </div>
-          )}
+          }
         </div>
       </div>
-
       <header>
         <div className="header-nav-2">
-          <Link className="back-button" style={{ marginLeft: "15px", color: "white" }} onClick={() => navigate(-1)}>
+          <Link className="back-button white-icon" style={{ marginLeft: "15px" }} onClick={() => navigate(-1)}>
             <FaArrowLeft />
           </Link>          
           <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>Факультет</ul>
@@ -556,7 +563,7 @@ const About = () => {
       </section>
 
       <footer className="footer-desktop">
-        <p>&copy; 2024 Факультет Кибербезопасности. Все права защищены.</p>
+        <p>&copy; 2025 Факультет Кибербезопасности. Все права защищены.</p>
       </footer>
     </div>
   );

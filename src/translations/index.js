@@ -1,5 +1,6 @@
 export const translations = {
   tajik: {
+    rights: "Ҳама ҳуқуқ маҳфуз аст",
     //AuthDetails
     language: "Забон",
     greeting: "Салом",
@@ -26,6 +27,7 @@ export const translations = {
     wasonline: "онлайн буд",
     mode: "Режим",
     //NotificationsPage
+    notifications: "Огоҳиномаҳо",
     dontnotifications: "Шумо ҳоло ягон огоҳинома надоред",
     //SearchPage
     find: "Ҷустуҷӯ кунеду, ёбед",
@@ -39,6 +41,7 @@ export const translations = {
     teachcollective: "Омӯзгорон",
     //Chats
     mychats: "Чатҳои ман",
+    messages: "Паёмҳо",
     //HomePage
     main: "Асосӣ",
     //MyProfile, UserProfile
@@ -60,6 +63,7 @@ export const translations = {
     teacher: "омузгор",
   },
   russian: {
+    rights: "Все права защищены",
     //AuthDetails
     language: "Язык",
     greeting: "Привет",
@@ -86,6 +90,7 @@ export const translations = {
     wasonline: "был(а) в сети",
     mode: "Режим",
     //NotificationsPage
+    notifications: "Уведомления",
     dontnotifications: "У вас пока нет уведомлений",
     //SearchPage
     find: "Найдите то что искали",
@@ -99,6 +104,7 @@ export const translations = {
     teachcollective: "Преподавательский Состав",
     //Chats
     mychats: "Мои чаты",
+    messages: "Сообщения",
     //HomePage
     main: "Главная",
     //MyProfile, UserProfile
@@ -120,6 +126,7 @@ export const translations = {
     teacher: "преподаватель",
   },
   english: {
+    rights: "All rights reserved",
     //AuthDetails
     language: "Language",
     greeting: "Hello",
@@ -146,6 +153,7 @@ export const translations = {
     wasonline: "Was online",
     mode: "Mode",
     //NotificationsPage
+    notifications: "Notifications",
     dontnotifications: "You don't have any notifications yet",
     //SearchPage
     find: "Find what you need",
@@ -159,6 +167,7 @@ export const translations = {
     teachcollective: "Teaching staff",
     //Chats
     mychats: "My chats",
+    messages: "Messages",
     //HomePage
     main: "Main",
     //MyProfile, UserProfile

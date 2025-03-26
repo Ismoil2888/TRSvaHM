@@ -260,7 +260,7 @@ const SearchStudents = () => {
 
   return (
     <div className="glava">
-      <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
+        <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <img style={{ width: "50px", height: "45px" }} src={ttulogo} alt="" />
           {isMenuOpen ? (
@@ -280,34 +280,38 @@ const SearchStudents = () => {
         </div>
 
         <nav className="menu-items">
-          <Link to="/" className="menu-item">
+          <Link to="/" className="menu-item" style={{ paddingRight: "15px" }}>
             <FiHome className="menu-icon" />
             {isMenuOpen && <span className="txt">Главная</span>}
           </Link>
-          <Link to="/searchpage" className="menu-item">
-            <FiSearch className="menu-icon" style={{ color: "orange" }} />
-            {isMenuOpen && <span className="txt">Поиск</span>}
-          </Link>
-          <Link to="/teachers" className="menu-item">
-            <FiUserCheck className="menu-icon" />
-            {isMenuOpen && <span className="txt">Преподаватели</span>}
-          </Link>
-          <Link to="/library" className="menu-item">
-            <FiBookOpen className="menu-icon" />
-            {isMenuOpen && <span className="txt">Библиотека</span>}
-          </Link>
+          <div className="menu-find-block">
+            <Link to="/searchpage" className="menu-item">
+              <FiSearch className="menu-icon" style={{ color: "orange" }} />
+              {isMenuOpen && <span className="txt">Поиск</span>}
+            </Link>
+            <Link to="/teachers" className="menu-item">
+              <FiUserCheck className="menu-icon" />
+              {isMenuOpen && <span className="txt">Преподаватели</span>}
+            </Link>
+            <Link to="/library" className="menu-item">
+              <FiBookOpen className="menu-icon" />
+              {isMenuOpen && <span className="txt">Библиотека</span>}
+            </Link>
+          </div>
           <Link to="/myprofile" className="menu-item">
             <FiUser className="menu-icon" />
             {isMenuOpen && <span className="txt">Профиль</span>}
           </Link>
-          <Link to="/chats" className="menu-item">
-            <FiMessageSquare className="menu-icon" />
-            {isMenuOpen && <span className="txt">Сообщения</span>}
-          </Link>
-          <Link to="/notifications" className="menu-item">
-            <FiBell className="menu-icon" />
-            {isMenuOpen && <span className="txt">Уведомления</span>}
-          </Link>
+          <div className="menu-find-block">
+            <Link to="/chats" className="menu-item">
+              <FiMessageSquare className="menu-icon" />
+              {isMenuOpen && <span className="txt">Сообщения</span>}
+            </Link>
+            <Link to="/notifications" className="menu-item">
+              <FiBell className="menu-icon" />
+              {isMenuOpen && <span className="txt">Уведомления</span>}
+            </Link>
+          </div>
           <Link to="/authdetails" className="menu-item">
             <FiSettings className="menu-icon" />
             {isMenuOpen && <span className="txt">Настройки</span>}
@@ -315,23 +319,21 @@ const SearchStudents = () => {
         </nav>
 
         <div className="logo-and-tik">
-          <img
-            src={basiclogo}
-            alt="logo"
-            className="tiklogo"
-          />
-          {isMenuOpen && (
-            <span style={{ fontSize: "35px", fontWeight: "bold", color: "#9daddf" }}>TIK</span>
-          )}
+          TRSvaHM
+          {isMenuOpen &&
+            <div>
+              <p className="txt">&copy; 2025 {t("rights")}.</p>
+            </div>
+          }
         </div>
       </div>
       <div className="search-students-page" style={mainContentStyle}>
         <header>
           <nav className="header-nav" style={HeaderDesktop}>
             <ul className="header-ul">
-              <li><Link to="/home">Главная</Link></li>
-              <li><Link to="/about">О факультете</Link></li>
-              <li><Link to="/teachers">Преподаватели</Link></li>
+              <li><Link to="/home" className="txt">Главная</Link></li>
+              <li><Link to="/about" className="txt">О факультете</Link></li>
+              <li><Link to="/teachers" className="txt">Преподаватели</Link></li>
             </ul>
             <Link to="/myprofile">
               <div className="currentUserHeader" style={currentUserHeader}>

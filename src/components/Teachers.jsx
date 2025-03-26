@@ -1165,7 +1165,7 @@ const Teachers = () => {
           TRSvaHM
           {isMenuOpen &&
             <div>
-              <p className="txt">&copy; 2025 Все права защищены.</p>
+              <p className="txt">&copy; 2025 {t("rights")}.</p>
             </div>
           }
         </div>
@@ -1174,9 +1174,9 @@ const Teachers = () => {
         <header>
           <nav className="header-nav" style={HeaderDesktop}>
             <ul className="header-ul">
-              <li><Link to="/home">Главная</Link></li>
-              <li><Link to="/about">О факультете</Link></li>
-              <li><Link to="/teachers">Преподаватели</Link></li>
+              <li><Link to="/home" className="txt">Главная</Link></li>
+              <li><Link to="/about" className="txt">О факультете</Link></li>
+              <li><Link to="/teachers" className="txt">Преподаватели</Link></li>
             </ul>
             <Link to="/myprofile">
               <div className="currentUserHeader" style={currentUserHeader}>

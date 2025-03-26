@@ -1053,7 +1053,7 @@ const UserProfile = () => {
           TRSvaHM
           {isMenuOpen &&
             <div>
-              <p className="txt">&copy; 2025 Все права защищены.</p>
+              <p className="txt">&copy; 2025 {t("rights")}.</p>
             </div>
           }
         </div>
@@ -1068,7 +1068,7 @@ const UserProfile = () => {
             onClick={() => setIsAvatarModalOpen(true)}
           />
           <div>
-            <h2 className="username">{userData.username}</h2>
+            <h2 className="username txt">{userData.username}</h2>
             {renderStatus()}
           </div>
         </div>
@@ -1119,15 +1119,15 @@ const UserProfile = () => {
       <div className="up-info-card">
         <div className="up-info-title">
           <FaPhone className="up-info-icon white-icon" />
-          {t('telnumber')}:
+          <p className="txt">{t('telnumber')}:</p>
         </div>
         <div className="up-info-content">{userData.phoneNumber || "Не указан"}</div>
       </div>
 
       <div className="up-info-card">
         <div className="up-info-title">
-          <FaUserEdit className="up-info-icon white-icon" />
-          {t('about')}:
+          <FaUserEdit className="up-info-icon white-icon"/>
+          <p className="txt">{t('about')}:</p>
         </div>
         <div className="up-info-content">{userData.aboutMe || "Нет информации"}</div>
       </div>
@@ -1138,7 +1138,7 @@ const UserProfile = () => {
             className={`up-info-icon white-icon ${identificationStatus === t('ident') ? "up-icon-verified" : "up-icon-unverified"
               }`}
           />
-          {t('identification')}:
+          <p className="txt">{t('identification')}:</p>
         </div>
         <div
           className={`up-info-content ${identificationStatus === t('ident') ? "up-status-verified" : "up-status-unverified"
@@ -1151,34 +1151,34 @@ const UserProfile = () => {
       {role === "teacher" ? (
         <>
           <div className="up-info-card">
-            <div className="up-info-title"><FaScroll className="up-info-icon white-icon" />{t('cathedra')}:</div>
+            <div className="up-info-title"><FaScroll className="up-info-icon white-icon" /><p className="txt">{t('cathedra')}:</p></div>
             <div className="up-info-content"><p>{teacherCathedra}</p></div>
           </div>
 
           <div className="up-info-card" style={{ display: "flex", flexDirection: "row" }}>
-            <div className="up-info-title"><FaUserGraduate className="up-info-icon white-icon" />Звание:</div>
+            <div className="up-info-title"><FaUserGraduate className="up-info-icon white-icon" /><p className="txt">Звание:</p></div>
             <div className="up-info-content"><p style={{ marginLeft: "15px" }}>{teacherTitle}</p></div>
           </div>
 
           <div className="up-info-card" style={{ display: "flex", flexDirection: "row" }}>
-            <div className="up-info-title"><FaBook className="up-info-icon white-icon" />Предмет:</div>
+            <div className="up-info-title"><FaBook className="up-info-icon white-icon" /><p className="txt">Предмет:</p></div>
             <div className="up-info-content"><p style={{ marginLeft: "15px" }}>{TeacherSubject}</p></div>
           </div>
         </>
       ) : (
         <>
           <div className="up-info-card">
-            <div className="up-info-title"><FaScroll className="up-info-icon white-icon" />{t('cathedra')}:</div>
+            <div className="up-info-title"><FaScroll className="up-info-icon white-icon" /><p className="txt">{t('cathedra')}:</p></div>
             <div className="up-info-content"><p>{userFaculty}</p></div>
           </div>
 
           <div className="up-info-card" style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-            <div className="up-info-title"><FaUserGraduate className="up-info-icon white-icon" />{t('course')}:</div>
+            <div className="up-info-title"><FaUserGraduate className="up-info-icon white-icon" /><p className="txt">{t('course')}:</p></div>
             <div className="up-info-content" style={{ marginLeft: "15px" }}>{userCourse}</div>
           </div>
 
           <div className="up-info-card" style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-            <div className="up-info-title"><FaUsers className="up-info-icon white-icon" style={{ fontSize: "20px" }} /> {t('group')}:</div>
+            <div className="up-info-title"><FaUsers className="up-info-icon white-icon" style={{ fontSize: "20px" }} /><p className="txt">{t('group')}:</p></div>
             <div className="up-info-content" style={{ marginLeft: "15px" }}><p>{userGroup}</p></div>
           </div>
         </>

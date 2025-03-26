@@ -1967,39 +1967,39 @@ const HomePage = () => {
         <nav className="menu-items">
           <Link to="/" className="menu-item" style={{ paddingRight: "15px" }}>
             <FiHome className="menu-icon" style={{ color: "orange" }} />
-            {isMenuOpen && <span className="txt">Главная</span>}
+            {isMenuOpen && <span className="txt">{t('main')}</span>}
           </Link>
           <div className="menu-find-block">
             <Link to="/searchpage" className="menu-item">
               <FiSearch className="menu-icon" />
-              {isMenuOpen && <span className="txt">Поиск</span>}
+              {isMenuOpen && <span className="txt">{t('findstudents')}</span>}
             </Link>
             <Link to="/teachers" className="menu-item">
               <FiUserCheck className="menu-icon" />
-              {isMenuOpen && <span className="txt">Преподаватели</span>}
+              {isMenuOpen && <span className="txt">{t('teachers')}</span>}
             </Link>
             <Link to="/library" className="menu-item">
               <FiBookOpen className="menu-icon" />
-              {isMenuOpen && <span className="txt">Библиотека</span>}
+              {isMenuOpen && <span className="txt">{t('library')}</span>}
             </Link>
           </div>
           <Link to="/myprofile" className="menu-item">
             <FiUser className="menu-icon" />
-            {isMenuOpen && <span className="txt">Профиль</span>}
+            {isMenuOpen && <span className="txt">{t('profile')}</span>}
           </Link>
           <div className="menu-find-block">
             <Link to="/chats" className="menu-item">
               <FiMessageSquare className="menu-icon" />
-              {isMenuOpen && <span className="txt">Сообщения</span>}
+              {isMenuOpen && <span className="txt">{t('messages')}</span>}
             </Link>
             <Link to="/notifications" className="menu-item">
               <FiBell className="menu-icon" />
-              {isMenuOpen && <span className="txt">Уведомления</span>}
+              {isMenuOpen && <span className="txt">{t('notifications')}</span>}
             </Link>
           </div>
           <Link to="/authdetails" className="menu-item">
             <FiSettings className="menu-icon" />
-            {isMenuOpen && <span className="txt">Настройки</span>}
+            {isMenuOpen && <span className="txt">{t('settings')}</span>}
           </Link>
         </nav>
 
@@ -2007,7 +2007,7 @@ const HomePage = () => {
           TRSvaHM
           {isMenuOpen &&
             <div>
-              <p className="txt">&copy; 2025 Все права защищены.</p>
+              <p className="txt">&copy; 2025 {t("rights")}.</p>
             </div>
           }
         </div>
