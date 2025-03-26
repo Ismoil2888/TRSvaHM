@@ -47,7 +47,8 @@
 
   .h2-icon-block h2{
     color: #ffffff;
-    background-color: #1e2c39;
+    /* background-color: #1e2c39; */
+    background: var(--bg-h2-icon-block-color);
     position: absolute;
     margin-top: 150px;
     font-size: 27px;
@@ -233,7 +234,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: #3a434f;
+    /* background: #3a434f; */
+    background: var(--bg-searchpage-blocks-color);
     border-radius: 15px;
     margin: 10px;
   }

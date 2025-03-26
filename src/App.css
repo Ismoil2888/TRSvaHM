@@ -857,12 +857,14 @@ header nav ul li a:hover::before {
         .menu-icon {
           cursor: pointer;
           font-size: 24px;
-          color: #00eaff;
-          margin-top: 10px;
         }
 
         .back-button{
           font-size: 25px;
+        }
+
+        .white-icon{
+          color: var(--white-icon-color);
         }
         
         .menu-dropdown {
@@ -1438,7 +1440,7 @@ input[type="file"] {
 .bm-span {
   width: 30px;
   height: 4px;
-  background-color: white;
+  background-color: var(--white-icon-color);
   margin: 4px 0;
   transition: all 0.3s ease-in-out;
 }
@@ -1731,10 +1733,7 @@ color: transparent;
   width: 30px;
   height: 35px;
   cursor: pointer;
-  /* position: fixed; */
-  /* right: 0; */
   padding: 15px;
-  /* top: -1px; */
   z-index: 9999;
 }
 

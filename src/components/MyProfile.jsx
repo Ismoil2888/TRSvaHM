@@ -271,7 +271,7 @@ import { FcAbout } from "react-icons/fc";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPhone, faUserCog, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { RiSettingsLine } from "react-icons/ri";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaPlusCircle, FaInfo } from "react-icons/fa";
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
 import basiclogo from "../basic-logo.png";
 import ttulogo from "../Ttulogo.png";
@@ -322,7 +322,7 @@ const MyProfile = () => {
     runk: teacherTitle,
     email: TeacherLogin,
     // можно добавить другие поля по необходимости
-  };  
+  };
 
   // Сохраняем состояние в localStorage при изменении
   useEffect(() => {
@@ -546,7 +546,7 @@ const MyProfile = () => {
             </Link>
           </div>
           <Link to="/myprofile" className="menu-item">
-            <FiUser className="menu-icon" style={{ borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px" }} />
+            <FiUser className="menu-icon" style={{ color: "lightgreen" }} />
             {isMenuOpen && <span>Профиль</span>}
           </Link>
           <div className="menu-find-block">
@@ -578,8 +578,8 @@ const MyProfile = () => {
 
         <div className="header-nav-2">
 
-          <Link to="/authdetails">
-            <RiSettingsLine style={{ color: "white", fontSize: "25px", marginLeft: "15px" }} />
+          <Link className="back-button white-icon" style={{marginLeft: "5px"}} onClick={() => navigate(-1)}>
+            <FaArrowLeft />
           </Link>
 
           <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>{t('profile')}</ul>
@@ -613,8 +613,8 @@ const MyProfile = () => {
           )}
 
           <div className="my-profile-header">
-            <Link className="back-button" onClick={() => navigate(-1)}>
-              <FaArrowLeft />
+            <Link to="/authdetails">
+              <RiSettingsLine className="white-icon" style={{ fontSize: "25px" }} />
             </Link>
 
             <div className="avatar-section">
@@ -710,8 +710,8 @@ const MyProfile = () => {
                   <h3>Предмет:</h3>
                   <p style={{ fontSize: "17px", marginLeft: "15px" }}>{TeacherSubject}</p>
                 </div>
-                <div style={{marginTop: "15px"}}>
-                <Link to={`/teacher-profile/${userUid}`} state={{ teacher: teacherData }}>Перейти в личный Кабинет</Link>
+                <div style={{ marginTop: "15px" }}>
+                  <Link to={`/teacher-profile/${userUid}`} state={{ teacher: teacherData }}>Перейти в личный Кабинет</Link>
                 </div>
               </>
             ) : (
@@ -737,6 +737,7 @@ const MyProfile = () => {
             <div className="footer-nav">
               <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon" style={{}} /></Link>
               <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon" /></Link>
+              <Link to="/about"><FaInfo className="footer-icon" /></Link>
               {role === "teacher" && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
               <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
               <Link to="/myprofile">

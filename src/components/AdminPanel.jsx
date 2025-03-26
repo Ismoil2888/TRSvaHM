@@ -1065,6 +1065,17 @@ import 'react-toastify/dist/ReactToastify.css';
 import '../AdminPanel.css';
 import '../App.css';
 import defaultAvatar from "../default-image.png";
+import useTranslation from '../hooks/useTranslation';
+
+const initialScheduleData = {
+  monday: [],
+  tuesday: [],
+  wednesday: [],
+  thursday: [],
+  friday: [],
+  saturday: [],
+  sunday: [],
+};
 
 const AdminPanel = () => {
   const [teachers, setTeachers] = useState([]);
@@ -1099,6 +1110,88 @@ const AdminPanel = () => {
   const [posts, setPosts] = useState([]);
   const [pendingPostsCount, setPendingPostsCount] = useState(0); // Количество ожидающих постов  
   const navigate = useNavigate();
+  const [showScheduleEditor, setShowScheduleEditor] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState("");
+  const [scheduleData, setScheduleData] = useState(initialScheduleData);
+  const [isScheduleLoading, setIsScheduleLoading] = useState(false);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(""); // Новое состояние для курса
+  const t = useTranslation();
+  const daysOrder = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+
+  const handleCourseSelect = (e) => {
+    const course = e.target.value;
+    setSelectedCourse(course);
+  };  
+
+  // Функция загрузки расписания для выбранной группы
+  const loadScheduleForGroup = (group) => {
+    setIsScheduleLoading(true);
+    const scheduleRef = dbRef(database, `schedules/${group}`);
+    onValue(scheduleRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setScheduleData(data);
+      } else {
+        // Если расписание ещё не создано – задаём начальные данные
+        setScheduleData(initialScheduleData);
+      }
+      setIsScheduleLoading(false);
+    }, { onlyOnce: true });
+  };
+
+  // Сохранение расписания в Firebase
+  const handleSaveSchedule = () => {
+    if (!selectedGroup || !selectedCourse) {
+      toast.error("Пожалуйста, выберите и группу, и курс");
+      return;
+    }
+    const scheduleRef = dbRef(database, `schedules/${selectedCourse}/${selectedGroup}`);
+    set(scheduleRef, scheduleData)
+      .then(() => {
+        toast.success("Расписание успешно сохранено");
+        setShowScheduleEditor(false);
+      })
+      .catch((error) => {
+        console.error("Ошибка при сохранении расписания:", error);
+        toast.error("Ошибка при сохранении расписания");
+      });
+  };  
+
+  // Обновляем функцию добавления урока, чтобы добавить поле teacher
+  const addLesson = (day) => {
+    setScheduleData(prev => ({
+      ...prev,
+      [day]: [...prev[day], { order: '', subject: '', startTime: '', endTime: '', teacher: '' }]
+    }));
+  };
+
+  // Функция для обновления любого поля урока уже универсальна (работает и с teacher)
+  const updateLesson = (day, index, field, value) => {
+    setScheduleData(prev => {
+      const newDayLessons = [...prev[day]];
+      newDayLessons[index] = { ...newDayLessons[index], [field]: value };
+      return { ...prev, [day]: newDayLessons };
+    });
+  };
+
+  // Функция для удаления урока из дня
+  const removeLesson = (day, index) => {
+    setScheduleData(prev => {
+      const newDayLessons = [...prev[day]];
+      newDayLessons.splice(index, 1);
+      return { ...prev, [day]: newDayLessons };
+    });
+  };
+
+  // Обработчик выбора группы в селекторе
+  const handleGroupSelect = (e) => {
+    const group = e.target.value;
+    setSelectedGroup(group);
+    if (group) {
+      loadScheduleForGroup(group);
+    }
+  };
 
   useEffect(() => {
     const db = getDatabase();
@@ -1390,18 +1483,32 @@ const AdminPanel = () => {
       console.error("Ошибка при обновлении статуса заявки:", error);
     }
   };
-  
-  
+
   const handleAcceptRequest = (id) => {
-    update(dbRef(database, `requests/${id}`), { status: "accepted" });
-    setRequests((prevRequests) =>
-      prevRequests.map((request) =>
-        request.id === id ? { ...request, status: "accepted" } : request
-      )
-    );
-    setNewRequestsCount((prevCount) => prevCount - 1);
-    toast.success('Заявка принята');
-  };
+    update(dbRef(database, `requests/${id}`), { status: "accepted" })
+      .then(() => {
+        // Находим заявку по id
+        const acceptedRequest = requests.find(req => req.id === id);
+        if (acceptedRequest && acceptedRequest.group && acceptedRequest.course) {
+          const groupKey = acceptedRequest.group;
+          const courseKey = acceptedRequest.course;
+          // Записываем данные заявки в узел для группы с учетом курса
+          const groupRef = push(dbRef(database, `groups/${courseKey}/${groupKey}`));
+          set(groupRef, acceptedRequest);
+        }
+        setRequests(prevRequests =>
+          prevRequests.map(request =>
+            request.id === id ? { ...request, status: "accepted" } : request
+          )
+        );
+        setNewRequestsCount(prevCount => prevCount - 1);
+        toast.success('Заявка принята');
+      })
+      .catch(error => {
+        console.error("Ошибка при принятии заявки:", error);
+        toast.error('Ошибка при принятии заявки');
+      });
+  };  
   
   const handleRejectRequest = (id) => {
     update(dbRef(database, `requests/${id}`), { status: "rejected" });
@@ -1516,6 +1623,15 @@ const AdminPanel = () => {
         <button className='ap-buttons-add-edit' onClick={() => setShowRequests(!showRequests)}>
           {showRequests ? 'Скрыть заявки' : 'Показать заявки'}
           {newRequestsCount > 0 && <div className="new-request-count-basic"><span className="new-requests-count">{newRequestsCount}</span> </div>}
+        </button>
+        <button 
+          className='ap-buttons-add-edit'
+          onClick={() => setShowScheduleModal(true)}
+        >
+          <FaPlus /> Добавить расписание уроков
+        </button>
+        <button className='ap-buttons-add-edit' onClick={() => setShowScheduleEditor(true)}>
+          <FaPlus /> Показать расписание уроков
         </button>
       </div>
 
@@ -1701,7 +1817,7 @@ const AdminPanel = () => {
               {request.status === 'pending' ? (
                 <>
                   <p>ФИО: {request.fio}</p>
-                  <p>Факультет: {request.faculty}</p>
+                  <p>Кафедра: {request.faculty}</p>
                   <p>Курс: {request.course}</p>
                   <p>Группа: {request.group}</p>
                   {request.photoUrl && <img src={request.photoUrl} alt="Фото студента" className="request-card-photo" />}
@@ -1834,6 +1950,102 @@ const AdminPanel = () => {
            </div>
          </div>
        )}
+
+           {/* Модальное окно для редактирования расписания выбранной группы */}
+           {showScheduleEditor && (
+  <div className="schedule-modal-overlay">
+    <div className="schedule-modal-content">
+      <h2>Расписание уроков</h2>
+      <label>Выберите курс:</label>
+      <select value={selectedCourse} onChange={handleCourseSelect}>
+        <option value="">-- Выберите курс --</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+      <label>Выберите группу:</label>
+      <select value={selectedGroup} onChange={handleGroupSelect}>
+        <option value="">-- Выберите группу --</option>
+        <option value="1-530102 - АСКИ">1-530102 - АСКИ</option>
+        <option value="1-400101 - ТБТИ">1-400101 - ТБТИ</option>
+        <option value="1-450103-02 - ШАваТИ">1-450103-02 - ШАваТИ</option>
+        <option value="1-400102-04 - ТИваХМ">1-400102-04 - ТИваХМ</option>
+        <option value="1-98010101-03 - ТИваХМ">1-98010101-03 - ТИваХМ</option>
+        <option value="1-98010101-05 - ТИваХМ">1-98010101-05 - ТИваХМ</option>
+        <option value="1-530101 - АРТваИ">1-530101 - АРТваИ</option>
+        <option value="1-530107 - АРТваИ">1-530107 - АРТваИ</option>
+        <option value="1-400301-02 - АРТваИ">1-400301-02 - АРТваИ</option>
+        <option value="1-400301-05 - АРТваИ">1-400301-05 - АРТваИ</option>
+        <option value="1-080101-07 - ИваТХ">1-080101-07 - ИваТХ</option>
+      </select>
+
+      {selectedCourse && selectedGroup && (
+        <>
+          {isScheduleLoading ? (
+            <p>Загрузка расписания...</p>
+          ) : (
+            daysOrder.map((dayKey) => (
+              <div key={dayKey} className="day-schedule">
+              <h3>{t(dayKey)}</h3>
+              {scheduleData[dayKey].map((lesson, index) => (
+                <div key={index} className="lesson-entry">
+                  <input
+                    type="number"
+                    placeholder="Порядок"
+                    value={lesson.order}
+                    onChange={(e) => updateLesson(dayKey, index, 'order', e.target.value)}
+                    className="lesson-input order-input"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Предмет"
+                    value={lesson.subject}
+                    onChange={(e) => updateLesson(dayKey, index, 'subject', e.target.value)}
+                    className="lesson-input subject-input"
+                  />
+                  <input
+                    type="time"
+                    placeholder="Начало"
+                    value={lesson.startTime}
+                    onChange={(e) => updateLesson(dayKey, index, 'startTime', e.target.value)}
+                    className="lesson-input time-input"
+                  />
+                  <input
+                    type="time"
+                    placeholder="Окончание"
+                    value={lesson.endTime}
+                    onChange={(e) => updateLesson(dayKey, index, 'endTime', e.target.value)}
+                    className="lesson-input time-input"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Преподаватель"
+                    value={lesson.teacher}
+                    onChange={(e) => updateLesson(dayKey, index, 'teacher', e.target.value)}
+                    className="lesson-input teacher-input"
+                  />
+                  <button onClick={() => removeLesson(dayKey, index)} className="remove-lesson-btn">
+                    Удалить
+                  </button>
+                </div>
+              ))}
+              <button onClick={() => addLesson(dayKey)} className="add-lesson-btn">
+                + Добавить урок
+              </button>
+            </div>
+            ))
+          )}
+        </>
+      )}
+
+      <div className="schedule-modal-buttons">
+        <button onClick={handleSaveSchedule}>Сохранить расписание</button>
+        <button onClick={() => setShowScheduleEditor(false)}>Отмена</button>
+      </div>
+    </div>
+  </div>
+)}
       <ToastContainer />
     </div>
   );

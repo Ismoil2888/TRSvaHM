@@ -7,7 +7,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import '../SearchPage.css';
 import basiclogo from "../basic-logo.png";
 import { Link } from "react-router-dom";
-import { FaPlusCircle, FaArrowLeft } from "react-icons/fa";
+import { FaPlusCircle, FaArrowLeft, FaInfo } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPhone, faUserCog, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
@@ -285,7 +285,7 @@ const SearchStudents = () => {
             {isMenuOpen && <span>Главная</span>}
           </Link>
           <Link to="/searchpage" className="menu-item">
-            <FiSearch className="menu-icon" style={{ borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px" }} />
+            <FiSearch className="menu-icon" style={{ color: "lightgreen" }} />
             {isMenuOpen && <span>Поиск</span>}
           </Link>
           <Link to="/teachers" className="menu-item">
@@ -348,7 +348,7 @@ const SearchStudents = () => {
 
           <div className="header-nav-2">
 
-            <Link className="back-button" style={{ marginLeft: "15px" }} onClick={() => navigate(-1)}>
+            <Link className="back-button white-icon" style={{ marginLeft: "15px" }} onClick={() => navigate(-1)}>
               <FaArrowLeft />
             </Link>
 
@@ -452,7 +452,8 @@ const SearchStudents = () => {
 
         <div className="footer-nav">
           <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon" /></Link>
-          <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon  active-icon" style={{}} /></Link>
+          <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon  active-icon" /></Link>
+          <Link to="/about"><FaInfo className="footer-icon" /></Link>
           {role === "teacher" && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
           <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
           <Link to="/myprofile">

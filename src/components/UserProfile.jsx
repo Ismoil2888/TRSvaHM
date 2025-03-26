@@ -1035,7 +1035,7 @@ const UserProfile = () => {
           </Link>
           <div className="menu-find-block">
             <Link to="/chats" className="menu-item">
-              <FiMessageSquare className="menu-icon" style={{ borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px" }} />
+              <FiMessageSquare className="menu-icon" style={{ color: "lightgreen" }} />
               {isMenuOpen && <span>Сообщения</span>}
             </Link>
             <Link to="/notifications" className="menu-item">
@@ -1058,8 +1058,8 @@ const UserProfile = () => {
           }
         </div>
       </div>
-      <div className="up-profile-header">
-        <FaChevronLeft className="up-back-icon" onClick={() => navigate(-1)} />
+      <div className="up-profile-header" style={{width: "100%"}}>
+        <FaChevronLeft className="up-back-icon white-icon" style={{ marginTop: "3px"}} onClick={() => navigate(-1)} />
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", minWidth: "320px" }}>
           <img
             src={userData.avatarUrl || "./default-image.png"}
@@ -1072,7 +1072,7 @@ const UserProfile = () => {
             {renderStatus()}
           </div>
         </div>
-        <FaEllipsisV className="up-menu-icon" />
+        <FaEllipsisV className="up-menu-icon white-icon" style={{marginTop: "5px", marginRight: "20px"}} />
       </div>
 
       {isAvatarModalOpen && (
@@ -1118,7 +1118,7 @@ const UserProfile = () => {
 
       <div className="up-info-card">
         <div className="up-info-title">
-          <FaPhone className="up-info-icon" />
+          <FaPhone className="up-info-icon white-icon" />
           {t('telnumber')}:
         </div>
         <div className="up-info-content">{userData.phoneNumber || "Не указан"}</div>
@@ -1126,7 +1126,7 @@ const UserProfile = () => {
 
       <div className="up-info-card">
         <div className="up-info-title">
-          <FaUserEdit className="up-info-icon" />
+          <FaUserEdit className="up-info-icon white-icon" />
           {t('about')}:
         </div>
         <div className="up-info-content">{userData.aboutMe || "Нет информации"}</div>
@@ -1135,7 +1135,7 @@ const UserProfile = () => {
       <div className="up-info-card" style={{ flexDirection: "column", alignItems: "flex-start" }}>
         <div className="up-info-title">
           <FaLock
-            className={`up-info-icon ${identificationStatus === t('ident') ? "up-icon-verified" : "up-icon-unverified"
+            className={`up-info-icon white-icon ${identificationStatus === t('ident') ? "up-icon-verified" : "up-icon-unverified"
               }`}
           />
           {t('identification')}:
@@ -1151,34 +1151,34 @@ const UserProfile = () => {
       {role === "teacher" ? (
         <>
           <div className="up-info-card">
-            <div className="up-info-title"><FaScroll className="up-info-icon" />{t('cathedra')}:</div>
+            <div className="up-info-title"><FaScroll className="up-info-icon white-icon" />{t('cathedra')}:</div>
             <div className="up-info-content"><p>{teacherCathedra}</p></div>
           </div>
 
           <div className="up-info-card" style={{ display: "flex", flexDirection: "row" }}>
-            <div className="up-info-title"><FaUserGraduate className="up-info-icon" />Звание:</div>
+            <div className="up-info-title"><FaUserGraduate className="up-info-icon white-icon" />Звание:</div>
             <div className="up-info-content"><p style={{ marginLeft: "15px" }}>{teacherTitle}</p></div>
           </div>
 
           <div className="up-info-card" style={{ display: "flex", flexDirection: "row" }}>
-            <div className="up-info-title"><FaBook className="up-info-icon" />Предмет:</div>
+            <div className="up-info-title"><FaBook className="up-info-icon white-icon" />Предмет:</div>
             <div className="up-info-content"><p style={{ marginLeft: "15px" }}>{TeacherSubject}</p></div>
           </div>
         </>
       ) : (
         <>
           <div className="up-info-card">
-            <div className="up-info-title"><FaScroll className="up-info-icon" />{t('cathedra')}:</div>
+            <div className="up-info-title"><FaScroll className="up-info-icon white-icon" />{t('cathedra')}:</div>
             <div className="up-info-content"><p>{userFaculty}</p></div>
           </div>
 
           <div className="up-info-card" style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-            <div className="up-info-title"><FaUserGraduate className="up-info-icon" />{t('course')}:</div>
+            <div className="up-info-title"><FaUserGraduate className="up-info-icon white-icon" />{t('course')}:</div>
             <div className="up-info-content" style={{ marginLeft: "15px" }}>{userCourse}</div>
           </div>
 
           <div className="up-info-card" style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-            <div className="up-info-title"><FaUsers className="up-info-icon" style={{ fontSize: "20px" }} /> {t('group')}:</div>
+            <div className="up-info-title"><FaUsers className="up-info-icon white-icon" style={{ fontSize: "20px" }} /> {t('group')}:</div>
             <div className="up-info-content" style={{ marginLeft: "15px" }}><p>{userGroup}</p></div>
           </div>
         </>

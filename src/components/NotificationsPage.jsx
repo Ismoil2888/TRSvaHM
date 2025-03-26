@@ -252,7 +252,7 @@ const NotificationsPage = () => {
             {isMenuOpen && <span>Сообщения</span>}
           </Link>
           <Link to="/notifications" className="menu-item">
-            <FiBell className="menu-icon" style={{borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px"}} />
+            <FiBell className="menu-icon" style={{color: "lightgreen"}} />
             {isMenuOpen && <span>Уведомления</span>}
           </Link>
           </div>
@@ -275,7 +275,7 @@ const NotificationsPage = () => {
         <header className="head-line">
           <div className="header-nav-2">
 
-            <Link className="back-button" style={{ marginLeft: "15px" }} onClick={() => navigate(-1)}>
+            <Link className="back-button white-icon" style={{ marginLeft: "15px" }} onClick={() => navigate(-1)}>
               <FaArrowLeft />
             </Link>
 

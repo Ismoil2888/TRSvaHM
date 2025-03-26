@@ -1382,7 +1382,7 @@ import { GoKebabHorizontal } from "react-icons/go";
 import { motion } from 'framer-motion';
 import { BsChatTextFill } from "react-icons/bs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { FaPlusCircle, FaHeart, FaRegHeart, FaRegComment, FaRegBookmark } from "react-icons/fa";
+import { FaPlusCircle, FaHeart, FaInfo, FaRegHeart, FaRegComment, FaRegBookmark } from "react-icons/fa";
 import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPhone, faUserCog, faSearch, faBell } from "@fortawesome/free-solid-svg-icons";
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
 import useTranslation from '../hooks/useTranslation';
@@ -1966,7 +1966,7 @@ const HomePage = () => {
 
         <nav className="menu-items">
           <Link to="/" className="menu-item" style={{ paddingRight: "15px" }}>
-            <FiHome className="menu-icon" style={{ borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px" }} />
+            <FiHome className="menu-icon" style={{ color: "lightgreen" }} />
             {isMenuOpen && <span>Главная</span>}
           </Link>
           <div className="menu-find-block">
@@ -2056,7 +2056,7 @@ const HomePage = () => {
 
             <Link to="/chats">
               <div style={{ position: "relative" }}>
-                <BsChatTextFill style={{ fontSize: "25px", marginRight: "15px", color: "white" }} />
+                <BsChatTextFill className="white-icon" style={{ fontSize: "25px", marginRight: "15px" }} />
                 {unreadChatsCount > 0 && (
                   <span className="notification-chat-count">
                     {unreadChatsCount}
@@ -2064,10 +2064,10 @@ const HomePage = () => {
                 )}
               </div>
             </Link>
-            <div className={`burger-menu-icon ${isMenuOpenMobile ? 'open' : ''}`} onClick={toggleMenuMobile}>
-              <span className="bm-span"></span>
-              <span className="bm-span"></span>
-              <span className="bm-span"></span>
+            <div className={`burger-menu-icon white-icon ${isMenuOpenMobile ? 'open' : ''}`} onClick={toggleMenuMobile}>
+              <span className="bm-span white-icon"></span>
+              <span className="bm-span white-icon"></span>
+              <span className="bm-span white-icon"></span>
             </div>
 
             <div className={`burger-menu ${isMenuOpenMobile ? 'open' : ''}`}>
@@ -2343,6 +2343,7 @@ const HomePage = () => {
           >
             <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon active-icon" style={{}} /></Link>
             <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon" /></Link>
+            <Link to="/about"><FaInfo className="footer-icon" /></Link>
             {role === "teacher" && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
             <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
             <Link to="/myprofile">

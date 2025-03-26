@@ -709,7 +709,7 @@ import "../library.css";
 import basiclogo from "../basic-logo.png";
 import { GoKebabHorizontal } from "react-icons/go";
 import { motion } from 'framer-motion';
-import { FaPlusCircle } from "react-icons/fa";
+import { FaPlusCircle, FaInfo } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPhone, faUserCog, faSearch } from "@fortawesome/free-solid-svg-icons";
 import defaultAvatar from '../default-image.png';
@@ -1132,7 +1132,7 @@ const Library = ({ userId }) => {
               {isMenuOpen && <span>Преподаватели</span>}
             </Link>
             <Link to="/library" className="menu-item">
-              <FiBookOpen className="menu-icon" style={{ borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px" }} />
+              <FiBookOpen className="menu-icon" style={{ color: "lightgreen" }} />
               {isMenuOpen && <span>Библиотека</span>}
             </Link>
           </div>
@@ -1374,6 +1374,7 @@ const Library = ({ userId }) => {
           <motion.nav variants={navbarVariants} initial="hidden" animate="visible" className="footer-nav">
             <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon" /></Link>
             <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon" /></Link>
+            <Link to="/about"><FaInfo className="footer-icon" /></Link>
             {role === "teacher" && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
             <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon active-icon" /></Link>
             <Link to="/myprofile">

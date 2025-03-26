@@ -1553,7 +1553,7 @@ const groupDropdownRef = useRef(null);
           </Link>
           </div>
           <Link to="/authdetails" className="menu-item">
-            <FiSettings className="menu-icon" style={{borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px"}} />
+            <FiSettings className="menu-icon white-icon" style={{color: "lightgreen"}} />
             {isMenuOpen && <span>Настройки</span>}
           </Link>
         </nav>
@@ -1577,7 +1577,7 @@ const groupDropdownRef = useRef(null);
 
           <div className="profile-header">
 
-            <Link className="back-button" onClick={() => navigate(-1)}>
+            <Link className="back-button white-icon" onClick={() => navigate(-1)}>
               <FaArrowLeft />
             </Link>
 
@@ -1603,7 +1603,7 @@ const groupDropdownRef = useRef(null);
               <p style={{ color: "lightgreen" }}>{renderStatus()}</p>
             </div>
 
-            <div className="menu-icon" onClick={() => setShowMenu(!showMenu)}>
+            <div className="menu-icon" style={{marginTop: "5px"}} onClick={() => setShowMenu(!showMenu)}>
               <FaEllipsisV />
             </div>
 

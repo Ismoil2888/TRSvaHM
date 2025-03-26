@@ -6,7 +6,7 @@ import '../SearchPage.css';
 import basiclogo from "../basic-logo.png";
 import { Link } from "react-router-dom";
 import { motion } from 'framer-motion';
-import { FaPlusCircle } from "react-icons/fa";
+import { FaPlusCircle, FaInfo } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPhone, faUserCog, faSearch, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
@@ -126,55 +126,55 @@ const SearchPage = () => {
     <div className="glava">
       <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
-        <img style={{width: "50px", height: "45px"}} src={ttulogo} alt="" />
+          <img style={{ width: "50px", height: "45px" }} src={ttulogo} alt="" />
           {isMenuOpen ? (
             <>
               <h2>TTU</h2>
-              <FiChevronLeft 
-                className="toggle-menu" 
+              <FiChevronLeft
+                className="toggle-menu"
                 onClick={toggleMenuDesktop}
               />
             </>
           ) : (
-            <FiChevronRight 
-              className="toggle-menu" 
+            <FiChevronRight
+              className="toggle-menu"
               onClick={toggleMenuDesktop}
             />
           )}
         </div>
 
         <nav className="menu-items">
-          <Link to="/" className="menu-item" style={{paddingRight: "15px"}}>
-            <FiHome className="menu-icon"/>
+          <Link to="/" className="menu-item" style={{ paddingRight: "15px" }}>
+            <FiHome className="menu-icon" />
             {isMenuOpen && <span>Главная</span>}
           </Link>
           <div className="menu-find-block">
-          <Link to="/searchpage" className="menu-item">
-             <FiSearch className="menu-icon" style={{borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px"}} />
-             {isMenuOpen && <span>Поиск</span>}
-          </Link>
-          <Link to="/teachers" className="menu-item">
-             <FiUserCheck className="menu-icon" />
-             {isMenuOpen && <span>Преподаватели</span>}
-          </Link>
-          <Link to="/library" className="menu-item">
-             <FiBookOpen className="menu-icon" />
-             {isMenuOpen && <span>Библиотека</span>}
-          </Link>
+            <Link to="/searchpage" className="menu-item">
+              <FiSearch className="menu-icon" style={{ color: "lightgreen" }} />
+              {isMenuOpen && <span>Поиск</span>}
+            </Link>
+            <Link to="/teachers" className="menu-item">
+              <FiUserCheck className="menu-icon" />
+              {isMenuOpen && <span>Преподаватели</span>}
+            </Link>
+            <Link to="/library" className="menu-item">
+              <FiBookOpen className="menu-icon" />
+              {isMenuOpen && <span>Библиотека</span>}
+            </Link>
           </div>
           <Link to="/myprofile" className="menu-item">
             <FiUser className="menu-icon" />
             {isMenuOpen && <span>Профиль</span>}
           </Link>
           <div className="menu-find-block">
-          <Link to="/chats" className="menu-item">
-            <FiMessageSquare className="menu-icon" />
-            {isMenuOpen && <span>Сообщения</span>}
-          </Link>
-          <Link to="/notifications" className="menu-item">
-            <FiBell className="menu-icon" />
-            {isMenuOpen && <span>Уведомления</span>}
-          </Link>
+            <Link to="/chats" className="menu-item">
+              <FiMessageSquare className="menu-icon" />
+              {isMenuOpen && <span>Сообщения</span>}
+            </Link>
+            <Link to="/notifications" className="menu-item">
+              <FiBell className="menu-icon" />
+              {isMenuOpen && <span>Уведомления</span>}
+            </Link>
           </div>
           <Link to="/authdetails" className="menu-item">
             <FiSettings className="menu-icon" />
@@ -183,12 +183,12 @@ const SearchPage = () => {
         </nav>
 
         <div className="logo-and-tik">
-        TRSvaHM
-        {isMenuOpen &&
-        <div>
-        <p>&copy; 2025 Все права защищены.</p>
-        </div>
-        }
+          TRSvaHM
+          {isMenuOpen &&
+            <div>
+              <p>&copy; 2025 Все права защищены.</p>
+            </div>
+          }
         </div>
       </div>
       <div className="search-page" style={mainContentStyle}>
@@ -205,9 +205,9 @@ const SearchPage = () => {
                   src={userDetails.avatarUrl || "./default-image.png"}
                   alt="User Avatar"
                   className="user-avatar"
-                  style={{width: "35px", height: "35px"}}
+                  style={{ width: "35px", height: "35px" }}
                 />
-                <span style={{ fontSize: "20px", color: "lightgreen"}}>{userDetails.username}</span>
+                <span style={{ fontSize: "20px", color: "lightgreen" }}>{userDetails.username}</span>
               </div>
             </Link>
           </nav>
@@ -252,14 +252,14 @@ const SearchPage = () => {
             <div className="search-block1" style={{ width: "100%", display: "flex", justifyContent: "space-around" }}>
               <Link to="/searchstudents">
                 <div className="students-search sb">
-                  <FontAwesomeIcon icon={faUser} className="footer-icon" />
+                  <FontAwesomeIcon icon={faUser} className="footer-icon white-icon" />
                   <p>{t('students')}</p>
                 </div>
               </Link>
 
               <Link to="/teachers">
                 <div className="teachers-search sb">
-                  <FontAwesomeIcon icon={faChalkboardTeacher} className="footer-icon" />
+                  <FontAwesomeIcon icon={faChalkboardTeacher} className="footer-icon white-icon" />
                   <p>{t('teachers')}</p>
                 </div>
               </Link>
@@ -268,14 +268,14 @@ const SearchPage = () => {
             <div className="search-block2" style={{ width: "100%", display: "flex", justifyContent: "space-around" }}>
               <Link to="/library">
                 <div className="books-search sb">
-                  <FontAwesomeIcon icon={faBook} className="footer-icon" />
+                  <FontAwesomeIcon icon={faBook} className="footer-icon white-icon" />
                   <p>{t('books')}</p>
                 </div>
               </Link>
 
               <Link to="/schedule">
                 <div className="schedule-search sb">
-                  <FontAwesomeIcon icon={faCalendarAlt} className="footer-icon" />
+                  <FontAwesomeIcon icon={faCalendarAlt} className="footer-icon white-icon" />
                   <p>{t('schedule')}</p>
                 </div>
               </Link>
@@ -283,22 +283,23 @@ const SearchPage = () => {
           </section>
         </div>
 
-        <div style={{width: "100%", display: "flex", alignItems: "center", justifyContent: "center"}}>
-                <motion.nav 
-                  variants={navbarVariants} 
-                  initial="hidden" 
-                  animate="visible" 
-                  className="footer-nav"
-                >
-                  <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon" style={{ }} /></Link>
-                  <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon active-icon" /></Link>
-                  {role === "teacher" && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
-                  <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
-                  <Link to="/myprofile">
-                  <img src={userDetails.avatarUrl || "./default-image.png"} alt="User Avatar" className="footer-avatar" />
-                  </Link>
-                </motion.nav> 
-              </div>
+        <div style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <motion.nav
+            variants={navbarVariants}
+            initial="hidden"
+            animate="visible"
+            className="footer-nav"
+          >
+            <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon" style={{}} /></Link>
+            <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon active-icon" /></Link>
+            <Link to="/about"><FaInfo className="footer-icon" /></Link>
+            {role === "teacher" && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
+            <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
+            <Link to="/myprofile">
+              <img src={userDetails.avatarUrl || "./default-image.png"} alt="User Avatar" className="footer-avatar" />
+            </Link>
+          </motion.nav>
+        </div>
       </div>
     </div>
   );

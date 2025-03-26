@@ -52,14 +52,19 @@
   /* Icons and menu */
   .up-back-icon, .up-menu-icon {
     position: absolute;
-    color: white;
     font-size: 1.2em;
   }
   
   .up-back-icon {
     top: -20px;
-    left: -13px;
+    left: 25px;
     cursor: pointer;
+  }
+
+  @media (width > 700px) {
+    .up-back-icon{
+      left: 350px;
+    }
   }
   
   .up-menu-icon {

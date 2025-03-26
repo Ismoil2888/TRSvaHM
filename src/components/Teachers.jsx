@@ -849,7 +849,7 @@ import logoTip from "../basic-logo.png";
 import defaultTeacherImg from "../teacher.png";
 import { FaCommentDots } from "react-icons/fa";
 import basiclogo from "../basic-logo.png";
-import { FaPlusCircle, FaUserSecret } from "react-icons/fa";
+import { FaPlusCircle, FaUserSecret, FaInfo } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { BsSendFill } from "react-icons/bs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -1133,7 +1133,7 @@ const Teachers = () => {
               {isMenuOpen && <span>Поиск</span>}
             </Link>
             <Link to="/teachers" className="menu-item">
-              <FiUserCheck className="menu-icon" style={{ borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px" }} />
+              <FiUserCheck className="menu-icon" style={{ color: "lightgreen" }} />
               {isMenuOpen && <span>Преподаватели</span>}
             </Link>
             <Link to="/library" className="menu-item">
@@ -1365,6 +1365,9 @@ const Teachers = () => {
             </Link>
             <Link to="/searchpage">
               <FontAwesomeIcon icon={faSearch} className="footer-icon active-icon" />
+            </Link>
+            <Link to="/about">
+              <FaInfo className="footer-icon" />
             </Link>
             {role === "teacher" && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
             <Link to="/library">

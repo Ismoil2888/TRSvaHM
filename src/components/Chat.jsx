@@ -614,7 +614,7 @@ const Chat = () => {
           </Link>
           <div className="menu-find-block">
           <Link to="/chats" className="menu-item">
-            <FiMessageSquare className="menu-icon" style={{borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px" }} />
+            <FiMessageSquare className="menu-icon" style={{color: "lightgreen"}} />
             {isMenuOpen && <span>Сообщения</span>}
           </Link>
           <Link to="/notifications" className="menu-item">

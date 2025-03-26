@@ -272,7 +272,7 @@ useEffect(() => {
           </Link>
           <div className="menu-find-block">
           <Link to="/chats" className="menu-item">
-            <FiMessageSquare className="menu-icon" style={{borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px"}} />
+            <FiMessageSquare className="menu-icon" style={{color: "lightgreen"}} />
             {isMenuOpen && <span>Сообщения</span>}
           </Link>
           <Link to="/notifications" className="menu-item">
@@ -301,8 +301,8 @@ useEffect(() => {
             {notification}
           </div>
         )} {/* Уведомление */}
-        <div className="chat-list-head" style={HeaderDesktop}>
-          <FaChevronLeft style={{ color: "white", fontSize: "25px" }} onClick={() => navigate(-1)} />
+        <div className="chat-list-head white-icon" style={HeaderDesktop}>
+          <FaChevronLeft style={{ fontSize: "25px" }} onClick={() => navigate(-1)} />
           <h2 style={{ marginRight: "160px" }}>{t('mychats')}</h2>
         </div>
         <ul className="chat-list" style={{overflowY: "scroll"}}>

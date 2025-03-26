@@ -30,6 +30,7 @@ import PostForm from "./components/PostForm";
 import NotificationsPage from "./components/NotificationsPage";
 import Chat from "./components/Chat";
 import ChatList from "./components/ChatList";
+import GroupPage  from "./components/GroupPage";
 import { LanguageProvider } from './contexts/LanguageContext';
 import { applyTheme } from "./theme";
 
@@ -194,7 +195,8 @@ useEffect(() => {
       <Route path="*" element={<NotfoundPage />} />
       <Route path="/chat/:chatRoomId" element={<PrivateRoute> <Chat /> </PrivateRoute>} />
       <Route path="/chats" element={<PrivateRoute> <ChatList /> </PrivateRoute>} />
-    </Routes>
+      <Route path="/group/:course/:groupName" element={<GroupPage />} />
+      </Routes>
     </>
     </LanguageProvider>
   );

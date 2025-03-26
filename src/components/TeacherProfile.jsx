@@ -192,7 +192,7 @@ const TeacherProfile = () => {
             </Link>
           </div>
           <Link to="/myprofile" className="menu-item">
-            <FiUser className="menu-icon" style={{ borderBottom: "1px solid rgb(255, 255, 255)", borderRadius: "15px", padding: "5px" }} />
+            <FiUser className="menu-icon" style={{ color: "lightgreen" }} />
             {isMenuOpen && <span>Профиль</span>}
           </Link>
           <div className="menu-find-block">
