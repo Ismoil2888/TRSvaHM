@@ -1120,39 +1120,39 @@ const Library = ({ userId }) => {
         <nav className="menu-items">
           <Link to="/" className="menu-item" style={{ paddingRight: "15px" }}>
             <FiHome className="menu-icon" />
-            {isMenuOpen && <span>Главная</span>}
+            {isMenuOpen && <span className="txt">Главная</span>}
           </Link>
           <div className="menu-find-block">
             <Link to="/searchpage" className="menu-item">
               <FiSearch className="menu-icon" />
-              {isMenuOpen && <span>Поиск</span>}
+              {isMenuOpen && <span className="txt">Поиск</span>}
             </Link>
             <Link to="/teachers" className="menu-item">
               <FiUserCheck className="menu-icon" />
-              {isMenuOpen && <span>Преподаватели</span>}
+              {isMenuOpen && <span className="txt">Преподаватели</span>}
             </Link>
             <Link to="/library" className="menu-item">
-              <FiBookOpen className="menu-icon" style={{ color: "lightgreen" }} />
-              {isMenuOpen && <span>Библиотека</span>}
+              <FiBookOpen className="menu-icon" style={{ color: "orange" }} />
+              {isMenuOpen && <span className="txt">Библиотека</span>}
             </Link>
           </div>
           <Link to="/myprofile" className="menu-item">
             <FiUser className="menu-icon" />
-            {isMenuOpen && <span>Профиль</span>}
+            {isMenuOpen && <span className="txt">Профиль</span>}
           </Link>
           <div className="menu-find-block">
             <Link to="/chats" className="menu-item">
               <FiMessageSquare className="menu-icon" />
-              {isMenuOpen && <span>Сообщения</span>}
+              {isMenuOpen && <span className="txt">Сообщения</span>}
             </Link>
             <Link to="/notifications" className="menu-item">
               <FiBell className="menu-icon" />
-              {isMenuOpen && <span>Уведомления</span>}
+              {isMenuOpen && <span className="txt">Уведомления</span>}
             </Link>
           </div>
           <Link to="/authdetails" className="menu-item">
             <FiSettings className="menu-icon" />
-            {isMenuOpen && <span>Настройки</span>}
+            {isMenuOpen && <span className="txt">Настройки</span>}
           </Link>
         </nav>
 
@@ -1160,7 +1160,7 @@ const Library = ({ userId }) => {
           TRSvaHM
           {isMenuOpen &&
             <div>
-              <p>&copy; 2025 Все права защищены.</p>
+              <p className="txt">&copy; 2025 Все права защищены.</p>
             </div>
           }
         </div>
@@ -1211,7 +1211,7 @@ const Library = ({ userId }) => {
         <motion.nav variants={navbarVariants} initial="hidden" animate="visible">
           <div className="library-main">
             <section className="library-header">
-              <h1>Библиотека Факультета Информационной Безопасности</h1>
+              <h1 className="txt">Библиотека Факультета Информационной Безопасности</h1>
               <div className="search-filter">
                 <input
                   type="search"
@@ -1248,8 +1248,8 @@ const Library = ({ userId }) => {
                 )}
               </div>
 
-              <div className="department-dropdown" style={{ margin: "20px 0", textAlign: "center" }}>
-                <label htmlFor="department-select" style={{ marginRight: "10px", fontWeight: "bold", color: "white" }}>
+              <div className="department-dropdown txt" style={{ margin: "20px 0", textAlign: "center" }}>
+                <label htmlFor="department-select" style={{ marginRight: "10px", fontWeight: "bold" }}>
                   Выберите кафедру:
                 </label>
                 <select

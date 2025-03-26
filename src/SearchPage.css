@@ -46,7 +46,6 @@
   }
 
   .h2-icon-block h2{
-    color: #ffffff;
     /* background-color: #1e2c39; */
     background: var(--bg-h2-icon-block-color);
     position: absolute;
@@ -67,7 +66,6 @@
   }
 
   .chat-page-header h2{
-    color: #ffffff;
     font-size: 25px;
   }
   

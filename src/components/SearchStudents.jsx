@@ -71,7 +71,7 @@ const SearchStudents = () => {
   };
 
   const mainContentStyle = {
-    marginLeft: isMobile ? (isMenuOpen ? "360px" : "0px") : (isMenuOpen ? "360px" : "80px"),
+    marginLeft: isMobile ? (isMenuOpen ? "360px" : "0px") : (isMenuOpen ? "320px" : "110px"),
     transition: "margin 0.3s ease",
   };
 
@@ -282,35 +282,35 @@ const SearchStudents = () => {
         <nav className="menu-items">
           <Link to="/" className="menu-item">
             <FiHome className="menu-icon" />
-            {isMenuOpen && <span>Главная</span>}
+            {isMenuOpen && <span className="txt">Главная</span>}
           </Link>
           <Link to="/searchpage" className="menu-item">
-            <FiSearch className="menu-icon" style={{ color: "lightgreen" }} />
-            {isMenuOpen && <span>Поиск</span>}
+            <FiSearch className="menu-icon" style={{ color: "orange" }} />
+            {isMenuOpen && <span className="txt">Поиск</span>}
           </Link>
           <Link to="/teachers" className="menu-item">
             <FiUserCheck className="menu-icon" />
-            {isMenuOpen && <span>Преподаватели</span>}
+            {isMenuOpen && <span className="txt">Преподаватели</span>}
           </Link>
           <Link to="/library" className="menu-item">
             <FiBookOpen className="menu-icon" />
-            {isMenuOpen && <span>Библиотека</span>}
+            {isMenuOpen && <span className="txt">Библиотека</span>}
           </Link>
           <Link to="/myprofile" className="menu-item">
             <FiUser className="menu-icon" />
-            {isMenuOpen && <span>Профиль</span>}
+            {isMenuOpen && <span className="txt">Профиль</span>}
           </Link>
           <Link to="/chats" className="menu-item">
             <FiMessageSquare className="menu-icon" />
-            {isMenuOpen && <span>Сообщения</span>}
+            {isMenuOpen && <span className="txt">Сообщения</span>}
           </Link>
           <Link to="/notifications" className="menu-item">
             <FiBell className="menu-icon" />
-            {isMenuOpen && <span>Уведомления</span>}
+            {isMenuOpen && <span className="txt">Уведомления</span>}
           </Link>
           <Link to="/authdetails" className="menu-item">
             <FiSettings className="menu-icon" />
-            {isMenuOpen && <span>Настройки</span>}
+            {isMenuOpen && <span className="txt">Настройки</span>}
           </Link>
         </nav>
 
@@ -376,7 +376,7 @@ const SearchStudents = () => {
         </header>
 
         <div className="chat-page-header">
-          <h2>{t('findstudents')}</h2>
+          <h2 className="txt">{t('findstudents')}</h2>
           <div className="chat-page-search-icon" onClick={() => setShowSearch(!showSearch)}>
             <FaSearch />
           </div>
@@ -417,7 +417,7 @@ const SearchStudents = () => {
                           className="chat-page-chat-info"
                           onClick={() => goToProfileFromHistory(user.uid)}
                         >
-                          <h3 style={{ color: "white" }}>{user.username}</h3>
+                          <h3 className="txt">{user.username}</h3>
                           <p>{user.aboutMe || "Информация не указана"}</p>
                         </div>
                       </div>
@@ -439,7 +439,7 @@ const SearchStudents = () => {
                 <div key={user.uid} className="chat-page-chat-item" onClick={() => goToProfile(user.uid)}>
                   <LazyLoadImage src={user.avatarUrl || "./default-image.png"} alt={user.username} className="chat-page-avatarka skeleton-media-avatars" />
                   <div className="chat-page-chat-info">
-                    <h3 style={{ color: "white" }}>{user.username}</h3>
+                    <h3 className="txt">{user.username}</h3>
                     <p>{user.aboutMe || "Информация не указана"}</p>
                   </div>
                 </div>

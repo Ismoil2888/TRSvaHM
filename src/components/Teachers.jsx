@@ -1125,39 +1125,39 @@ const Teachers = () => {
         <nav className="menu-items">
           <Link to="/" className="menu-item" style={{ paddingRight: "15px" }}>
             <FiHome className="menu-icon" />
-            {isMenuOpen && <span>Главная</span>}
+            {isMenuOpen && <span className="txt">Главная</span>}
           </Link>
           <div className="menu-find-block">
             <Link to="/searchpage" className="menu-item">
               <FiSearch className="menu-icon" />
-              {isMenuOpen && <span>Поиск</span>}
+              {isMenuOpen && <span className="txt">Поиск</span>}
             </Link>
             <Link to="/teachers" className="menu-item">
-              <FiUserCheck className="menu-icon" style={{ color: "lightgreen" }} />
-              {isMenuOpen && <span>Преподаватели</span>}
+              <FiUserCheck className="menu-icon" style={{ color: "orange" }} />
+              {isMenuOpen && <span className="txt">Преподаватели</span>}
             </Link>
             <Link to="/library" className="menu-item">
               <FiBookOpen className="menu-icon" />
-              {isMenuOpen && <span>Библиотека</span>}
+              {isMenuOpen && <span className="txt">Библиотека</span>}
             </Link>
           </div>
           <Link to="/myprofile" className="menu-item">
             <FiUser className="menu-icon" />
-            {isMenuOpen && <span>Профиль</span>}
+            {isMenuOpen && <span className="txt">Профиль</span>}
           </Link>
           <div className="menu-find-block">
             <Link to="/chats" className="menu-item">
               <FiMessageSquare className="menu-icon" />
-              {isMenuOpen && <span>Сообщения</span>}
+              {isMenuOpen && <span className="txt">Сообщения</span>}
             </Link>
             <Link to="/notifications" className="menu-item">
               <FiBell className="menu-icon" />
-              {isMenuOpen && <span>Уведомления</span>}
+              {isMenuOpen && <span className="txt">Уведомления</span>}
             </Link>
           </div>
           <Link to="/authdetails" className="menu-item">
             <FiSettings className="menu-icon" />
-            {isMenuOpen && <span>Настройки</span>}
+            {isMenuOpen && <span className="txt">Настройки</span>}
           </Link>
         </nav>
 
@@ -1165,7 +1165,7 @@ const Teachers = () => {
           TRSvaHM
           {isMenuOpen &&
             <div>
-              <p>&copy; 2025 Все права защищены.</p>
+              <p className="txt">&copy; 2025 Все права защищены.</p>
             </div>
           }
         </div>
@@ -1226,8 +1226,8 @@ const Teachers = () => {
           <h1>{t("teachcollective")}</h1>
         </section>
         <motion.nav className="dropdown-search" variants={navbarVariants} initial="hidden" animate="visible">
-          <div className="department-dropdown" style={{ margin: "20px 0", textAlign: "center" }}>
-            <label htmlFor="department-select" style={{ marginRight: "10px", fontWeight: "bold", color: "white" }}>
+          <div className="department-dropdown txt" style={{ margin: "20px 0", textAlign: "center" }}>
+            <label htmlFor="department-select" style={{ marginRight: "10px", fontWeight: "bold" }}>
               Выберите кафедру:
             </label>
             <select

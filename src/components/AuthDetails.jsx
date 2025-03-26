@@ -1522,39 +1522,39 @@ const groupDropdownRef = useRef(null);
         <nav className="menu-items">
           <Link to="/" className="menu-item">
             <FiHome className="menu-icon"/>
-            {isMenuOpen && <span>Главная</span>}
+            {isMenuOpen && <span className="txt">Главная</span>}
           </Link>
           <div className="menu-find-block">
           <Link to="/searchpage" className="menu-item">
              <FiSearch className="menu-icon" />
-             {isMenuOpen && <span>Поиск</span>}
+             {isMenuOpen && <span className="txt">Поиск</span>}
           </Link>
           <Link to="/teachers" className="menu-item">
              <FiUserCheck className="menu-icon" />
-             {isMenuOpen && <span>Преподаватели</span>}
+             {isMenuOpen && <span className="txt">Преподаватели</span>}
           </Link>
           <Link to="/library" className="menu-item">
              <FiBookOpen className="menu-icon" />
-             {isMenuOpen && <span>Библиотека</span>}
+             {isMenuOpen && <span className="txt">Библиотека</span>}
           </Link>
           </div>
           <Link to="/myprofile" className="menu-item">
             <FiUser className="menu-icon" />
-            {isMenuOpen && <span>Профиль</span>}
+            {isMenuOpen && <span className="txt">Профиль</span>}
           </Link>
           <div className="menu-find-block">
           <Link to="/chats" className="menu-item">
             <FiMessageSquare className="menu-icon" />
-            {isMenuOpen && <span>Сообщения</span>}
+            {isMenuOpen && <span className="txt">Сообщения</span>}
           </Link>
           <Link to="/notifications" className="menu-item">
             <FiBell className="menu-icon" />
-            {isMenuOpen && <span>Уведомления</span>}
+            {isMenuOpen && <span className="txt">Уведомления</span>}
           </Link>
           </div>
           <Link to="/authdetails" className="menu-item">
-            <FiSettings className="menu-icon white-icon" style={{color: "lightgreen"}} />
-            {isMenuOpen && <span>Настройки</span>}
+            <FiSettings className="menu-icon white-icon" style={{color: "orange"}} />
+            {isMenuOpen && <span className="txt">Настройки</span>}
           </Link>
         </nav>
 
@@ -1562,7 +1562,7 @@ const groupDropdownRef = useRef(null);
         TRSvaHM
         {isMenuOpen &&
         <div>
-        <p>&copy; 2025 Все права защищены.</p>
+        <p className="txt">&copy; 2025 Все права защищены.</p>
         </div>
         }
         </div>

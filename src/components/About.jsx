@@ -27,12 +27,12 @@
 //       const savedState = localStorage.getItem('isMenuOpen');
 //       return savedState ? JSON.parse(savedState) : true;
 //     });
-  
+
 //     // Сохраняем состояние в localStorage при изменении
 //     useEffect(() => {
 //       localStorage.setItem('isMenuOpen', JSON.stringify(isMenuOpen));
 //     }, [isMenuOpen]);
-  
+
 //     // Обработчик изменения размера окна
 //     useEffect(() => {
 //       const checkMobile = () => {
@@ -46,12 +46,12 @@
 //           setIsMenuOpen(savedState ? JSON.parse(savedState) : true);
 //         }
 //       };
-  
+
 //       checkMobile();
 //       window.addEventListener('resize', checkMobile);
 //       return () => window.removeEventListener('resize', checkMobile);
 //     }, []);
-  
+
 //     // Модифицированная функция переключения меню
 //     const toggleMenuDesktop = () => {
 //       setIsMenuOpen(prev => {
@@ -60,7 +60,7 @@
 //         return newState;
 //       });
 //     };
-  
+
 //     const mainContentStyle = {
 //       marginLeft: isMobile ? (isMenuOpen ? "360px" : "0px") : (isMenuOpen ? "340px" : "110px"),
 //       transition: "margin 0.3s ease",
@@ -236,7 +236,7 @@
 
 
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -253,13 +253,15 @@ import ttulogo from "../Ttulogo.png";
 import { auth } from "../firebase";
 import { getDatabase, ref as dbRef, onValue } from "firebase/database";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FaArrowLeft } from "react-icons/fa";
 import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPhone, faUserCog } from "@fortawesome/free-solid-svg-icons";
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiUserCheck, FiBookOpen, FiSearch } from "react-icons/fi";
 
 const About = () => {
   const [userAvatarUrl, setUserAvatarUrl] = useState(null);
+    const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
-    const [isMenuOpenMobile, setIsMenuOpenMobile] = useState(false);
+  const [isMenuOpenMobile, setIsMenuOpenMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(() => {
     const savedState = localStorage.getItem('isMenuOpen');
     return savedState ? JSON.parse(savedState) : true;
@@ -448,7 +450,9 @@ const About = () => {
 
       <header>
         <div className="header-nav-2">
-          <img src={basiclogo} width="50px" alt="logo" style={{ marginLeft: "10px" }} />
+          <Link className="back-button" style={{ marginLeft: "15px", color: "white" }} onClick={() => navigate(-1)}>
+            <FaArrowLeft />
+          </Link>          
           <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>Факультет</ul>
           <div className={`burger-menu-icon ${isMenuOpenMobile ? 'open' : ''}`} onClick={toggleMenuMobile}>
             <span className="bm-span"></span>
@@ -484,7 +488,7 @@ const About = () => {
           pagination={{ clickable: true }}
           autoplay={{ delay: 3000 }}
           spaceBetween={30}
-          slidesPerView={2}
+          slidesPerView={1}
           loop
         >
           <SwiperSlide><img className="swiperslide-img" src={ttustudents} alt="Фото 1" /></SwiperSlide>

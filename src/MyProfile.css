@@ -136,7 +136,7 @@
   .menu-icon {
     cursor: pointer;
     font-size: 24px;
-    color: #00eaff;
+    /* color: #00eaff; */
   }
 
   .back-button{

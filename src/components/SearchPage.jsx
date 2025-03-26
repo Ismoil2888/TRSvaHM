@@ -146,39 +146,39 @@ const SearchPage = () => {
         <nav className="menu-items">
           <Link to="/" className="menu-item" style={{ paddingRight: "15px" }}>
             <FiHome className="menu-icon" />
-            {isMenuOpen && <span>Главная</span>}
+            {isMenuOpen && <span className="txt">Главная</span>}
           </Link>
           <div className="menu-find-block">
             <Link to="/searchpage" className="menu-item">
-              <FiSearch className="menu-icon" style={{ color: "lightgreen" }} />
-              {isMenuOpen && <span>Поиск</span>}
+              <FiSearch className="menu-icon" style={{ color: "orange" }} />
+              {isMenuOpen && <span className="txt">Поиск</span>}
             </Link>
             <Link to="/teachers" className="menu-item">
               <FiUserCheck className="menu-icon" />
-              {isMenuOpen && <span>Преподаватели</span>}
+              {isMenuOpen && <span className="txt">Преподаватели</span>}
             </Link>
             <Link to="/library" className="menu-item">
               <FiBookOpen className="menu-icon" />
-              {isMenuOpen && <span>Библиотека</span>}
+              {isMenuOpen && <span className="txt">Библиотека</span>}
             </Link>
           </div>
           <Link to="/myprofile" className="menu-item">
             <FiUser className="menu-icon" />
-            {isMenuOpen && <span>Профиль</span>}
+            {isMenuOpen && <span className="txt">Профиль</span>}
           </Link>
           <div className="menu-find-block">
             <Link to="/chats" className="menu-item">
               <FiMessageSquare className="menu-icon" />
-              {isMenuOpen && <span>Сообщения</span>}
+              {isMenuOpen && <span className="txt">Сообщения</span>}
             </Link>
             <Link to="/notifications" className="menu-item">
               <FiBell className="menu-icon" />
-              {isMenuOpen && <span>Уведомления</span>}
+              {isMenuOpen && <span className="txt">Уведомления</span>}
             </Link>
           </div>
           <Link to="/authdetails" className="menu-item">
             <FiSettings className="menu-icon" />
-            {isMenuOpen && <span>Настройки</span>}
+            {isMenuOpen && <span className="txt">Настройки</span>}
           </Link>
         </nav>
 
@@ -186,7 +186,7 @@ const SearchPage = () => {
           TRSvaHM
           {isMenuOpen &&
             <div>
-              <p>&copy; 2025 Все права защищены.</p>
+              <p className="txt">&copy; 2025 Все права защищены.</p>
             </div>
           }
         </div>
@@ -241,7 +241,7 @@ const SearchPage = () => {
 
         <div className="search-main">
           <div className="h2-icon-block">
-            <h2>{t('find')}!</h2>
+            <h2 className="txt">{t('find')}!</h2>
 
             <div className="search-page-search-icon">
               <FaSearch />
@@ -253,14 +253,14 @@ const SearchPage = () => {
               <Link to="/searchstudents">
                 <div className="students-search sb">
                   <FontAwesomeIcon icon={faUser} className="footer-icon white-icon" />
-                  <p>{t('students')}</p>
+                  <p className="txt">{t('students')}</p>
                 </div>
               </Link>
 
               <Link to="/teachers">
                 <div className="teachers-search sb">
                   <FontAwesomeIcon icon={faChalkboardTeacher} className="footer-icon white-icon" />
-                  <p>{t('teachers')}</p>
+                  <p className="txt">{t('teachers')}</p>
                 </div>
               </Link>
             </div>
@@ -269,14 +269,14 @@ const SearchPage = () => {
               <Link to="/library">
                 <div className="books-search sb">
                   <FontAwesomeIcon icon={faBook} className="footer-icon white-icon" />
-                  <p>{t('books')}</p>
+                  <p className="txt">{t('books')}</p>
                 </div>
               </Link>
 
               <Link to="/schedule">
                 <div className="schedule-search sb">
                   <FontAwesomeIcon icon={faCalendarAlt} className="footer-icon white-icon" />
-                  <p>{t('schedule')}</p>
+                  <p className="txt">{t('schedule')}</p>
                 </div>
               </Link>
             </div>

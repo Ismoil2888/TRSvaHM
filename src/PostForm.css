@@ -394,12 +394,9 @@ width: 90%; */
 
 .menu-find-block{
   width: 67%;
-  background: #384f64;
+  /* background: #384f64; */
+  background: var(--bg-sidebar-menu-find-block);
   border-radius: 25px;
-  /* padding-right: 7.5px; */
-  /* display: flex;
-  justify-content: center;
-  flex-direction: column; */
 }
 
 .sidebar h2{
@@ -445,7 +442,7 @@ width: 90%; */
   display: flex;
   align-items: center;
   padding: 15px 20px;
-  color: #ffffff;
+  /* color: #ffffff; */
   text-decoration: none;
   border-radius: 25px;
   transition: background 0.3s ease;
@@ -514,12 +511,12 @@ width: 90%; */
   width: 150px;
   height: 27px;
   /* background-color: #394f65; */
-  background-color: #334454;
+  background-color: var(--bg-header-ul-color);
   align-items: center;
   border-radius: 15px;
   padding: 10px;
-  /* margin-top: 6px; */
   transition: background-color 5s ease;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
 }
 
 .currentUserHeader:hover{

@@ -17,6 +17,10 @@ body {
   scroll-behavior: smooth;
 }
 
+.txt{
+  color: var(--text-color);
+}
+
 /* ::-webkit-scrollbar{
   display: none;
 } */
@@ -46,6 +50,7 @@ body {
 *::-webkit-scrollbar {
 width: 0px;
 height: 0px;
+color: #cce5edd8;
 }
 
 /* Навигация */
@@ -73,10 +78,12 @@ header{
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(15px);
-  background-color: #334454c6;
+  /* background-color: #334454c6; */
+  background: var(--bg-header-ul-color);
   border-radius: 15px;
   padding: 5px;
   margin-left: 15px;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
 }
 
 header nav ul li {
@@ -228,7 +235,7 @@ footer {
 
 /* Плавный переход для ссылок */
 a {
-  color: #58a6ff;
+  /* color: #58a6ff; */
   text-decoration: none;
   transition: color 0.3s, text-shadow 0.3s; /* Плавный переход цвета и тени */
 }
@@ -857,6 +864,7 @@ header nav ul li a:hover::before {
         .menu-icon {
           cursor: pointer;
           font-size: 24px;
+          color: var(--menu-icon-color);
         }
 
         .back-button{

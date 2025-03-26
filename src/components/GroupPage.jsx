@@ -6,7 +6,7 @@ import defaultAvatar from "../default-image.png";
 import "../SpecialtyPage.css";
 import { FaArrowLeft } from "react-icons/fa";
 import useTranslation from '../hooks/useTranslation';
-import basiclogo from "../Screenshot_2025-03-26-11-56-26-760_com.miui.gallery.jpg";
+import basiclogo from "../Screenshot_2025-03-26-11-56-24-140_com.miui.gallery.jpg";
 
 const GroupPage = () => {
   // Принимаем два параметра: course и groupName
@@ -54,7 +54,7 @@ const GroupPage = () => {
       <Link className="back-button-gp" style={{ marginLeft: "15px", color: "black" }} onClick={() => navigate(-1)}>
         <FaArrowLeft />
       </Link>
-      <h3 style={{ color: "grey", padding: "15px", fontSize: "22px" }}>Группа: {groupName} (Курс: {course})</h3>
+      <h3 style={{ color: "grey", paddingTop: "45px", fontSize: "21px" }}>Группа: {groupName} (Курс: {course})</h3>
 
       {schedule && (
         <div className="group-schedule">
@@ -112,10 +112,6 @@ const GroupPage = () => {
             </div>
           </div>
         ))}
-      </div>
-      <div style={{display: "flex", alignItems: "center"}}>
-      <input type="color" />
-      <img width={500} src={basiclogo} alt="" />
       </div>
     </div>
   );
