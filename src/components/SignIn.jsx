@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import { IoEyeOutline, IoEyeOffOutline, IoMailOutline } from "react-icons/io5";
 import "../SignUp-SignIn.css";
+import { FaArrowLeft } from "react-icons/fa";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -37,6 +38,9 @@ const SignIn = () => {
 
   return (
     <div className="section">
+      <Link className="back-button white-icon" style={{ position: "absolute", top: "0", left: "20px" }} onClick={() => navigate(-1)}>
+        <FaArrowLeft />
+      </Link>
       <div className="login-box">
         <form onSubmit={logIn}>
           <h2>Вход</h2>
@@ -72,7 +76,7 @@ const SignIn = () => {
             </label> */}
             <p>Забыли пароль?</p>
           </div>
-          <button type="submit">Login</button>
+          <button type="submit" className="reg-login-button">Login</button>
           {error && <p style={{ color: "red" }}>{error}</p>}
           <div className="register-link">
             <p>

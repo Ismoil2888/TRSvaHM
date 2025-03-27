@@ -996,7 +996,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaEllipsisV, FaTimes, FaPen, FaArrowLeft, FaLock, FaEye, FaEyeSlash, FaRegAddressBook } from "react-icons/fa"; // Иконка карандаша
 import imageCompression from 'browser-image-compression';
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
-import ttulogo from "../Ttulogo.png";
+import basiclogo from "../basic-logo.png";
 import { LanguageContext } from '../contexts/LanguageContext';
 import { translations } from '../translations';
 import useTranslation from '../hooks/useTranslation';
@@ -1121,23 +1121,21 @@ const groupDropdownRef = useRef(null);
 
   const handleSubmitRequest = async () => {
     const { fio, faculty, course, group, photo } = studentInfo;
-
-    // Проверка на пустые поля
+  
     if (!fio || !faculty || !course || !group || !photo) {
       showNotificationError("Все поля обязательны к заполнению.");
       return;
     }
-
+  
     try {
-      // Отправка фото студента в Firebase Storage (если выбрано)
       let photoUrl = "";
       if (photo) {
         const storageReference = ref(storage, `request_photos/${Date.now()}_${photo.name}`);
         const snapshot = await uploadBytes(storageReference, photo);
         photoUrl = await getDownloadURL(snapshot.ref);
       }
-
-      // Сохранение данных заявки в Firebase Database
+  
+      // Сохранение заявки с дополнительными данными пользователя
       const requestRef = push(databaseRef(database, "requests"));
       await update(requestRef, {
         fio,
@@ -1146,10 +1144,13 @@ const groupDropdownRef = useRef(null);
         group,
         photoUrl,
         status: "pending",
-        email: authUser.email // Save the user's email to link request with user
+        email: authUser.email,          // Email пользователя
+        username,                      // Имя пользователя (из состояния компонента)
+        userAvatar: avatarUrl,         // URL аватарки пользователя
+        userId: authUser.uid           // uid пользователя, чтобы можно было перейти в его профиль
       });
-
-      setRequestId(requestRef.key); // Set the request ID state
+  
+      setRequestId(requestRef.key);
       handleCloseForm();
       showNotification("Заявка отправлена успешно.");
     } catch (error) {
@@ -1157,6 +1158,46 @@ const groupDropdownRef = useRef(null);
       showNotificationError("Ошибка отправки заявки.");
     }
   };
+  
+
+  // const handleSubmitRequest = async () => {
+  //   const { fio, faculty, course, group, photo } = studentInfo;
+
+  //   // Проверка на пустые поля
+  //   if (!fio || !faculty || !course || !group || !photo) {
+  //     showNotificationError("Все поля обязательны к заполнению.");
+  //     return;
+  //   }
+
+  //   try {
+  //     // Отправка фото студента в Firebase Storage (если выбрано)
+  //     let photoUrl = "";
+  //     if (photo) {
+  //       const storageReference = ref(storage, `request_photos/${Date.now()}_${photo.name}`);
+  //       const snapshot = await uploadBytes(storageReference, photo);
+  //       photoUrl = await getDownloadURL(snapshot.ref);
+  //     }
+
+  //     // Сохранение данных заявки в Firebase Database
+  //     const requestRef = push(databaseRef(database, "requests"));
+  //     await update(requestRef, {
+  //       fio,
+  //       faculty,
+  //       course,
+  //       group,
+  //       photoUrl,
+  //       status: "pending",
+  //       email: authUser.email // Save the user's email to link request with user
+  //     });
+
+  //     setRequestId(requestRef.key); // Set the request ID state
+  //     handleCloseForm();
+  //     showNotification("Заявка отправлена успешно.");
+  //   } catch (error) {
+  //     console.error("Ошибка отправки заявки:", error);
+  //     showNotificationError("Ошибка отправки заявки.");
+  //   }
+  // };
 
 
   useEffect(() => {
@@ -1505,71 +1546,71 @@ const groupDropdownRef = useRef(null);
               {notification}
             </div>
           )} {/* Уведомление */}
-    <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
+     <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
-        <img style={{width: "50px", height: "45px"}} src={ttulogo} alt="" />
+          <img style={{ width: "50px", height: "45px" }} src={basiclogo} alt="" />
           {isMenuOpen ? (
             <>
-              <h2>TTU</h2>
-              <FiChevronLeft 
-                className="toggle-menu" 
+              <h2>{t('facultname')}</h2>
+              <FiChevronLeft
+                className="toggle-menu"
                 onClick={toggleMenuDesktop}
               />
             </>
           ) : (
-            <FiChevronRight 
-              className="toggle-menu" 
+            <FiChevronRight
+              className="toggle-menu"
               onClick={toggleMenuDesktop}
             />
           )}
         </div>
 
         <nav className="menu-items">
-          <Link to="/" className="menu-item">
-            <FiHome className="menu-icon"/>
-            {isMenuOpen && <span className="txt">Главная</span>}
+          <Link to="/" className="menu-item" style={{ paddingRight: "15px" }}>
+            <FiHome className="menu-icon" />
+            {isMenuOpen && <span className="txt">{t('main')}</span>}
           </Link>
           <div className="menu-find-block">
-          <Link to="/searchpage" className="menu-item">
-             <FiSearch className="menu-icon" />
-             {isMenuOpen && <span className="txt">Поиск</span>}
-          </Link>
-          <Link to="/teachers" className="menu-item">
-             <FiUserCheck className="menu-icon" />
-             {isMenuOpen && <span className="txt">Преподаватели</span>}
-          </Link>
-          <Link to="/library" className="menu-item">
-             <FiBookOpen className="menu-icon" />
-             {isMenuOpen && <span className="txt">Библиотека</span>}
-          </Link>
+            <Link to="/searchpage" className="menu-item">
+              <FiSearch className="menu-icon"  />
+              {isMenuOpen && <span className="txt">{t('findstudents')}</span>}
+            </Link>
+            <Link to="/teachers" className="menu-item">
+              <FiUserCheck className="menu-icon" />
+              {isMenuOpen && <span className="txt">{t('teachers')}</span>}
+            </Link>
+            <Link to="/library" className="menu-item">
+              <FiBookOpen className="menu-icon" />
+              {isMenuOpen && <span className="txt">{t('library')}</span>}
+            </Link>
           </div>
           <Link to="/myprofile" className="menu-item">
             <FiUser className="menu-icon" />
-            {isMenuOpen && <span className="txt">Профиль</span>}
+            {isMenuOpen && <span className="txt">{t('profile')}</span>}
           </Link>
           <div className="menu-find-block">
-          <Link to="/chats" className="menu-item">
-            <FiMessageSquare className="menu-icon" />
-            {isMenuOpen && <span className="txt">Сообщения</span>}
-          </Link>
-          <Link to="/notifications" className="menu-item">
-            <FiBell className="menu-icon" />
-            {isMenuOpen && <span className="txt">Уведомления</span>}
-          </Link>
+            <Link to="/chats" className="menu-item">
+              <FiMessageSquare className="menu-icon" />
+              {isMenuOpen && <span className="txt">{t('messages')}</span>}
+            </Link>
+            <Link to="/notifications" className="menu-item">
+              <FiBell className="menu-icon" />
+              {isMenuOpen && <span className="txt">{t('notifications')}</span>}
+            </Link>
           </div>
           <Link to="/authdetails" className="menu-item">
-            <FiSettings className="menu-icon white-icon" style={{color: "orange"}} />
-            {isMenuOpen && <span className="txt">Настройки</span>}
+            <FiSettings className="menu-icon" style={{ color: "orange" }} />
+            {isMenuOpen && <span className="txt">{t('settings')}</span>}
           </Link>
         </nav>
 
         <div className="logo-and-tik">
-        TRSvaHM
-        {isMenuOpen &&
-        <div>
-        <p className="txt">&copy; 2025 {t("rights")}.</p>
-        </div>
-        }
+        {t('facultname')}
+          {isMenuOpen &&
+            <div>
+              <p className="txt">&copy; 2025 {t("rights")}.</p>
+            </div>
+          }
         </div>
       </div>
       {authUser ? (

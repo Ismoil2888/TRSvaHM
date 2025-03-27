@@ -385,22 +385,23 @@ width: 90%; */
   left: 0;
   top: 0;
   height: 100vh;
-  /* background: #2c3e50; */
   background: var(--bg-sidebar-color);
   box-shadow: 2px 0 10px rgba(0,0,0,0.1);
   z-index: 99999;
   transition: width 0.3s ease;
+  overflow-y: auto !important;
+  overflow-x: hidden;
 }
 
 .menu-find-block{
   width: 67%;
-  /* background: #384f64; */
   background: var(--bg-sidebar-menu-find-block);
   border-radius: 25px;
 }
 
 .sidebar h2{
   color: #9daddf;
+  font-size: 27px;
 }
 
 .sidebar.open {
@@ -440,9 +441,8 @@ width: 90%; */
 
 .menu-item {
   display: flex;
-  align-items: center;
+  align-items: end;
   padding: 15px 20px;
-  /* color: #ffffff; */
   text-decoration: none;
   border-radius: 25px;
   transition: background 0.3s ease;
@@ -498,19 +498,13 @@ width: 90%; */
   flex-direction: column;
   color: #c7daee;
   border-top: 1px solid #07202d;
-  /* text-overflow: ellipsis; */
   white-space: nowrap;
 }
 
 .currentUserHeader {
-  /* position: absolute;
-  top: 8px;
-  bottom: 0px;
-  right: 105px; */
   display: flex;
   width: 150px;
   height: 27px;
-  /* background-color: #394f65; */
   background-color: var(--bg-header-ul-color);
   align-items: center;
   border-radius: 15px;
@@ -540,6 +534,5 @@ width: 90%; */
 
 .glava{
   display: flex;
-  background-color: #1e2c39;
-  /* height: 100vh; */
+  background-color: var(--bg-container-color);
 }

@@ -690,7 +690,7 @@ import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight,
 import { useNavigate, Link } from "react-router-dom";
 import "../UserProfile.css";
 import { motion } from 'framer-motion';
-import ttulogo from "../Ttulogo.png";
+import basiclogo from "../basic-logo.png";
 import useTranslation from '../hooks/useTranslation';
 
 const UserProfile = () => {
@@ -993,10 +993,10 @@ const UserProfile = () => {
     <div className="up-profile-container">
       <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
-          <img style={{ width: "50px", height: "45px" }} src={ttulogo} alt="" />
+          <img style={{ width: "50px", height: "45px" }} src={basiclogo} alt="" />
           {isMenuOpen ? (
             <>
-              <h2>TTU</h2>
+              <h2>{t('facultname')}</h2>
               <FiChevronLeft
                 className="toggle-menu"
                 onClick={toggleMenuDesktop}
@@ -1013,44 +1013,44 @@ const UserProfile = () => {
         <nav className="menu-items">
           <Link to="/" className="menu-item" style={{ paddingRight: "15px" }}>
             <FiHome className="menu-icon" />
-            {isMenuOpen && <span className="txt">Главная</span>}
+            {isMenuOpen && <span className="txt">{t('main')}</span>}
           </Link>
           <div className="menu-find-block">
             <Link to="/searchpage" className="menu-item">
-              <FiSearch className="menu-icon" />
-              {isMenuOpen && <span className="txt">Поиск</span>}
+              <FiSearch className="menu-icon" style={{ color: "orange" }} />
+              {isMenuOpen && <span className="txt">{t('findstudents')}</span>}
             </Link>
             <Link to="/teachers" className="menu-item">
               <FiUserCheck className="menu-icon" />
-              {isMenuOpen && <span className="txt">Преподаватели</span>}
+              {isMenuOpen && <span className="txt">{t('teachers')}</span>}
             </Link>
             <Link to="/library" className="menu-item">
               <FiBookOpen className="menu-icon" />
-              {isMenuOpen && <span className="txt">Библиотека</span>}
+              {isMenuOpen && <span className="txt">{t('library')}</span>}
             </Link>
           </div>
           <Link to="/myprofile" className="menu-item">
             <FiUser className="menu-icon" />
-            {isMenuOpen && <span className="txt">Профиль</span>}
+            {isMenuOpen && <span className="txt">{t('profile')}</span>}
           </Link>
           <div className="menu-find-block">
             <Link to="/chats" className="menu-item">
-              <FiMessageSquare className="menu-icon" style={{ color: "orange" }} />
-              {isMenuOpen && <span className="txt">Сообщения</span>}
+              <FiMessageSquare className="menu-icon" />
+              {isMenuOpen && <span className="txt">{t('messages')}</span>}
             </Link>
             <Link to="/notifications" className="menu-item">
               <FiBell className="menu-icon" />
-              {isMenuOpen && <span className="txt">Уведомления</span>}
+              {isMenuOpen && <span className="txt">{t('notifications')}</span>}
             </Link>
           </div>
           <Link to="/authdetails" className="menu-item">
             <FiSettings className="menu-icon" />
-            {isMenuOpen && <span className="txt">Настройки</span>}
+            {isMenuOpen && <span className="txt">{t('settings')}</span>}
           </Link>
         </nav>
 
         <div className="logo-and-tik">
-          TRSvaHM
+          {t('facultname')}
           {isMenuOpen &&
             <div>
               <p className="txt">&copy; 2025 {t("rights")}.</p>
@@ -1058,8 +1058,8 @@ const UserProfile = () => {
           }
         </div>
       </div>
-      <div className="up-profile-header" style={{width: "100%"}}>
-        <FaChevronLeft className="up-back-icon white-icon" style={{ marginTop: "3px"}} onClick={() => navigate(-1)} />
+      <div className="up-profile-header" style={{ width: "100%" }}>
+        <FaChevronLeft className="up-back-icon white-icon" style={{ marginTop: "3px" }} onClick={() => navigate(-1)} />
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", minWidth: "320px" }}>
           <img
             src={userData.avatarUrl || "./default-image.png"}
@@ -1072,7 +1072,7 @@ const UserProfile = () => {
             {renderStatus()}
           </div>
         </div>
-        <FaEllipsisV className="up-menu-icon white-icon" style={{marginTop: "5px", marginRight: "20px"}} />
+        <FaEllipsisV className="up-menu-icon white-icon" style={{ marginTop: "5px", marginRight: "20px" }} />
       </div>
 
       {isAvatarModalOpen && (
@@ -1126,7 +1126,7 @@ const UserProfile = () => {
 
       <div className="up-info-card">
         <div className="up-info-title">
-          <FaUserEdit className="up-info-icon white-icon"/>
+          <FaUserEdit className="up-info-icon white-icon" />
           <p className="txt">{t('about')}:</p>
         </div>
         <div className="up-info-content">{userData.aboutMe || "Нет информации"}</div>
@@ -1177,7 +1177,7 @@ const UserProfile = () => {
             <div className="up-info-content" style={{ marginLeft: "15px" }}>{userCourse}</div>
           </div>
 
-          <div className="up-info-card" style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+          <div className="up-info-card" style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
             <div className="up-info-title"><FaUsers className="up-info-icon white-icon" style={{ fontSize: "20px" }} /><p className="txt">{t('group')}:</p></div>
             <div className="up-info-content" style={{ marginLeft: "15px" }}><p>{userGroup}</p></div>
           </div>

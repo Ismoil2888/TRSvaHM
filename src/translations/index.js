@@ -1,5 +1,6 @@
 export const translations = {
   tajik: {
+    facultname: "ТРСваҲИ",
     rights: "Ҳама ҳуқуқ маҳфуз аст",
     //AuthDetails
     language: "Забон",
@@ -63,6 +64,7 @@ export const translations = {
     teacher: "омузгор",
   },
   russian: {
+    facultname: "ЦТСиЗИ",
     rights: "Все права защищены",
     //AuthDetails
     language: "Язык",
@@ -126,6 +128,7 @@ export const translations = {
     teacher: "преподаватель",
   },
   english: {
+    facultname: "DTSandIS",
     rights: "All rights reserved",
     //AuthDetails
     language: "Language",

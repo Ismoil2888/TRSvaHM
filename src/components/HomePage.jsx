@@ -1371,7 +1371,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { getDatabase, ref as dbRef, onValue, get, push, set, update, remove } from "firebase/database";
 import { auth, database } from "../firebase";
 import defaultAvatar from "../default-image.png";
-import ttulogo from "../Ttulogo.png";
+import basiclogo from "../basic-logo.png";
 import "../App.css";
 import "../PostForm.css";
 import "swiper/css";
@@ -1947,10 +1947,10 @@ const HomePage = () => {
     <div className="glava" style={{ height: "100%" }}>
       <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
-          <img style={{ width: "50px", height: "45px" }} src={ttulogo} alt="" />
+          <img style={{ width: "50px", height: "45px" }} src={basiclogo} alt="" />
           {isMenuOpen ? (
             <>
-              <h2>TTU</h2>
+              <h2>{t('facultname')}</h2>
               <FiChevronLeft
                 className="toggle-menu"
                 onClick={toggleMenuDesktop}
@@ -2004,7 +2004,7 @@ const HomePage = () => {
         </nav>
 
         <div className="logo-and-tik">
-          TRSvaHM
+        {t('facultname')}
           {isMenuOpen &&
             <div>
               <p className="txt">&copy; 2025 {t("rights")}.</p>

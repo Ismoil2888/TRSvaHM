@@ -12,6 +12,7 @@ export const themes = {
       '--white-icon-color': '#F8F9FB',
       '--bg-sidebar-menu-find-block': '#384f64',
       '--menu-icon-color': '#00eaff',
+      '--bg-register-login-button-color': 'white',
     },
     light: {
       '--bg-container-color': '#F8F9FB',
@@ -26,9 +27,10 @@ export const themes = {
       '--white-icon-color': '#000103',
       '--bg-sidebar-menu-find-block': '#08213e21',
       '--menu-icon-color': '#1b68c0',
+      '--bg-register-login-button-color': 'linear-gradient(90deg, #00e5ff, #9b00ff)',
     },
     dark: {
-      '--bg-container-color': '#020818',
+      '--bg-container-color': '#00040f',
       '--bg-header-color': 'linear-gradient(to left top, #000103e5, #000103)',
       '--bg-header-ul-color': '#000103ce',
       '--bg-sidebar-color': '#000103',
@@ -36,10 +38,11 @@ export const themes = {
       '--bg-content-color': '#000103',
       '--bg-footer-color': '#00010393',
       '--bg-searchpage-blocks-color': '#202938',
-      '--bg-h2-icon-block-color': '#020818',
+      '--bg-h2-icon-block-color': '#00040f',
       '--white-icon-color': '#F8F9FB',
       '--bg-sidebar-menu-find-block': '#151d2cb5',
       '--menu-icon-color': '#00eaff',
+      '--bg-register-login-button-color': 'white',
     }
   };
   

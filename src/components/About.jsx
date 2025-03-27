@@ -1,240 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import { Link } from "react-router-dom";
-// import { Swiper, SwiperSlide } from "swiper/react";
-// import "swiper/css";
-// import "swiper/css/navigation";
-// import "swiper/css/pagination";
-// import { Navigation, Pagination, Autoplay } from "swiper/modules";
-// import "../App.css";
-// import "../aboute.css";
-// import basiclogo from "../basic-logo.png";
-// import ttustudents from "../ttustudents.jpg";
-// import ttustudents1 from "../ttustudents1.jpg";
-// import ttustudents2 from "../ttustudents2.jpg";
-// import ttustudents3 from "../ttustudents3.jpg";
-// import ttulogo from "../Ttulogo.png";
-// import { auth } from "../firebase";
-// import { getDatabase, ref as dbRef, onValue } from "firebase/database";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPhone, faUserCog } from "@fortawesome/free-solid-svg-icons";
-// import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiUserCheck, FiBookOpen, FiSearch } from "react-icons/fi";
-
-// const About = () => {
-//   const [userAvatarUrl, setUserAvatarUrl] = useState(null);
-//     const [isMobile, setIsMobile] = useState(false);
-//     const [isMenuOpen, setIsMenuOpen] = useState(() => {
-//       // Восстанавливаем состояние из localStorage при инициализации
-//       const savedState = localStorage.getItem('isMenuOpen');
-//       return savedState ? JSON.parse(savedState) : true;
-//     });
-
-//     // Сохраняем состояние в localStorage при изменении
-//     useEffect(() => {
-//       localStorage.setItem('isMenuOpen', JSON.stringify(isMenuOpen));
-//     }, [isMenuOpen]);
-
-//     // Обработчик изменения размера окна
-//     useEffect(() => {
-//       const checkMobile = () => {
-//         const mobile = window.innerWidth < 700;
-//         setIsMobile(mobile);
-//         if (mobile) {
-//           setIsMenuOpen(false);
-//         } else {
-//           // Восстанавливаем состояние только для десктопа
-//           const savedState = localStorage.getItem('isMenuOpen');
-//           setIsMenuOpen(savedState ? JSON.parse(savedState) : true);
-//         }
-//       };
-
-//       checkMobile();
-//       window.addEventListener('resize', checkMobile);
-//       return () => window.removeEventListener('resize', checkMobile);
-//     }, []);
-
-//     // Модифицированная функция переключения меню
-//     const toggleMenuDesktop = () => {
-//       setIsMenuOpen(prev => {
-//         const newState = !prev;
-//         localStorage.setItem('isMenuOpen', JSON.stringify(newState));
-//         return newState;
-//       });
-//     };
-
-//     const mainContentStyle = {
-//       marginLeft: isMobile ? (isMenuOpen ? "360px" : "0px") : (isMenuOpen ? "340px" : "110px"),
-//       transition: "margin 0.3s ease",
-//     };
-
-//   useEffect(() => {
-//     const user = auth.currentUser;
-//     if (user) {
-//       const db = getDatabase();
-//       const userRef = dbRef(db, `users/${user.uid}`);
-//       onValue(userRef, (snapshot) => {
-//         const userData = snapshot.val();
-//         setUserAvatarUrl(userData?.avatarUrl || "./default-image.png");
-//       });
-//     }
-//   }, []);
-
-//   const toggleMenuu = () => {
-//     if (isMenuOpen) {
-//       setTimeout(() => {
-//         setIsMenuOpen(false);
-//       }, 0); // Задержка для плавного исчезновения
-//     } else {
-//       setIsMenuOpen(true);
-//     }
-//   };
-
-//   return (
-//     <div style={mainContentStyle}>
-//           <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
-//         <div className="sidebar-header">
-//         <img style={{width: "50px", height: "45px"}} src={ttulogo} alt="" />
-//           {isMenuOpen ? (
-//             <>
-//               <h2>TTU</h2>
-//               <FiChevronLeft 
-//                 className="toggle-menu" 
-//                 onClick={toggleMenuDesktop}
-//               />
-//             </>
-//           ) : (
-//             <FiChevronRight 
-//               className="toggle-menu" 
-//               onClick={toggleMenuDesktop}
-//             />
-//           )}
-//         </div>
-
-//         <nav className="menu-items">
-//           <Link to="/" className="menu-item">
-//             <FiHome className="menu-icon" style={{color: "lightgreen"}}/>
-//             {isMenuOpen && <span>Главная</span>}
-//           </Link>
-//           <div className="menu-find-block">
-//           <Link to="/searchpage" className="menu-item">
-//              <FiSearch className="menu-icon" />
-//              {isMenuOpen && <span>Поиск</span>}
-//           </Link>
-//           <Link to="/teachers" className="menu-item">
-//              <FiUserCheck className="menu-icon" />
-//              {isMenuOpen && <span>Преподаватели</span>}
-//           </Link>
-//           <Link to="/library" className="menu-item">
-//              <FiBookOpen className="menu-icon" />
-//              {isMenuOpen && <span>Библиотека</span>}
-//           </Link>
-//           </div>
-//           <Link to="/myprofile" className="menu-item">
-//             <FiUser className="menu-icon" />
-//             {isMenuOpen && <span>Профиль</span>}
-//           </Link>
-//           <div className="menu-find-block">
-//           <Link to="/chats" className="menu-item">
-//             <FiMessageSquare className="menu-icon" />
-//             {isMenuOpen && <span>Сообщения</span>}
-//           </Link>
-//           <Link to="/notifications" className="menu-item">
-//             <FiBell className="menu-icon" />
-//             {isMenuOpen && <span>Уведомления</span>}
-//           </Link>
-//           </div>
-//           <Link to="/authdetails" className="menu-item">
-//             <FiSettings className="menu-icon" />
-//             {isMenuOpen && <span>Настройки</span>}
-//           </Link>
-//         </nav>
-
-//         <div className="logo-and-tik">
-//         TRSvaHM
-//         {isMenuOpen &&
-//         <div>
-//         <p>&copy; 2025 Все права защищены.</p>
-//         </div>
-//         }
-//         </div>
-//       </div>
-//       <header>
-//         <div className="header-nav-2">
-
-//           <img src={basiclogo} width="50px" alt="logo" style={{marginLeft: "10px"}} />
-
-//           <ul className="logo-app" style={{color: "#58a6ff", fontSize: "25px"}}>Факультет</ul>
-
-//           <div className={`burger-menu-icon ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenuu}>          
-//             <span className="bm-span"></span>
-//             <span className="bm-span"></span>
-//             <span className="bm-span"></span>
-//           </div>
-
-//           <div className={`burger-menu ${isMenuOpen ? 'open' : ''}`}>         
-//           <ul>
-//              <li><Link to="/home"><FontAwesomeIcon icon={faHome} /> Главная</Link></li>
-//              <li><Link to="/about"><FontAwesomeIcon icon={faInfoCircle} style={{color: "red"}} /> О факультете</Link></li>
-//              <li><Link to="/teachers"><FontAwesomeIcon icon={faChalkboardTeacher} /> Преподаватели</Link></li>
-//              <li><Link to="/schedule"><FontAwesomeIcon icon={faCalendarAlt} /> Расписание</Link></li>
-//              <li><Link to="/library"><FontAwesomeIcon icon={faBook} /> Библиотека</Link></li>
-//              <li><Link to="/contacts"><FontAwesomeIcon icon={faPhone} /> Контакты</Link></li>
-//              <li><Link to="/authdetails"><FontAwesomeIcon icon={faUserCog} /> Настройки Профиля</Link></li>
-//           </ul>
-//           </div>
-
-//         </div>
-//       </header>
-
-//       <section className="about-hero">
-//         <h1>О факультете цифровых технологий</h1>
-//         <div className="faculty-image">
-//           <img src={basiclogo} alt="Факультет" />
-//         </div>
-//       </section>
-
-//       <section className="slider-section">
-//         <h2 className="section-title" style={{color: "black"}}>Галерея</h2>
-//         <Swiper
-//           modules={[Navigation, Pagination, Autoplay]}
-//           navigation
-//           pagination={{ clickable: true }}
-//           autoplay={{ delay: 3000 }}
-//           spaceBetween={30}
-//           slidesPerView={1}
-//           loop
-//         >
-//           <SwiperSlide><img style={{width: "100%"}} src={ttustudents} alt="Фото 1" /></SwiperSlide>
-//           <SwiperSlide><img style={{width: "100%"}} src={ttustudents1} alt="Фото 2" /></SwiperSlide>
-//           <SwiperSlide><img style={{width: "100%"}} src={ttustudents2} alt="Фото 3" /></SwiperSlide>
-//           <SwiperSlide><img style={{width: "100%"}} src={ttustudents3} alt="Фото 4" /></SwiperSlide>
-//           <SwiperSlide><img style={{width: "100%"}} src={ttustudents} alt="Фото 1" /></SwiperSlide>
-//           <SwiperSlide><img style={{width: "100%"}} src={ttustudents1} alt="Фото 2" /></SwiperSlide>
-//           <SwiperSlide><img style={{width: "100%"}} src={ttustudents2} alt="Фото 3" /></SwiperSlide>
-//           <SwiperSlide><img style={{width: "100%"}} src={ttustudents3} alt="Фото 4" /></SwiperSlide>
-//         </Swiper>
-//       </section>
-
-//       <section className="about-section">
-//         <div className="about-container">
-//           <h2>Информация о факультете</h2>
-//           <p>Факультет информационных технологий готовит специалистов...</p>
-//           <p>Наши выпускники занимают высокие позиции в ИТ-компаниях.</p>
-//         </div>
-//       </section>
-
-//       <footer className="footer-desktop">
-//         <p>&copy; 2024 Факультет Кибербезопасности. Все права защищены.</p>
-//       </footer>
-//     </div>
-//   );
-// };
-
-// export default About;
-
-
-
-
-
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -256,10 +19,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FaArrowLeft } from "react-icons/fa";
 import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPhone, faUserCog } from "@fortawesome/free-solid-svg-icons";
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiUserCheck, FiBookOpen, FiSearch } from "react-icons/fi";
+import useTranslation from '../hooks/useTranslation';
 
 const About = () => {
   const [userAvatarUrl, setUserAvatarUrl] = useState(null);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const t = useTranslation();
+  const [userRole, setUserRole] = useState('');
+  const database = getDatabase();
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpenMobile, setIsMenuOpenMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(() => {
@@ -311,6 +78,19 @@ const About = () => {
       });
     }
   }, []);
+
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user) {
+      const userRef = dbRef(database, `users/${user.uid}`);
+      onValue(userRef, (snapshot) => {
+        const userData = snapshot.val();
+        // Предполагается, что роль хранится в поле role
+        setUserRole(userData?.role || '');
+      });
+    }
+  }, [database]);
 
   const toggleMenuMobile = () => {
     if (isMenuOpenMobile) {
@@ -388,12 +168,12 @@ const About = () => {
 
   return (
     <div style={mainContentStyle}>
-       <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
+      <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
-          <img style={{ width: "50px", height: "45px" }} src={ttulogo} alt="" />
+          <img style={{ width: "50px", height: "45px" }} src={basiclogo} alt="" />
           {isMenuOpen ? (
             <>
-              <h2>TTU</h2>
+              <h2>{t('facultname')}</h2>
               <FiChevronLeft
                 className="toggle-menu"
                 onClick={toggleMenuDesktop}
@@ -410,47 +190,58 @@ const About = () => {
         <nav className="menu-items">
           <Link to="/" className="menu-item" style={{ paddingRight: "15px" }}>
             <FiHome className="menu-icon" style={{ color: "orange" }} />
-            {isMenuOpen && <span className="txt">Главная</span>}
+            {isMenuOpen && <span className="txt">{t('main')}</span>}
           </Link>
           <div className="menu-find-block">
             <Link to="/searchpage" className="menu-item">
               <FiSearch className="menu-icon" />
-              {isMenuOpen && <span className="txt">Поиск</span>}
+              {isMenuOpen && <span className="txt">{t('findstudents')}</span>}
             </Link>
             <Link to="/teachers" className="menu-item">
               <FiUserCheck className="menu-icon" />
-              {isMenuOpen && <span className="txt">Преподаватели</span>}
+              {isMenuOpen && <span className="txt">{t('teachers')}</span>}
             </Link>
             <Link to="/library" className="menu-item">
               <FiBookOpen className="menu-icon" />
-              {isMenuOpen && <span className="txt">Библиотека</span>}
+              {isMenuOpen && <span className="txt">{t('library')}</span>}
             </Link>
           </div>
           <Link to="/myprofile" className="menu-item">
             <FiUser className="menu-icon" />
-            {isMenuOpen && <span className="txt">Профиль</span>}
+            {isMenuOpen && <span className="txt">{t('profile')}</span>}
           </Link>
           <div className="menu-find-block">
             <Link to="/chats" className="menu-item">
               <FiMessageSquare className="menu-icon" />
-              {isMenuOpen && <span className="txt">Сообщения</span>}
+              {isMenuOpen && <span className="txt">{t('messages')}</span>}
             </Link>
             <Link to="/notifications" className="menu-item">
               <FiBell className="menu-icon" />
-              {isMenuOpen && <span className="txt">Уведомления</span>}
+              {isMenuOpen && <span className="txt">{t('notifications')}</span>}
             </Link>
           </div>
           <Link to="/authdetails" className="menu-item">
             <FiSettings className="menu-icon" />
-            {isMenuOpen && <span className="txt">Настройки</span>}
+            {isMenuOpen && <span className="txt">{t('settings')}</span>}
           </Link>
+
+                  {/* Дополнительные разделы для декана */}
+        {userRole === 'dean' && (
+          <>
+            <Link to="/admin-login" className="menu-item">
+              {/* Используйте подходящую иконку */}
+              <FiUserCheck className="menu-icon" />
+              {isMenuOpen && <span className="txt">Админ-Панель</span>}
+            </Link>
+          </>
+        )}
         </nav>
 
         <div className="logo-and-tik">
-          TRSvaHM
+          {t('facultname')}
           {isMenuOpen &&
             <div>
-              <p className="txt">&copy; 2025 Все права защищены.</p>
+              <p className="txt">&copy; 2025 {t("rights")}.</p>
             </div>
           }
         </div>
@@ -459,7 +250,7 @@ const About = () => {
         <div className="header-nav-2">
           <Link className="back-button white-icon" style={{ marginLeft: "15px" }} onClick={() => navigate(-1)}>
             <FaArrowLeft />
-          </Link>          
+          </Link>
           <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>Факультет</ul>
           <div className={`burger-menu-icon ${isMenuOpenMobile ? 'open' : ''}`} onClick={toggleMenuMobile}>
             <span className="bm-span"></span>
@@ -509,14 +300,6 @@ const About = () => {
         </Swiper>
       </section>
 
-      <section className="about-section">
-        <div className="about-container">
-          <h2>Информация о факультете</h2>
-          <p>Факультет информационных технологий готовит специалистов...</p>
-          <p>Наши выпускники занимают высокие позиции в ИТ-компаниях.</p>
-        </div>
-      </section>
-
       {/* Раздел "Кафедры" с вложенными списками – элементы всегда отрисовываются, а класс "open" добавляется по состоянию */}
       <section className="departments-section">
         <div className="departments-container">
@@ -552,9 +335,11 @@ const About = () => {
                     </ul>
                   </li>
                   <li>
-                    Преподаватели
-                    {/* Дополнительная логика для преподавателей */}
+                    <Link to={`/department-teachers/${encodeURIComponent(dept.name)}`} className="department-teachers-link">
+                      Преподаватели
+                    </Link>
                   </li>
+
                 </ul>
               </li>
             ))}

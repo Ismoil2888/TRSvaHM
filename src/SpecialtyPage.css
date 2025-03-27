@@ -3,12 +3,45 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding-top: 18px;
+    background: var(--bg-container-color);
+    width: 100%;
+}
+
+.header-gp{
+ display: none;
+}
+
+.gp-desltop-header{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (width < 700px) {
+  .header-gp{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    position: fixed;
+    z-index: 9999;
+    background: var(--bg-header-color);
+    width: 100%;
+    padding: 5px;
+  }
+
+  .gp-desltop-header{
+    display: none;
+  }
+
+  .group-page{
+    padding-top: 50px;
+  }
 }
 
 .back-button-gp{
     position: absolute;
-    left: 0;
-    top: 15px;
+    left: 400px;
     font-size: 23px;
 }
 
@@ -16,44 +49,52 @@
     color: #98a5b3;
 }
 
-/* Основной блок карточки пользователя */
 .user-block {
-    display: flex;
-    align-items: center;
-    border: 1px solid #ccc;
-    padding: 16px;
-    margin: 12px 0;
-    width: 340px;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    transition: box-shadow 0.3s ease;
-  }
-  
-  .user-block:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  }
-  
-  /* Стили для изображения пользователя */
-  .user-photo {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-right: 16px;
-  }
-  
-  /* Блок с информацией о пользователе */
-  .user-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .user-info p {
-    margin: 4px 0;
-    font-size: 14px;
-    color: #333;
-  }
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  margin-bottom: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.user-block:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.user-photo {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 16px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-info .username {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+.user-info .fio {
+  font-size: 16px;
+  color: #555;
+  margin: 4px 0;
+}
+
+.user-info .meta {
+  font-size: 14px;
+  color: #777;
+}
 
   
 

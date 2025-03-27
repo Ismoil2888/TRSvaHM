@@ -228,71 +228,71 @@ useEffect(() => {
 
   return (
     <div className="glava" style={{height: "100%"}}>
-        <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
+    <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
-        <img style={{width: "50px", height: "45px"}} src={ttulogo} alt="" />
+          <img style={{ width: "50px", height: "45px" }} src={basiclogo} alt="" />
           {isMenuOpen ? (
             <>
-              <h2>TTU</h2>
-              <FiChevronLeft 
-                className="toggle-menu" 
+              <h2>{t('facultname')}</h2>
+              <FiChevronLeft
+                className="toggle-menu"
                 onClick={toggleMenuDesktop}
               />
             </>
           ) : (
-            <FiChevronRight 
-              className="toggle-menu" 
+            <FiChevronRight
+              className="toggle-menu"
               onClick={toggleMenuDesktop}
             />
           )}
         </div>
 
         <nav className="menu-items">
-          <Link to="/" className="menu-item" style={{paddingRight: "15px"}}>
-            <FiHome className="menu-icon"/>
-            {isMenuOpen && <span className="txt">Главная</span>}
+          <Link to="/" className="menu-item" style={{ paddingRight: "15px" }}>
+            <FiHome className="menu-icon" />
+            {isMenuOpen && <span className="txt">{t('main')}</span>}
           </Link>
           <div className="menu-find-block">
-          <Link to="/searchpage" className="menu-item">
-             <FiSearch className="menu-icon" />
-             {isMenuOpen && <span className="txt">Поиск</span>}
-          </Link>
-          <Link to="/teachers" className="menu-item">
-             <FiUserCheck className="menu-icon" />
-             {isMenuOpen && <span className="txt">Преподаватели</span>}
-          </Link>
-          <Link to="/library" className="menu-item">
-             <FiBookOpen className="menu-icon" />
-             {isMenuOpen && <span className="txt">Библиотека</span>}
-          </Link>
+            <Link to="/searchpage" className="menu-item">
+              <FiSearch className="menu-icon" />
+              {isMenuOpen && <span className="txt">{t('findstudents')}</span>}
+            </Link>
+            <Link to="/teachers" className="menu-item">
+              <FiUserCheck className="menu-icon" />
+              {isMenuOpen && <span className="txt">{t('teachers')}</span>}
+            </Link>
+            <Link to="/library" className="menu-item">
+              <FiBookOpen className="menu-icon" />
+              {isMenuOpen && <span className="txt">{t('library')}</span>}
+            </Link>
           </div>
           <Link to="/myprofile" className="menu-item">
             <FiUser className="menu-icon" />
-            {isMenuOpen && <span className="txt">Профиль</span>}
+            {isMenuOpen && <span className="txt">{t('profile')}</span>}
           </Link>
           <div className="menu-find-block">
-          <Link to="/chats" className="menu-item">
-            <FiMessageSquare className="menu-icon" style={{color: "orange"}} />
-            {isMenuOpen && <span className="txt">Сообщения</span>}
-          </Link>
-          <Link to="/notifications" className="menu-item">
-            <FiBell className="menu-icon" />
-            {isMenuOpen && <span className="txt">Уведомления</span>}
-          </Link>
+            <Link to="/chats" className="menu-item">
+              <FiMessageSquare className="menu-icon" style={{ color: "orange" }} />
+              {isMenuOpen && <span className="txt">{t('messages')}</span>}
+            </Link>
+            <Link to="/notifications" className="menu-item">
+              <FiBell className="menu-icon" />
+              {isMenuOpen && <span className="txt">{t('notifications')}</span>}
+            </Link>
           </div>
           <Link to="/authdetails" className="menu-item">
             <FiSettings className="menu-icon" />
-            {isMenuOpen && <span className="txt">Настройки</span>}
+            {isMenuOpen && <span className="txt">{t('settings')}</span>}
           </Link>
         </nav>
 
         <div className="logo-and-tik">
-        TRSvaHM
-        {isMenuOpen &&
-        <div>
-        <p className="txt">&copy; 2025 {t("rights")}.</p>
-        </div>
-        }
+        {t('facultname')}
+          {isMenuOpen &&
+            <div>
+              <p className="txt">&copy; 2025 {t("rights")}.</p>
+            </div>
+          }
         </div>
       </div>
       <div className="chat-list-container" style={mainContentStyle}>

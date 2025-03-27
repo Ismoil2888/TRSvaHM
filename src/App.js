@@ -31,6 +31,8 @@ import NotificationsPage from "./components/NotificationsPage";
 import Chat from "./components/Chat";
 import ChatList from "./components/ChatList";
 import GroupPage  from "./components/GroupPage";
+import DepartmentTeachers from "./components/DepartmentTeachers";
+import DeanLogin from './components/DeanLogin';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { applyTheme } from "./theme";
 
@@ -188,6 +190,7 @@ useEffect(() => {
       <Route path="/searchstudents" element={<PrivateRoute> <SearchStudents /> </PrivateRoute>} />
       <Route path="/welcomepage" element={<WelcomePage />} />
       <Route path="/teacher-login" element={<TeacherLogin />} />
+      <Route path="/dean-login" element={<DeanLogin />} />
       <Route path="/teacher-profile/:id" element={<TeacherProfile />} />
       <Route path="/admin" element={<AdminPrivateRoute> <AdminPanel /> </AdminPrivateRoute>} />
       <Route path="/admin-login" element={<AdminLogin />} />
@@ -196,6 +199,7 @@ useEffect(() => {
       <Route path="/chat/:chatRoomId" element={<PrivateRoute> <Chat /> </PrivateRoute>} />
       <Route path="/chats" element={<PrivateRoute> <ChatList /> </PrivateRoute>} />
       <Route path="/group/:course/:groupName" element={<GroupPage />} />
+      <Route path="/department-teachers/:cathedra" element={<DepartmentTeachers />} />
       </Routes>
     </>
     </LanguageProvider>
