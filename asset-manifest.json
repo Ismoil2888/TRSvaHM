@@ -1,29 +1,26 @@
 {
   "files": {
-    "main.css": "/static/css/main.887b4ed1.css",
-    "main.js": "/static/js/main.3634c9cc.js",
+    "main.css": "/static/css/main.fe9427bf.css",
+    "main.js": "/static/js/main.95176a7d.js",
     "static/js/453.54a84d69.chunk.js": "/static/js/453.54a84d69.chunk.js",
     "static/media/Ttulogo.png": "/static/media/Ttulogo.9f1ba24657d744625136.png",
-    "static/media/Screenshot_2025-03-26-11-56-24-140_com.miui.gallery.jpg": "/static/media/Screenshot_2025-03-26-11-56-24-140_com.miui.gallery.89d5161dddf6dc0832f9.jpg",
     "static/media/basic-logo.png": "/static/media/basic-logo.b85a726a2b7cef73406c.png",
     "static/media/ttustudents.jpg": "/static/media/ttustudents.a7f5f30d2edbaff5d3de.jpg",
-    "static/media/glkorpusosimi.jpg": "/static/media/glkorpusosimi.1d8ac7f3ee20c2d86a99.jpg",
     "static/media/ttustudents1.jpg": "/static/media/ttustudents1.fa4acca2a0247c2dcfec.jpg",
     "static/media/ttustudents3.jpg": "/static/media/ttustudents3.a3b62f95d106d1028fc2.jpg",
     "static/media/ttustudents2.jpg": "/static/media/ttustudents2.9447bfbbd1bd9ef5c2f5.jpg",
     "static/media/Ttulogo.jpg": "/static/media/Ttulogo.8bcd067d26c02a5e0181.jpg",
     "static/media/teacher.png": "/static/media/teacher.e8187546bf56bdf1c240.png",
-    "static/media/Каримзода.jpg": "/static/media/Каримзода.b54d0bd401d25ad38939.jpg",
     "static/media/anonym2.jpg": "/static/media/anonym2.a2039a21efea645c43e1.jpg",
     "static/media/book-icon.png": "/static/media/book-icon.0420ae430b803a32c888.png",
     "static/media/edit-icon.png": "/static/media/edit-icon.e492a56b8c19c7656365.png",
     "index.html": "/index.html",
-    "main.887b4ed1.css.map": "/static/css/main.887b4ed1.css.map",
-    "main.3634c9cc.js.map": "/static/js/main.3634c9cc.js.map",
+    "main.fe9427bf.css.map": "/static/css/main.fe9427bf.css.map",
+    "main.95176a7d.js.map": "/static/js/main.95176a7d.js.map",
     "453.54a84d69.chunk.js.map": "/static/js/453.54a84d69.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.887b4ed1.css",
-    "static/js/main.3634c9cc.js"
+    "static/css/main.fe9427bf.css",
+    "static/js/main.95176a7d.js"
   ]
 }
