@@ -1878,7 +1878,7 @@ const groupDropdownRef = useRef(null);
             }}
           >
             <h3 style={{color: "grey"}}>Выберите тему</h3>
-            <button onClick={() => handleThemeChange('standard')}>Стандартная</button>
+            <button onClick={() => handleThemeChange('standard')}>Универсальная</button>
             <button onClick={() => handleThemeChange('light')}>Светлая</button>
             <button onClick={() => handleThemeChange('dark')}>Темная</button>
           </div>

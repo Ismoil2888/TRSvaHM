@@ -8,7 +8,6 @@ import { FaArrowLeft } from "react-icons/fa";
 import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPhone, faUserCog } from "@fortawesome/free-solid-svg-icons";
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiUserCheck, FiBookOpen, FiSearch } from "react-icons/fi";
 import basiclogo from "../basic-logo.png";
-import ttulogo from "../Ttulogo.png";
 import "../NotificationsPage.css";
 import useTranslation from '../hooks/useTranslation';
 import { motion } from 'framer-motion';

@@ -1408,6 +1408,7 @@ const HomePage = () => {
   const navigate = useNavigate();
   const t = useTranslation();
   const [role, setRole] = useState("");
+  const [userRole, setUserRole] = useState('');
   const [unreadChatsCount, setUnreadChatsCount] = useState(0);
   const [imageLoadedStatus, setImageLoadedStatus] = useState({});
   const [showAnonymousModal, setShowAnonymousModal] = useState(false);
@@ -1585,6 +1586,12 @@ const HomePage = () => {
           setUserAvatarUrl(defaultAvatar); // Изображение по умолчанию
         }
       });
+
+      onValue(userRef, (snapshot) => {
+        const userData = snapshot.val();
+        // Предполагается, что роль хранится в поле role
+        setUserRole(userData?.role || '');
+      });
     }
   }, []);
 
@@ -1666,22 +1673,6 @@ const HomePage = () => {
 
     return () => unsubscribe(); // ✅ Теперь подписка удаляется
   };
-
-  // const openCommentModal = (postId) => {
-  //   setCommentModal({ isOpen: true, postId });
-
-  //   const database = getDatabase();
-  //   const commentsRef = dbRef(database, `postComments/${postId}`);
-  //   onValue(commentsRef, (snapshot) => {
-  //     const data = snapshot.val();
-  //     if (data) {
-  //       const loadedComments = Object.keys(data).map((id) => ({ id, ...data[id] }));
-  //       setComments(loadedComments);
-  //     } else {
-  //       setComments([]);
-  //     }
-  //   });
-  // };
 
   const closeCommentModal = () => {
     setCommentModal({ isOpen: false, postId: null });
@@ -2004,7 +1995,7 @@ const HomePage = () => {
         </nav>
 
         <div className="logo-and-tik">
-        {t('facultname')}
+          {t('facultname')}
           {isMenuOpen &&
             <div>
               <p className="txt">&copy; 2025 {t("rights")}.</p>
@@ -2025,7 +2016,27 @@ const HomePage = () => {
               <li><Link to="/home" className="txt">Главная</Link></li>
               <li><Link to="/about" className="txt">О факультете</Link></li>
               <li><Link to="/teachers" className="txt">Преподаватели</Link></li>
+
+              {/* Дополнительные разделы для декана */}
+              {userRole === 'dean' && (
+                <>
+                  <li>
+                    <Link to="/admin">
+                      <span className="txt">Админ-Панель</span>
+                    </Link>
+                  </li>
+                </>
+              )}
             </ul>
+
+            {(role === "teacher" || role === "dean") && (
+              <>
+                <ul className="header-ul">
+                  <li><Link to="/post" className="txt">Выложить пост</Link></li>
+                </ul>
+              </>
+            )}
+
             <Link to="/myprofile">
               <div className="currentUserHeader" style={currentUserHeader}>
                 <img

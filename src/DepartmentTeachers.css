@@ -3,29 +3,40 @@
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
+    min-height: 900px;
+    padding-top: 100px;
     background: var(--bg-container-color);
   }
+
+  .department-teachers-page h1{
+    text-align: center;
+    color: var(--text-color);
+  }
   
-  .teachers-list {
+  .dpt-teachers-list {
+    width: 100%;
     display: flex;
+    justify-content: center;
+    align-items: center;
     flex-wrap: wrap;
     gap: 20px;
   }
   
-  .teacher-card {
+  .dpt-teacher-card {
     background: #ffffff;
     border-radius: 10px;
+    margin: 10px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     width: calc(33.333% - 20px);
     transition: transform 0.2s, box-shadow 0.2s;
   }
   
-  .teacher-card:hover {
+  .dpt-teacher-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   }
   
-  .teacher-card-link {
+  .dpt-teacher-card-link {
     text-decoration: none;
     color: inherit;
     display: flex;
@@ -34,37 +45,37 @@
     padding: 15px;
   }
   
-  .teacher-photo {
+  .dpt-teacher-photo {
     width: 100px;
     height: 100px;
     border-radius: 50%;
     object-fit: cover;
   }
   
-  .teacher-info {
+  .dpt-teacher-info {
     margin-top: 10px;
     text-align: center;
   }
   
-  .teacher-info h3 {
+  .dpt-teacher-info h3 {
     margin: 0;
     font-size: 20px;
   }
   
-  .teacher-info p {
+  .dpt-teacher-info p {
     margin: 5px 0;
     font-size: 14px;
     color: #555;
   }
   
   @media (max-width: 768px) {
-    .teacher-card {
+    .dpt-teacher-card {
       width: calc(50% - 20px);
     }
   }
   
   @media (max-width: 480px) {
-    .teacher-card {
+    .dpt-teacher-card {
       width: 100%;
     }
   }  

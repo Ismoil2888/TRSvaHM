@@ -11,7 +11,6 @@ import { FaPlusCircle, FaArrowLeft, FaInfo } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPhone, faUserCog, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
-import ttulogo from "../Ttulogo.png";
 import useTranslation from '../hooks/useTranslation';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
@@ -30,6 +29,7 @@ const SearchStudents = () => {
   const [userDetails, setUserDetails] = useState({ username: "", avatarUrl: "" });
   const [isMobile, setIsMobile] = useState(false);
   const t = useTranslation();
+  const [userRole, setUserRole] = useState('');
   const [role, setRole] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(() => {
     // Восстанавливаем состояние из localStorage при инициализации
@@ -116,6 +116,12 @@ const SearchStudents = () => {
           setRole(data.role || "");
         }
       });
+
+         onValue(userRef, (snapshot) => {
+              const userData = snapshot.val();
+              // Предполагается, что роль хранится в поле role
+              setUserRole(userData?.role || '');
+            });
     }
   }, []);
 
@@ -334,6 +340,16 @@ const SearchStudents = () => {
               <li><Link to="/home" className="txt">Главная</Link></li>
               <li><Link to="/about" className="txt">О факультете</Link></li>
               <li><Link to="/teachers" className="txt">Преподаватели</Link></li>
+                    {/* Дополнительные разделы для декана */}
+                            {userRole === 'dean' && (
+                              <>
+                                <li>
+                                  <Link to="/admin">
+                                    <span className="txt">Админ-Панель</span>
+                                  </Link>
+                                </li>
+                              </>
+                            )}
             </ul>
             <Link to="/myprofile">
               <div className="currentUserHeader" style={currentUserHeader}>

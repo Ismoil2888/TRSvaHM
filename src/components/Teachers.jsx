@@ -876,6 +876,8 @@ const Teachers = () => {
   const actionMenuRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
   const t = useTranslation();
+  const database = getDatabase();
+  const [userRole, setUserRole] = useState('');
   const [role, setRole] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(() => {
     const savedState = localStorage.getItem("isMenuOpen");
@@ -977,6 +979,12 @@ const Teachers = () => {
           });
           setRole(data.role || "");
         }
+      });
+
+      onValue(userRef, (snapshot) => {
+        const userData = snapshot.val();
+        // Предполагается, что роль хранится в поле role
+        setUserRole(userData?.role || '');
       });
     }
   }, []);
@@ -1173,11 +1181,23 @@ const Teachers = () => {
       <div className="glav-container" style={mainContentStyle}>
         <header>
           <nav className="header-nav" style={HeaderDesktop}>
-            <ul className="header-ul">
-              <li><Link to="/home" className="txt">Главная</Link></li>
-              <li><Link to="/about" className="txt">О факультете</Link></li>
-              <li><Link to="/teachers" className="txt">Преподаватели</Link></li>
-            </ul>
+               <ul className="header-ul">
+                         <li><Link to="/home" className="txt">Главная</Link></li>
+                         <li><Link to="/about" className="txt">О факультете</Link></li>
+                         <li><Link to="/teachers" className="txt">Преподаватели</Link></li>
+           
+                         {/* Дополнительные разделы для декана */}
+                         {userRole === 'dean' && (
+                           <>
+                             <li>
+                               <Link to="/admin">
+                                 <span className="txt">Админ-Панель</span>
+                               </Link>
+                             </li>
+                           </>
+                         )}
+                       </ul>
+
             <Link to="/myprofile">
               <div className="currentUserHeader" style={currentUserHeader}>
                 <img

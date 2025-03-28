@@ -224,17 +224,6 @@ const About = () => {
             <FiSettings className="menu-icon" />
             {isMenuOpen && <span className="txt">{t('settings')}</span>}
           </Link>
-
-                  {/* Дополнительные разделы для декана */}
-        {userRole === 'dean' && (
-          <>
-            <Link to="/admin-login" className="menu-item">
-              {/* Используйте подходящую иконку */}
-              <FiUserCheck className="menu-icon" />
-              {isMenuOpen && <span className="txt">Админ-Панель</span>}
-            </Link>
-          </>
-        )}
         </nav>
 
         <div className="logo-and-tik">

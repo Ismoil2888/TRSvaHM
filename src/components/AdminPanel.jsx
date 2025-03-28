@@ -1460,16 +1460,28 @@ const AdminPanel = () => {
 
   useEffect(() => {
     const requestsRef = dbRef(database, "requests");
-    onValue(requestsRef, (snapshot) => {
+    onValue(requestsRef, async (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        const formattedData = Object.keys(data).map((key) => ({
-          id: key,
-          ...data[key],
-          status: data[key].status || 'pending', // Новый ключ состояния заявки
-        }));
+        const formattedData = await Promise.all(
+          Object.keys(data).map(async (key) => {
+            // Берем данные заявки
+            const request = { id: key, ...data[key], status: data[key].status || 'pending' };
+            // Если заявка в статусе "pending", проверяем роль отправителя
+            if (request.status === 'pending') {
+              const userSnapshot = await get(dbRef(database, `users/${request.senderId}`));
+              const userData = userSnapshot.val();
+              if (userData && userData.role === 'dean') {
+                // Если отправитель — декан, обновляем статус заявки автоматически
+                await update(dbRef(database, `requests/${key}`), { status: "accepted" });
+                request.status = "accepted";
+              }
+            }
+            return request;
+          })
+        );
         setRequests(formattedData);
-        setNewRequestsCount(formattedData.length);
+        setNewRequestsCount(formattedData.filter(req => req.status === 'pending').length);
       }
     });
   }, [database]);
@@ -1513,32 +1525,6 @@ const AdminPanel = () => {
         toast.error('Ошибка при принятии заявки');
       });
   };  
-
-  // const handleAcceptRequest = (id) => {
-  //   update(dbRef(database, `requests/${id}`), { status: "accepted" })
-  //     .then(() => {
-  //       // Находим заявку по id
-  //       const acceptedRequest = requests.find(req => req.id === id);
-  //       if (acceptedRequest && acceptedRequest.group && acceptedRequest.course) {
-  //         const groupKey = acceptedRequest.group;
-  //         const courseKey = acceptedRequest.course;
-  //         // Записываем данные заявки в узел для группы с учетом курса
-  //         const groupRef = push(dbRef(database, `groups/${courseKey}/${groupKey}`));
-  //         set(groupRef, acceptedRequest);
-  //       }
-  //       setRequests(prevRequests =>
-  //         prevRequests.map(request =>
-  //           request.id === id ? { ...request, status: "accepted" } : request
-  //         )
-  //       );
-  //       setNewRequestsCount(prevCount => prevCount - 1);
-  //       toast.success('Заявка принята');
-  //     })
-  //     .catch(error => {
-  //       console.error("Ошибка при принятии заявки:", error);
-  //       toast.error('Ошибка при принятии заявки');
-  //     });
-  // };
 
   const handleRejectRequest = (id) => {
     update(dbRef(database, `requests/${id}`), { status: "rejected" });

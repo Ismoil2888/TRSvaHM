@@ -14,7 +14,7 @@ import { FaPlusCircle } from "react-icons/fa";
 import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPhone, faUserCog, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
 import basiclogo from "../basic-logo.png";
-import ttulogo from "../Ttulogo.png";
+import useTranslation from '../hooks/useTranslation';
 
 const PostForm = () => {
   const [userDetails, setUserDetails] = useState({ username: "", avatarUrl: defaultAvatar });
@@ -22,6 +22,7 @@ const PostForm = () => {
   const [description, setDescription] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const navigate = useNavigate();
+  const t = useTranslation();
   // const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [userAvatarUrl, setUserAvatarUrl] = useState(null);
   const [identificationStatus, setIdentificationStatus] = useState(null);
@@ -68,7 +69,7 @@ const PostForm = () => {
     };
 
     const mainContentStyle = {
-      marginLeft: isMobile ? (isMenuOpen ? "360px" : "0px") : (isMenuOpen ? "360px" : "80px"),
+      marginLeft: isMobile ? (isMenuOpen ? "360px" : "0px") : (isMenuOpen ? "200px" : "80px"),
       transition: "margin 0.3s ease",
     };
   
@@ -258,12 +259,12 @@ const showNotificationError = (message) => {
         {notification}
             </div>
           )} {/* Уведомление */}
-               <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
+       <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
-          <img style={{ width: "50px", height: "45px" }} src={ttulogo} alt="" />
+          <img style={{ width: "50px", height: "45px" }} src={basiclogo} alt="" />
           {isMenuOpen ? (
             <>
-              <h2>TTU</h2>
+              <h2>{t('facultname')}</h2>
               <FiChevronLeft
                 className="toggle-menu"
                 onClick={toggleMenuDesktop}
@@ -278,72 +279,55 @@ const showNotificationError = (message) => {
         </div>
 
         <nav className="menu-items">
-          <Link to="/" className="menu-item">
-            <FiHome className="menu-icon" />
-            {isMenuOpen && <span>Главная</span>}
+          <Link to="/" className="menu-item" style={{ paddingRight: "15px" }}>
+            <FiHome className="menu-icon"  />
+            {isMenuOpen && <span className="txt">{t('main')}</span>}
           </Link>
-          <Link to="/searchpage" className="menu-item">
-            <FiSearch className="menu-icon" />
-            {isMenuOpen && <span>Поиск</span>}
-          </Link>
-          <Link to="/teachers" className="menu-item">
-            <FiUserCheck className="menu-icon" />
-            {isMenuOpen && <span>Преподаватели</span>}
-          </Link>
-          <Link to="/library" className="menu-item">
-            <FiBookOpen className="menu-icon" />
-            {isMenuOpen && <span>Библиотека</span>}
-          </Link>
+          <div className="menu-find-block">
+            <Link to="/searchpage" className="menu-item">
+              <FiSearch className="menu-icon" />
+              {isMenuOpen && <span className="txt">{t('findstudents')}</span>}
+            </Link>
+            <Link to="/teachers" className="menu-item">
+              <FiUserCheck className="menu-icon" />
+              {isMenuOpen && <span className="txt">{t('teachers')}</span>}
+            </Link>
+            <Link to="/library" className="menu-item">
+              <FiBookOpen className="menu-icon" />
+              {isMenuOpen && <span className="txt">{t('library')}</span>}
+            </Link>
+          </div>
           <Link to="/myprofile" className="menu-item">
-            <FiUser className="menu-icon" style={{ borderBottom: "1px solid rgb(200, 255, 0)", borderRadius: "15px", padding: "5px" }} />
-            {isMenuOpen && <span>Профиль</span>}
+            <FiUser className="menu-icon" />
+            {isMenuOpen && <span className="txt">{t('profile')}</span>}
           </Link>
-          <Link to="/chats" className="menu-item">
-            <FiMessageSquare className="menu-icon" />
-            {isMenuOpen && <span>Сообщения</span>}
-          </Link>
-          <Link to="/notifications" className="menu-item">
-            <FiBell className="menu-icon" />
-            {isMenuOpen && <span>Уведомления</span>}
-          </Link>
+          <div className="menu-find-block">
+            <Link to="/chats" className="menu-item">
+              <FiMessageSquare className="menu-icon" />
+              {isMenuOpen && <span className="txt">{t('messages')}</span>}
+            </Link>
+            <Link to="/notifications" className="menu-item">
+              <FiBell className="menu-icon" style={{ color: "orange" }} />
+              {isMenuOpen && <span className="txt">{t('notifications')}</span>}
+            </Link>
+          </div>
           <Link to="/authdetails" className="menu-item">
             <FiSettings className="menu-icon" />
-            {isMenuOpen && <span>Настройки</span>}
+            {isMenuOpen && <span className="txt">{t('settings')}</span>}
           </Link>
         </nav>
 
         <div className="logo-and-tik">
-          <img
-            src={basiclogo}
-            alt="logo"
-            className="tiklogo"
-          />
-          {isMenuOpen && (
-            <span style={{ fontSize: "35px", fontWeight: "bold", color: "#9daddf" }}>TIK</span>
-          )}
+        {t('facultname')}
+          {isMenuOpen &&
+            <div>
+              <p className="txt">&copy; 2025 {t("rights")}.</p>
+            </div>
+          }
         </div>
       </div>
       <div className="glav-container" style={mainContentStyle}>
 <header>
-        <nav className="header-nav" style={HeaderDesktop}>
-            <ul className="header-ul">
-              <li><Link to="/home">Главная</Link></li>
-              <li><Link to="/about">О факультете</Link></li>
-              <li><Link to="/teachers">Преподаватели</Link></li>
-            </ul>
-            <Link to="/myprofile">
-              <div className="currentUserHeader" style={currentUserHeader}>
-                <img
-                  src={userDetails.avatarUrl || "./default-image.png"}
-                  alt="User Avatar"
-                  className="user-avatar"
-                  style={{width: "35px", height: "35px"}}
-                />
-                <span style={{ fontSize: "20px", color: "lightgreen"}}>{userDetails.username}</span>
-              </div>
-            </Link>
-          </nav>
-
         <div className="header-nav-2">
 
         <FaChevronLeft style={{ marginLeft: "10px", color: "white", fontSize: "25px"}} onClick={() => navigate(-1)} />
@@ -398,10 +382,6 @@ const showNotificationError = (message) => {
           </button>
         </form>
       </div>
-
-      <footer className="footer-desktop">
-        <p>&copy; 2024 Факультет Кибербезопасности. Все права защищены.</p>
-      </footer>
 
 <div style={{width: "100%", display: "flex", alignItems: "center", justifyContent: "center"}}>
         <motion.nav 

@@ -10,12 +10,12 @@ import { FaPlusCircle, FaInfo } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPhone, faUserCog, faSearch, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
-import ttulogo from "../Ttulogo.png";
 import useTranslation from '../hooks/useTranslation';
 
 const SearchPage = () => {
   const [userDetails, setUserDetails] = useState({ username: "", avatarUrl: "" });
   const t = useTranslation();
+  const [userRole, setUserRole] = useState('');
   const [role, setRole] = useState("");
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpenMobile, setIsMenuOpenMobile] = useState(false);
@@ -91,6 +91,12 @@ const SearchPage = () => {
           setRole(data.role || "");
         }
       });
+
+      onValue(userRef, (snapshot) => {
+        const userData = snapshot.val();
+        // Предполагается, что роль хранится в поле role
+        setUserRole(userData?.role || '');
+      });
     }
   }, []);
 
@@ -124,7 +130,7 @@ const SearchPage = () => {
 
   return (
     <div className="glava">
-   <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
+      <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <img style={{ width: "50px", height: "45px" }} src={basiclogo} alt="" />
           {isMenuOpen ? (
@@ -183,7 +189,7 @@ const SearchPage = () => {
         </nav>
 
         <div className="logo-and-tik">
-        {t('facultname')}
+          {t('facultname')}
           {isMenuOpen &&
             <div>
               <p className="txt">&copy; 2025 {t("rights")}.</p>
@@ -198,6 +204,16 @@ const SearchPage = () => {
               <li><Link to="/home" className="txt">Главная</Link></li>
               <li><Link to="/about" className="txt">О факультете</Link></li>
               <li><Link to="/teachers" className="txt">Преподаватели</Link></li>
+              {/* Дополнительные разделы для декана */}
+              {userRole === 'dean' && (
+                <>
+                  <li>
+                    <Link to="/admin">
+                      <span className="txt">Админ-Панель</span>
+                    </Link>
+                  </li>
+                </>
+              )}
             </ul>
             <Link to="/myprofile">
               <div className="currentUserHeader" style={currentUserHeader}>

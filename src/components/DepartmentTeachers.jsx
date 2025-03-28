@@ -13,81 +13,81 @@ const DepartmentTeachers = () => {
   const [teachers, setTeachers] = useState([]);
   const t = useTranslation();
   const database = getDatabase();
-    const navigate = useNavigate();
-    const [isMobile, setIsMobile] = useState(false);
-    const [isMenuOpen, setIsMenuOpen] = useState(() => {
-      // Восстанавливаем состояние из localStorage при инициализации
-      const savedState = localStorage.getItem('isMenuOpen');
-      return savedState ? JSON.parse(savedState) : true;
-    });
-  
-    // Сохраняем состояние в localStorage при изменении
-    useEffect(() => {
-      localStorage.setItem('isMenuOpen', JSON.stringify(isMenuOpen));
-    }, [isMenuOpen]);
-  
-    // Обработчик изменения размера окна
-    useEffect(() => {
-      const checkMobile = () => {
-        const mobile = window.innerWidth < 700;
-        setIsMobile(mobile);
-        if (mobile) {
-          setIsMenuOpen(false);
-        } else {
-          // Восстанавливаем состояние только для десктопа
-          const savedState = localStorage.getItem('isMenuOpen');
-          setIsMenuOpen(savedState ? JSON.parse(savedState) : true);
-        }
-      };
-  
-      checkMobile();
-      window.addEventListener('resize', checkMobile);
-      return () => window.removeEventListener('resize', checkMobile);
-    }, []);
-  
-    // Модифицированная функция переключения меню
-    const toggleMenuDesktop = () => {
-      setIsMenuOpen(prev => {
-        const newState = !prev;
-        localStorage.setItem('isMenuOpen', JSON.stringify(newState));
-        return newState;
-      });
-    };
-  
-    // Добавляем стиль для основного контента
-    const mainContentStyle = {
-        marginLeft: isMobile ? (isMenuOpen ? "360px" : "0px") : (isMenuOpen ? "340px" : "110px"),
-        transition: "margin 0.3s ease",
-      };
+  const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(() => {
+    // Восстанавливаем состояние из localStorage при инициализации
+    const savedState = localStorage.getItem('isMenuOpen');
+    return savedState ? JSON.parse(savedState) : true;
+  });
 
-    useEffect(() => {
-        const usersRef = dbRef(database, 'users');
-        onValue(usersRef, (snapshot) => {
-          const data = snapshot.val();
-          if (data) {
-            const allUsers = Object.keys(data).map(key => ({ id: key, ...data[key] }));
-            const filtered = allUsers.filter(user =>
-              (typeof user.cathedra === 'string' && user.cathedra === cathedra) ||
-              (Array.isArray(user.cathedra) && user.cathedra.includes(cathedra)) ||
-              user.isDean
-            );
-            // Сортировка: деканы (role === 'dean') первыми
-            const sorted = filtered.sort((a, b) => {
-              if (a.role === 'dean' && b.role !== 'dean') return -1;
-              if (a.role !== 'dean' && b.role === 'dean') return 1;
-              return 0;
-            });
-            setTeachers(sorted);
-          } else {
-            setTeachers([]);
-          }
+  // Сохраняем состояние в localStorage при изменении
+  useEffect(() => {
+    localStorage.setItem('isMenuOpen', JSON.stringify(isMenuOpen));
+  }, [isMenuOpen]);
+
+  // Обработчик изменения размера окна
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 700;
+      setIsMobile(mobile);
+      if (mobile) {
+        setIsMenuOpen(false);
+      } else {
+        // Восстанавливаем состояние только для десктопа
+        const savedState = localStorage.getItem('isMenuOpen');
+        setIsMenuOpen(savedState ? JSON.parse(savedState) : true);
+      }
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Модифицированная функция переключения меню
+  const toggleMenuDesktop = () => {
+    setIsMenuOpen(prev => {
+      const newState = !prev;
+      localStorage.setItem('isMenuOpen', JSON.stringify(newState));
+      return newState;
+    });
+  };
+
+  // Добавляем стиль для основного контента
+  const mainContentStyle = {
+    marginLeft: isMobile ? (isMenuOpen ? "360px" : "0px") : (isMenuOpen ? "320px" : "90px"),
+    transition: "margin 0.3s ease",
+  };
+
+  useEffect(() => {
+    const usersRef = dbRef(database, 'users');
+    onValue(usersRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const allUsers = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+        const filtered = allUsers.filter(user =>
+          (typeof user.cathedra === 'string' && user.cathedra === cathedra) ||
+          (Array.isArray(user.cathedra) && user.cathedra.includes(cathedra)) ||
+          user.isDean
+        );
+        // Сортировка: деканы (role === 'dean') первыми
+        const sorted = filtered.sort((a, b) => {
+          if (a.role === 'dean' && b.role !== 'dean') return -1;
+          if (a.role !== 'dean' && b.role === 'dean') return 1;
+          return 0;
         });
-      }, [cathedra, database]);       
+        setTeachers(sorted);
+      } else {
+        setTeachers([]);
+      }
+    });
+  }, [cathedra, database]);
 
   return (
     <div className="glava">
 
-<div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
+      <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <img style={{ width: "50px", height: "45px" }} src={basiclogo} alt="" />
           {isMenuOpen ? (
@@ -146,7 +146,7 @@ const DepartmentTeachers = () => {
         </nav>
 
         <div className="logo-and-tik">
-        {t('facultname')}
+          {t('facultname')}
           {isMenuOpen &&
             <div>
               <p className="txt">&copy; 2025 {t("rights")}.</p>
@@ -154,40 +154,46 @@ const DepartmentTeachers = () => {
           }
         </div>
       </div>
-    <div className="department-teachers-page" style={mainContentStyle}>
-            <div className='gp-desltop-header'>
+      <div className="header-gp">
+        <Link style={{ marginRight: "50px" }} className="back-button gp white-icon" onClick={() => navigate(-1)}>
+          <FaArrowLeft />
+        </Link>
+        <ul className="logo-app txt" style={{ fontSize: "20px" }}>{t("teachcollective")}:</ul>
+      </div>
+      <div className="department-teachers-page" style={mainContentStyle}>
+           <div className='gp-desltop-header'>
                   <Link className="back-button-gp white-icon" onClick={() => navigate(-1)}>
                     <FaArrowLeft />
                   </Link>
-                  <h3 style={{ color: "grey", fontSize: "21px" }}>Преподаватели</h3>
+                  <h3 style={{ fontSize: "21px" }}>{t('teachcollective')}:</h3>
                 </div>
-      <h1>Преподаватели кафедры {cathedra}</h1>
-      <div className="teachers-list">
-        {teachers.length > 0 ? (
-          teachers.map((teacher) => (
-            <div className="teacher-card" key={teacher.id}>
-            <Link to={`/teacher-profile/${teacher.id}`} className="teacher-card-link">
-              <img
-                src={teacher.avatarUrl || defaultAvatar}
-                alt={teacher.username}
-                className="teacher-photo"
-              />
-              <div className="teacher-info">
-                <h3>{teacher.username}</h3>
-                <p><strong>Предмет:</strong> {teacher.subject}</p>
-                <p>
-                  <strong>{teacher.role === 'dean' ? 'Должность' : 'Звание'}:</strong>{" "}
-                  {teacher.role === 'dean' ? 'Декан' : teacher.runk}
-                </p>
+        <h1>Преподаватели кафедры {cathedra}</h1>
+        <div className="dpt-teachers-list">
+          {teachers.length > 0 ? (
+            teachers.map((teacher) => (
+              <div className="dpt-teacher-card" key={teacher.id}>
+                <Link to={`/teacher-profile/${teacher.id}`} className="dpt-teacher-card-link">
+                  <img
+                    src={teacher.avatarUrl || defaultAvatar}
+                    alt={teacher.username}
+                    className="dpt-teacher-photo"
+                  />
+                  <div className="dpt-teacher-info">
+                    <h3>{teacher.username}</h3>
+                    <p><strong>Предмет:</strong> {teacher.subject}</p>
+                    <p>
+                      <strong>{teacher.role === 'dean' ? 'Должность' : 'Звание'}:</strong>{" "}
+                      {teacher.role === 'dean' ? 'Декан' : teacher.runk}
+                    </p>
+                  </div>
+                </Link>
               </div>
-            </Link>
-          </div>          
-          ))
-        ) : (
-          <p>Нет преподавателей для данной кафедры.</p>
-        )}
+            ))
+          ) : (
+            <p>Нет преподавателей для данной кафедры.</p>
+          )}
+        </div>
       </div>
-    </div>
     </div>
   );
 };

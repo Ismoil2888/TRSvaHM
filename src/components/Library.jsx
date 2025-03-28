@@ -735,6 +735,7 @@ const Library = ({ userId }) => {
   const [actionMenuId, setActionMenuId] = useState(null);
   const actionMenuRef = useRef(null);
   const t = useTranslation();
+  const [userRole, setUserRole] = useState('');
   const [role, setRole] = useState("");
   const database = getDatabase();
   const navigate = useNavigate();
@@ -906,6 +907,12 @@ const Library = ({ userId }) => {
           });
           setRole(data.role || "");
         }
+      });
+
+      onValue(userRef, (snapshot) => {
+        const userData = snapshot.val();
+        // Предполагается, что роль хранится в поле role
+        setUserRole(userData?.role || '');
       });
     }
 
@@ -1098,7 +1105,7 @@ const Library = ({ userId }) => {
 
   return (
     <div className="glava" style={{ height: "100vh" }}>
-     <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
+      <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <img style={{ width: "50px", height: "45px" }} src={basiclogo} alt="" />
           {isMenuOpen ? (
@@ -1157,7 +1164,7 @@ const Library = ({ userId }) => {
         </nav>
 
         <div className="logo-and-tik">
-        {t('facultname')}
+          {t('facultname')}
           {isMenuOpen &&
             <div>
               <p className="txt">&copy; 2025 {t("rights")}.</p>
@@ -1173,6 +1180,17 @@ const Library = ({ userId }) => {
               <li><Link to="/home" className="txt">Главная</Link></li>
               <li><Link to="/about" className="txt">О факультете</Link></li>
               <li><Link to="/teachers" className="txt">Преподаватели</Link></li>
+
+              {/* Дополнительные разделы для декана */}
+              {userRole === 'dean' && (
+                <>
+                  <li>
+                    <Link to="/admin">
+                      <span className="txt">Админ-Панель</span>
+                    </Link>
+                  </li>
+                </>
+              )}
             </ul>
             <Link to="/myprofile">
               <div className="currentUserHeader" style={currentUserHeader}>

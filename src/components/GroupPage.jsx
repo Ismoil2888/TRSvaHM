@@ -229,9 +229,9 @@ const GroupPage = () => {
               <p className="username">{user.username || "Без имени"}</p>
               <p className="fio">{user.fio}</p>
               <p className="meta">
-                <span>Факультет: {user.faculty}</span> |{" "}
+                <span>Кафедра: {user.faculty}</span> |{" "}
                 <span>Курс: {user.course}</span> |{" "}
-                <span>Группа: {user.group}</span>
+                <span>Специальность: {user.group}</span>
               </p>
             </div>
           </Link>

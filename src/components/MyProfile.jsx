@@ -710,8 +710,8 @@ const MyProfile = () => {
                   <h3>Предмет:</h3>
                   <p style={{ fontSize: "17px", marginLeft: "15px" }}>{TeacherSubject}</p>
                 </div>
-                <div style={{ marginTop: "15px" }}>
-                  <Link to={`/teacher-profile/${userUid}`} state={{ teacher: teacherData }}>Перейти в личный Кабинет</Link>
+                <div className="txt" style={{ marginTop: "15px", color: "white" }}>
+                  <Link style={{ color: "white" }} to={`/teacher-profile/${userUid}`} state={{ teacher: teacherData }}>Перейти в личный Кабинет</Link>
                 </div>
               </>
             ) : (
