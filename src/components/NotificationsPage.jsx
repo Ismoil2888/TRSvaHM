@@ -305,6 +305,44 @@ const NotificationsPage = () => {
           {notifications.length > 0 ? (
             notifications.map((notification) => (
               <div key={notification.id} id={`notification-${notification.id}`} className="notification-card ani">
+
+     {/* Уведомление от декана */}
+     {notification.type === 'dean_notification' && (
+              <div className="dean-notification">
+                <div className="notification-header">
+                  <img
+                    src={notification.deanAvatar}
+                    alt="Декан"
+                    className="dean-avatar"
+                  />
+                  <div className="dean-info">
+                    <h4>Уведомление от декана</h4>
+                    <p className="dean-name">{notification.deanName}</p>
+                  </div>
+                  {/* <button
+                    className="delete-notification-button"
+                    onClick={() => handleDeleteNotification(notification.id)}
+                  >
+                    &times;
+                  </button> */}
+                </div>
+                <div className="notification-body">
+                  <p className="notification-message">
+                    {notification.message}
+                  </p>
+                  <p className="notification-date">
+                    {new Date(notification.timestamp).toLocaleDateString('ru-RU', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </p>
+                </div>
+              </div>
+            )}
+
                 {/* Уведомление о запросе на переписку */}
                 {notification.type === "conversation_request" && (
                   <>

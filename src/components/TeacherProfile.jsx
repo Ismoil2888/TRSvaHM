@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLocation, useParams } from 'react-router-dom';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
-import { getDatabase, ref as dbRef, push, set, update, remove, onValue } from "firebase/database";
+import { getDatabase, ref as dbRef, push, set, get, update, remove, onValue } from "firebase/database";
+import { auth } from "../firebase";
 import bookIcon from '../book-icon.png'; // Иконка для книг
 import editIcon from '../edit-icon.png'; // Иконка для редактирования (карандаш)
 import "../TeacherProfile.css";
@@ -26,6 +27,93 @@ const TeacherProfile = () => {
   const database = getDatabase();
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
+  const [userRole, setUserRole] = useState('');
+
+ // Добавить новые состояния для формы уведомлений
+ const [message, setMessage] = useState('');
+ const [audience, setAudience] = useState('');
+ const [selectedDepartment, setSelectedDepartment] = useState('');
+
+ useEffect(() => {
+  const user = auth.currentUser;
+  if (user) {
+    const userRef = dbRef(database, `users/${user.uid}`);
+    onValue(userRef, (snapshot) => {
+      const userData = snapshot.val();
+      setUserRole(userData?.role || '');
+    });
+  }
+}, [database]);
+
+ // Список кафедр
+ const departments = [
+   "Системахои Автоматикунонидашудаи Идоракуни",
+   "Шабакахои Алока Ва Системахои Комутатсиони",
+   "Технологияхои Иттилооти Ва Хифзи Маълумот",
+   "Автоматонии Равандхои Технологи Ва Истехсолот",
+   "Информатика Ва Техникаи Хисоббарор"
+ ];
+
+ // Обработчик отправки уведомления
+ const handleSendNotification = async () => {
+   if (!message || !audience || (audience === 'department' && !selectedDepartment)) {
+     alert('Заполните все обязательные поля!');
+     return;
+   }
+
+   const db = getDatabase();
+   const usersRef = dbRef(db, 'users');
+   
+   try {
+     // Получаем всех пользователей
+     const snapshot = await get(usersRef);
+     const allUsers = snapshot.val();
+     const receivers = [];
+
+     // Фильтруем получателей
+     Object.keys(allUsers).forEach(userId => {
+       const user = allUsers[userId];
+       switch(audience) {
+         case 'all':
+           receivers.push(userId);
+           break;
+         case 'teachers':
+           if (user.role === 'teacher') receivers.push(userId);
+           break;
+         case 'department':
+           if (user.role === 'teacher' && user.cathedra === selectedDepartment) {
+             receivers.push(userId);
+           }
+           break;
+       }
+     });
+
+     // Создаем объект уведомления
+     const notification = {
+       type: 'dean_notification',
+       message: message,
+       deanName: `${teacher.name} ${teacher.surname}`,
+       deanAvatar: teacher.photo || defaultAvatar,
+       timestamp: new Date().toISOString(),
+     };
+
+     // Отправляем каждому получателю
+     receivers.forEach(userId => {
+       const userNotificationsRef = dbRef(db, `notifications/${userId}`);
+       push(userNotificationsRef, notification);
+     });
+
+     // Сброс формы и уведомление
+     setMessage('');
+     setAudience('');
+     setSelectedDepartment('');
+     showNotification('Уведомление успешно отправлено!');
+   } catch (error) {
+     console.error('Ошибка отправки уведомления:', error);
+     alert('Произошла ошибка при отправке уведомления');
+   }
+ };
+
   const [isMenuOpen, setIsMenuOpen] = useState(() => {
     // Восстанавливаем состояние из localStorage при инициализации
     const savedState = localStorage.getItem('isMenuOpen');
@@ -239,6 +327,62 @@ const TeacherProfile = () => {
             <p><strong>Звание:</strong> {teacher.runk}</p>
             <p><strong>Логин:</strong> {teacher.email}</p>
           </div>
+
+               {/* Форма для декана */}
+               {userRole === 'dean' && (
+  <div className="dean-notification-form">
+    <h3>Отправка официального уведомления</h3>
+    <textarea
+      value={message}
+      onChange={(e) => setMessage(e.target.value)}
+      placeholder="Текст уведомления..."
+      className="dean-textarea"
+    />
+    
+    <div className="audience-selector">
+      <button 
+        onClick={() => setAudience('all')}
+        className={audience === 'all' ? 'active' : ''}
+      >
+        Всем пользователям
+      </button>
+      
+      <button 
+        onClick={() => setAudience('teachers')}
+        className={audience === 'teachers' ? 'active' : ''}
+      >
+        Всем преподавателям
+      </button>
+      
+      <button 
+        onClick={() => setAudience('department')}
+        className={audience === 'department' ? 'active' : ''}
+      >
+        Кафедре
+      </button>
+    </div>
+
+    {audience === 'department' && (
+      <select
+        value={selectedDepartment}
+        onChange={(e) => setSelectedDepartment(e.target.value)}
+        className="department-select"
+      >
+        <option value="">Выберите кафедру</option>
+        {departments.map((dept, index) => (
+          <option key={index} value={dept}>{dept}</option>
+        ))}
+      </select>
+    )}
+
+    <button 
+      onClick={handleSendNotification}
+      className="send-notification-btn"
+    >
+      Отправить уведомление
+    </button>
+  </div>
+)}
 
           <div className="spisok-button-block">
             <button onClick={() => setShowBooks(!showBooks)} className="toggle-books-button">

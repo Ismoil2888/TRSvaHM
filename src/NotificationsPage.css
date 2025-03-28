@@ -275,3 +275,59 @@
 .fade-out {
   animation: fadeOut 0.3s ease-out forwards;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.dean-notification {
+  background: #fff;
+  border-left: 4px solid #3498db;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.dean-notification .notification-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.dean-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.dean-info h4 {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.dean-name {
+  color: #7f8c8d;
+  margin: 0;
+}
+
+.notification-message {
+  color: #34495e;
+  line-height: 1.5;
+}
+
+.notification-date {
+  color: #95a5a6;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}

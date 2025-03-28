@@ -507,7 +507,7 @@ const MyProfile = () => {
 
   return (
     <div className="my-profile-container">
-   <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
+      <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <img style={{ width: "50px", height: "45px" }} src={basiclogo} alt="" />
           {isMenuOpen ? (
@@ -566,7 +566,7 @@ const MyProfile = () => {
         </nav>
 
         <div className="logo-and-tik">
-        {t('facultname')}
+          {t('facultname')}
           {isMenuOpen &&
             <div>
               <p className="txt">&copy; 2025 {t("rights")}.</p>
@@ -578,7 +578,7 @@ const MyProfile = () => {
 
         <div className="header-nav-2">
 
-          <Link className="back-button white-icon" style={{marginLeft: "5px"}} onClick={() => navigate(-1)}>
+          <Link className="back-button white-icon" style={{ marginLeft: "5px" }} onClick={() => navigate(-1)}>
             <FaArrowLeft />
           </Link>
 
@@ -710,9 +710,6 @@ const MyProfile = () => {
                   <h3>Предмет:</h3>
                   <p style={{ fontSize: "17px", marginLeft: "15px" }}>{TeacherSubject}</p>
                 </div>
-                <div className="txt" style={{ marginTop: "15px", color: "white" }}>
-                  <Link style={{ color: "white" }} to={`/teacher-profile/${userUid}`} state={{ teacher: teacherData }}>Перейти в личный Кабинет</Link>
-                </div>
               </>
             ) : (
               <>
@@ -727,6 +724,15 @@ const MyProfile = () => {
                 <div className="info-section" style={{ display: "flex" }}>
                   <h3>{t('group')}:</h3>
                   <p style={{ fontSize: "17px", marginLeft: "15px" }}>{userGroup}</p>
+                </div>
+              </>
+            )}
+
+                 {/* Дополнительные разделы для декана */}
+            {(role === "teacher" || role === "dean") && (
+              <>
+                <div style={{ marginTop: "15px" }}>
+                  <Link className="txt" to={`/teacher-profile/${userUid}`} state={{ teacher: teacherData }}>Перейти в личный Кабинет</Link>
                 </div>
               </>
             )}
