@@ -303,7 +303,7 @@ const WelcomePage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2, type: 'spring', stiffness: 80 }}
         >
-          <button onClick={() => setIsMenuOpen(true)} style={{ background: "none", border: "none" }}>
+          <button onClick={() => setIsMenuOpen(true)} style={{ color: "grey", background: "none", border: "none" }}>
             <FontAwesomeIcon icon={faBars} size="1x" />
           </button>
         </motion.div>

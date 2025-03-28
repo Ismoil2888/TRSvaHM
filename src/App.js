@@ -44,7 +44,7 @@ function App() {
 
 useEffect(() => {
   // Считываем сохранённую тему или задаём стандартную
-  const savedTheme = localStorage.getItem('theme') || 'standard';
+  const savedTheme = localStorage.getItem('theme') || 'light';
   applyTheme(savedTheme);
 }, []);
 
