@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/static/css/main.c76a9ec0.css",
-    "main.js": "/static/js/main.01ce46ca.js",
-    "static/js/453.54a84d69.chunk.js": "/static/js/453.54a84d69.chunk.js",
+    "main.css": "/static/css/main.1c6170f4.css",
+    "main.js": "/static/js/main.e8ccef92.js",
+    "static/js/206.3520b24c.chunk.js": "/static/js/206.3520b24c.chunk.js",
     "static/media/Ttulogo.png": "/static/media/Ttulogo.9f1ba24657d744625136.png",
     "static/media/basic-logo.png": "/static/media/basic-logo.b85a726a2b7cef73406c.png",
     "static/media/ttustudents.jpg": "/static/media/ttustudents.a7f5f30d2edbaff5d3de.jpg",
@@ -14,13 +14,10 @@
     "static/media/anonym2.jpg": "/static/media/anonym2.a2039a21efea645c43e1.jpg",
     "static/media/book-icon.png": "/static/media/book-icon.0420ae430b803a32c888.png",
     "static/media/edit-icon.png": "/static/media/edit-icon.e492a56b8c19c7656365.png",
-    "index.html": "/index.html",
-    "main.c76a9ec0.css.map": "/static/css/main.c76a9ec0.css.map",
-    "main.01ce46ca.js.map": "/static/js/main.01ce46ca.js.map",
-    "453.54a84d69.chunk.js.map": "/static/js/453.54a84d69.chunk.js.map"
+    "index.html": "/index.html"
   },
   "entrypoints": [
-    "static/css/main.c76a9ec0.css",
-    "static/js/main.01ce46ca.js"
+    "static/css/main.1c6170f4.css",
+    "static/js/main.e8ccef92.js"
   ]
 }
