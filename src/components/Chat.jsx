@@ -121,7 +121,7 @@ const Chat = () => {
   };
 
   const mainContentStyle = {
-    marginLeft: isMobile ? (isMenuOpen ? "360px" : "0px") : (isMenuOpen ? "360px" : "110px"),
+    marginLeft: isMobile ? (isMenuOpen ? "360px" : "0px") : (isMenuOpen ? "340px" : "110px"),
     transition: "margin 0.3s ease",
   };
 
