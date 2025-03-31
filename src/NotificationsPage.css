@@ -297,7 +297,7 @@
   margin-bottom: 1rem;
 }
 
-.dean-notification .notification-header {
+.dean-notification-header {
   display: flex;
   align-items: center;
   gap: 1rem;

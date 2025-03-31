@@ -1000,7 +1000,7 @@ import basiclogo from "../basic-logo.png";
 import { LanguageContext } from '../contexts/LanguageContext';
 import { translations } from '../translations';
 import useTranslation from '../hooks/useTranslation';
-import { applyTheme, themes } from "../theme"; 
+import { applyTheme, themes } from "../theme";
 
 const AuthDetails = () => {
   const [authUser, setAuthUser] = useState(null);
@@ -1031,12 +1031,12 @@ const AuthDetails = () => {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'standard');
   const [showThemeModal, setShowThemeModal] = useState(false);
   const [showFacultyList, setShowFacultyList] = useState(false);
-const [showCourseList, setShowCourseList] = useState(false);
-const [showGroupList, setShowGroupList] = useState(false);
+  const [showCourseList, setShowCourseList] = useState(false);
+  const [showGroupList, setShowGroupList] = useState(false);
 
-const cathedra = ["Системахои Автоматикунонидашудаи Идоракуни", "Шабакахои Алока Ва Системахои Комутатсиони", "Технологияхои Иттилооти Ва Хифзи Маълумот", "Автоматонии Равандхои Технологи Ва Истехсолот", "Информатика Ва Техникаи Хисоббарор"];
-const courses = ["1", "2", "3", "4"];
-const groups = ["1-530102 - АСКИ", "1-400101 - ТБТИ", "1-450103-02 - ШАваТИ", "1-400102-04 - ТИваХМ", "1-98010101-03 - ТИваХМ", "1-98010101-05 - ТИваХМ", "1-530101 - АРТваИ", "1-530107 - АРТваИ", "1-400301-02 - АРТваИ", "1-400301-05 - АРТваИ", "1-080101-07 - ИваТХ"];
+  const cathedra = ["Системахои Автоматикунонидашудаи Идоракуни", "Шабакахои Алока Ва Системахои Комутатсиони", "Технологияхои Иттилооти Ва Хифзи Маълумот", "Автоматонии Равандхои Технологи Ва Истехсолот", "Информатика Ва Техникаи Хисоббарор"];
+  const courses = ["1", "2", "3", "4"];
+  const groups = ["1-530102 - АСКИ", "1-400101 - ТБТИ", "1-450103-02 - ШАваТИ", "1-400102-04 - ТИваХМ", "1-98010101-03 - ТИваХМ", "1-98010101-05 - ТИваХМ", "1-530101 - АРТваИ", "1-530107 - АРТваИ", "1-400301-02 - АРТваИ", "1-400301-05 - АРТваИ", "1-080101-07 - ИваТХ"];
 
   const [isMobile, setIsMobile] = useState(false);
   const t = useTranslation();
@@ -1098,8 +1098,8 @@ const groups = ["1-530102 - АСКИ", "1-400101 - ТБТИ", "1-450103-02 - Ш�
   });
 
   const facultyDropdownRef = useRef(null);
-const courseDropdownRef = useRef(null);
-const groupDropdownRef = useRef(null);
+  const courseDropdownRef = useRef(null);
+  const groupDropdownRef = useRef(null);
 
   const handleOpenForm = () => {
     if (identificationStatus === t('notident')) {
@@ -1121,12 +1121,12 @@ const groupDropdownRef = useRef(null);
 
   const handleSubmitRequest = async () => {
     const { fio, faculty, course, group, photo } = studentInfo;
-  
+
     if (!fio || !faculty || !course || !group || !photo) {
       showNotificationError("Все поля обязательны к заполнению.");
       return;
     }
-  
+
     try {
       let photoUrl = "";
       if (photo) {
@@ -1134,7 +1134,7 @@ const groupDropdownRef = useRef(null);
         const snapshot = await uploadBytes(storageReference, photo);
         photoUrl = await getDownloadURL(snapshot.ref);
       }
-  
+
       // Сохранение заявки с дополнительными данными пользователя
       const requestRef = push(databaseRef(database, "requests"));
       await update(requestRef, {
@@ -1149,7 +1149,7 @@ const groupDropdownRef = useRef(null);
         userAvatar: avatarUrl,         // URL аватарки пользователя
         userId: authUser.uid           // uid пользователя, чтобы можно было перейти в его профиль
       });
-  
+
       setRequestId(requestRef.key);
       handleCloseForm();
       showNotification("Заявка отправлена успешно.");
@@ -1158,7 +1158,7 @@ const groupDropdownRef = useRef(null);
       showNotificationError("Ошибка отправки заявки.");
     }
   };
-  
+
 
   // const handleSubmitRequest = async () => {
   //   const { fio, faculty, course, group, photo } = studentInfo;
@@ -1201,21 +1201,21 @@ const groupDropdownRef = useRef(null);
 
 
   useEffect(() => {
-    
-      const handleClickOutside = (e) => {
-        if (menuRef.current && !menuRef.current.contains(e.target)) {
-          setShowMenu(false);
-        }
-        if (
-          facultyDropdownRef.current && !facultyDropdownRef.current.contains(e.target) &&
-          courseDropdownRef.current && !courseDropdownRef.current.contains(e.target) &&
-          groupDropdownRef.current && !groupDropdownRef.current.contains(e.target)
-        ) {
-          setShowFacultyList(false);
-          setShowCourseList(false);
-          setShowGroupList(false);
-        }
-      };
+
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setShowMenu(false);
+      }
+      if (
+        facultyDropdownRef.current && !facultyDropdownRef.current.contains(e.target) &&
+        courseDropdownRef.current && !courseDropdownRef.current.contains(e.target) &&
+        groupDropdownRef.current && !groupDropdownRef.current.contains(e.target)
+      ) {
+        setShowFacultyList(false);
+        setShowCourseList(false);
+        setShowGroupList(false);
+      }
+    };
 
     const listen = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -1229,15 +1229,15 @@ const groupDropdownRef = useRef(null);
             setUsername(data.username || "User");
             setPhoneNumber(data.phoneNumber ? data.phoneNumber : t('addtelnumber'));
 
-                      // Проверяем статус преподавателя ДО остальных обновлений
-          if (data.role === 'teacher') {
-            setIdentificationStatus(t('ident'));
-            setStatus(data.status || "online");
-            setLastActive(data.lastActive || "");
-            setAvatarUrl(data.avatarUrl || "./default-image.png");
-            setAboutMe(data.aboutMe || t('infonot'));
-            return; // Прерываем выполнение для преподавателей
-          }
+            // Проверяем статус преподавателя ДО остальных обновлений
+            if (data.role === 'teacher') {
+              setIdentificationStatus(t('ident'));
+              setStatus(data.status || "online");
+              setLastActive(data.lastActive || "");
+              setAvatarUrl(data.avatarUrl || "./default-image.png");
+              setAboutMe(data.aboutMe || t('infonot'));
+              return; // Прерываем выполнение для преподавателей
+            }
             // Только для обычных пользователей продолжаем
             setStatus(data.status || "offline");
             setLastActive(data.lastActive || "");
@@ -1541,12 +1541,12 @@ const groupDropdownRef = useRef(null);
 
   return (
     <div className="profile-container">
-         {notification && (
-            <div className={`notification ${notificationType}`}>
-              {notification}
-            </div>
-          )} {/* Уведомление */}
-     <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
+      {notification && (
+        <div className={`notification ${notificationType}`}>
+          {notification}
+        </div>
+      )} {/* Уведомление */}
+      <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <img style={{ width: "50px", height: "45px" }} src={basiclogo} alt="" />
           {isMenuOpen ? (
@@ -1572,7 +1572,7 @@ const groupDropdownRef = useRef(null);
           </Link>
           <div className="menu-find-block">
             <Link to="/searchpage" className="menu-item">
-              <FiSearch className="menu-icon"  />
+              <FiSearch className="menu-icon" />
               {isMenuOpen && <span className="txt">{t('findstudents')}</span>}
             </Link>
             <Link to="/teachers" className="menu-item">
@@ -1605,7 +1605,7 @@ const groupDropdownRef = useRef(null);
         </nav>
 
         <div className="logo-and-tik">
-        {t('facultname')}
+          {t('facultname')}
           {isMenuOpen &&
             <div>
               <p className="txt">&copy; 2025 {t("rights")}.</p>
@@ -1643,7 +1643,7 @@ const groupDropdownRef = useRef(null);
               <p style={{ color: "lightgreen" }}>{renderStatus()}</p>
             </div>
 
-            <div className="menu-icon" style={{marginTop: "5px"}} onClick={() => setShowMenu(!showMenu)}>
+            <div className="menu-icon" style={{ marginTop: "5px" }} onClick={() => setShowMenu(!showMenu)}>
               <FaEllipsisV />
             </div>
 
@@ -1727,10 +1727,10 @@ const groupDropdownRef = useRef(null);
 
             <div className="info-section">
               <div className="ident-block-basic" onClick={handleOpenForm}>
-              <div className="ident-block1">
-  <h3>{t('identification')}</h3>
-  <p>{identificationStatus}</p>
-</div>
+                <div className="ident-block1">
+                  <h3>{t('identification')}</h3>
+                  <p>{identificationStatus}</p>
+                </div>
                 <div className="ident-block2">
                   <FaLock style={{ color: identificationStatus === t('ident') ? '#0AFFFF' : 'red' }} />
                 </div>
@@ -1738,110 +1738,111 @@ const groupDropdownRef = useRef(null);
             </div>
 
             {isRequestFormOpen && (
-  <div className="request-form-modal">
-    <div className="form-content">
-      <h2>Идентификация студента</h2>
-      <input type="text" name="fio" placeholder="ФИО" onChange={handleInputChange} required />
-      
-      {/* Факультет */}
-      <div className="custom-dropdown-auth" ref={facultyDropdownRef}>
-        <div 
-          className="dropdown-header-auth"
-          onClick={() => {
-            setShowFacultyList(!showFacultyList);
-            setShowCourseList(false);
-            setShowGroupList(false);
-          }}
-        >
-          {studentInfo.faculty || "Выберите кафедру"}
-          <span className={`arrow-auth ${showFacultyList ? "up-auth" : "down-auth"}`}></span>
-        </div>
-        {showFacultyList && (
-          <div className="dropdown-list-auth">
-            {cathedra.map((faculty) => (
-              <div
-                key={faculty}
-                className="dropdown-item-auth"
-                onClick={() => {
-                  setStudentInfo(prev => ({ ...prev, faculty }));
-                  setShowFacultyList(false);
-                }}
-              >
-                {faculty}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+              <div className="request-form-modal">
+                <div className="form-content">
+                  <h2>Идентификация студента</h2>
+                  <input type="text" name="fio" placeholder="ФИО" onChange={handleInputChange} required />
 
-      {/* Курс */}
-      <div className="custom-dropdown-auth" ref={courseDropdownRef}>
-        <div 
-          className="dropdown-header-auth"
-          onClick={() => {
-            setShowCourseList(!showCourseList);
-            setShowFacultyList(false);
-            setShowGroupList(false);
-          }}
-        >
-          {studentInfo.course || "Выберите курс"}
-          <span className={`arrow-auth ${showCourseList ? "up-auth" : "down-auth"}`}></span>
-        </div>
-        {showCourseList && (
-          <div className="dropdown-list-auth">
-            {courses.map((course) => (
-              <div
-                key={course}
-                className="dropdown-item-auth"
-                onClick={() => {
-                  setStudentInfo(prev => ({ ...prev, course }));
-                  setShowCourseList(false);
-                }}
-              >
-                {course}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+                  {/* Факультет */}
+                  <div className="custom-dropdown-auth" ref={facultyDropdownRef}>
+                    <div
+                      className="dropdown-header-auth"
+                      onClick={() => {
+                        setShowFacultyList(!showFacultyList);
+                        setShowCourseList(false);
+                        setShowGroupList(false);
+                      }}
+                    >
+                      {studentInfo.faculty || "Выберите кафедру"}
+                      <span className={`arrow-auth ${showFacultyList ? "up-auth" : "down-auth"}`}></span>
+                    </div>
+                    {showFacultyList && (
+                      <div className="dropdown-list-auth">
+                        {cathedra.map((faculty) => (
+                          <div
+                            key={faculty}
+                            className="dropdown-item-auth"
+                            onClick={() => {
+                              setStudentInfo(prev => ({ ...prev, faculty }));
+                              setShowFacultyList(false);
+                            }}
+                          >
+                            {faculty}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
 
-      {/* Группа */}
-      <div className="custom-dropdown-auth" ref={groupDropdownRef}>
-        <div 
-          className="dropdown-header-auth"
-          onClick={() => {
-            setShowGroupList(!showGroupList);
-            setShowFacultyList(false);
-            setShowCourseList(false);
-          }}
-        >
-          {studentInfo.group || "Выберите группу"}
-          <span className={`arrow-auth ${showGroupList ? "up-auth" : "down-auth"}`}></span>
-        </div>
-        {showGroupList && (
-          <div className="dropdown-list-auth">
-            {groups.map((group) => (
-              <div
-                key={group}
-                className="dropdown-item-auth"
-                onClick={() => {
-                  setStudentInfo(prev => ({ ...prev, group }));
-                  setShowGroupList(false);
-                }}
-              >
-                {group}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+                  {/* Курс */}
+                  <div className="custom-dropdown-auth" ref={courseDropdownRef}>
+                    <div
+                      className="dropdown-header-auth"
+                      onClick={() => {
+                        setShowCourseList(!showCourseList);
+                        setShowFacultyList(false);
+                        setShowGroupList(false);
+                      }}
+                    >
+                      {studentInfo.course || "Выберите курс"}
+                      <span className={`arrow-auth ${showCourseList ? "up-auth" : "down-auth"}`}></span>
+                    </div>
+                    {showCourseList && (
+                      <div className="dropdown-list-auth">
+                        {courses.map((course) => (
+                          <div
+                            key={course}
+                            className="dropdown-item-auth"
+                            onClick={() => {
+                              setStudentInfo(prev => ({ ...prev, course }));
+                              setShowCourseList(false);
+                            }}
+                          >
+                            {course}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
 
-      <input type="file" name="photo" accept="image/*" onChange={handleFileChange} />
-      <button onClick={handleSubmitRequest}>Отправить</button>
-      <button onClick={handleCloseForm}>Закрыть</button>
-    </div>
-  </div>
-)}
+                  {/* Группа */}
+                  <div className="custom-dropdown-auth" ref={groupDropdownRef}>
+                    <div
+                      className="dropdown-header-auth"
+                      onClick={() => {
+                        setShowGroupList(!showGroupList);
+                        setShowFacultyList(false);
+                        setShowCourseList(false);
+                      }}
+                    >
+                      {studentInfo.group || "Выберите группу"}
+                      <span className={`arrow-auth ${showGroupList ? "up-auth" : "down-auth"}`}></span>
+                    </div>
+                    {showGroupList && (
+                      <div className="dropdown-list-auth">
+                        {groups.map((group) => (
+                          <div
+                            key={group}
+                            className="dropdown-item-auth"
+                            onClick={() => {
+                              setStudentInfo(prev => ({ ...prev, group }));
+                              setShowGroupList(false);
+                            }}
+                          >
+                            {group}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <label style={{color: "grey", fontSize: "14px"}}>Фото студенческого билета</label>
+                  <input type="file" name="photo" accept="image/*" onChange={handleFileChange} />
+                  <button onClick={handleSubmitRequest}>Отправить</button>
+                  <button onClick={handleCloseForm}>Закрыть</button>
+                </div>
+              </div>
+            )}
 
             <div className="info-section">
               <h3>{t('email')}</h3>
@@ -1851,39 +1852,39 @@ const groupDropdownRef = useRef(null);
             <div className="settings">
               <h3>{t('settings')}</h3>
               <ul>
-              <li onClick={() => setShowThemeModal(true)}>{t('mode')}</li>
+                <li onClick={() => setShowThemeModal(true)}>{t('mode')}</li>
 
-  {/* Модальное окно для выбора темы */}
-  {showThemeModal && (
-        <div
-          className="modal-backdrop-theme"
-          onClick={() => setShowThemeModal(false)}
-          style={{
-            position: 'fixed',
-            top: 0, left: 0, right: 0, bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            zIndex: 1000
-          }}
-        >
-          <div
-            className="modal-content-theme"
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              backgroundColor: '#fff',
-              padding: '20px',
-              borderRadius: '8px',
-              minWidth: '250px',
-              textAlign: 'center'
-            }}
-          >
-            <h3 style={{color: "grey"}}>Выберите тему</h3>
-            <button onClick={() => handleThemeChange('standard')}>Универсальная</button>
-            <button onClick={() => handleThemeChange('light')}>Светлая</button>
-            <button onClick={() => handleThemeChange('dark')}>Темная</button>
-          </div>
-        </div>
-      )}
+                {/* Модальное окно для выбора темы */}
+                {showThemeModal && (
+                  <div
+                    className="modal-backdrop-theme"
+                    onClick={() => setShowThemeModal(false)}
+                    style={{
+                      position: 'fixed',
+                      top: 0, left: 0, right: 0, bottom: 0,
+                      backgroundColor: 'rgba(0,0,0,0.5)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      zIndex: 1000
+                    }}
+                  >
+                    <div
+                      className="modal-content-theme"
+                      onClick={(e) => e.stopPropagation()}
+                      style={{
+                        backgroundColor: '#fff',
+                        padding: '20px',
+                        borderRadius: '8px',
+                        minWidth: '250px',
+                        textAlign: 'center'
+                      }}
+                    >
+                      <h3 style={{ color: "grey" }}>Выберите тему</h3>
+                      <button onClick={() => handleThemeChange('standard')}>Универсальная</button>
+                      <button onClick={() => handleThemeChange('light')}>Светлая</button>
+                      <button onClick={() => handleThemeChange('dark')}>Темная</button>
+                    </div>
+                  </div>
+                )}
 
                 <div className="edit-password" onClick={openPasswordModal}>
                   <li>{t('password')}</li>
@@ -1943,13 +1944,13 @@ const groupDropdownRef = useRef(null);
                       onClick={(e) => e.stopPropagation()}
                     >
                       <button onClick={() => handleLanguageChange('tajik')}>Тоҷикӣ</button>
-                      <div style={{borderBottom: "1px solid grey",width: "25px"}}>
+                      <div style={{ borderBottom: "1px solid grey", width: "25px" }}>
                       </div>
                       <button onClick={() => handleLanguageChange('russian')}>Русский</button>
-                      <div style={{borderBottom: "1px solid grey",width: "25px"}}>
+                      <div style={{ borderBottom: "1px solid grey", width: "25px" }}>
                       </div>
                       <button onClick={() => handleLanguageChange('english')}>English</button>
-                      <div style={{borderBottom: "1px solid grey",width: "25px"}}>
+                      <div style={{ borderBottom: "1px solid grey", width: "25px" }}>
                       </div>
                     </div>
                   </div>

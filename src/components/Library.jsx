@@ -1104,7 +1104,7 @@ const Library = ({ userId }) => {
   }
 
   return (
-    <div className="glava" style={{ height: "100vh" }}>
+    <div className="glava" style={{ minHeight: "900px" }}>
       <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <img style={{ width: "50px", height: "45px" }} src={basiclogo} alt="" />

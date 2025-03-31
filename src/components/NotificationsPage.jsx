@@ -309,7 +309,7 @@ const NotificationsPage = () => {
      {/* Уведомление от декана */}
      {notification.type === 'dean_notification' && (
               <div className="dean-notification">
-                <div className="notification-header">
+                <div className="dean-notification-header">
                   <img
                     src={notification.deanAvatar}
                     alt="Декан"

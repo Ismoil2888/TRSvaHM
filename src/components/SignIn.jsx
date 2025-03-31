@@ -71,9 +71,6 @@ const SignIn = () => {
             <label htmlFor="password">Пароль</label>
           </div>
           <div className="remember-forgot">
-            {/* <label className="checkbox-p">
-              <input type="checkbox" /> <p>Запомнить меня</p>
-            </label> */}
             <p>Забыли пароль?</p>
           </div>
           <button type="submit" className="reg-login-button">Login</button>

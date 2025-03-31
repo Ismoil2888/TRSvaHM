@@ -1053,6 +1053,7 @@ input[type="file"] {
         .settings li {
           padding: 10px 0;
           cursor: pointer;
+          border-radius: 15px;
           transition: background-color 0.2s ease;
         }
         
@@ -1408,7 +1409,7 @@ input[type="file"] {
   background: rgba(0, 0, 0, 0.85);
   transform: translateY(-100%);
   opacity: 0;
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition: opacity 0.5s ease, transform 0s ease;
   z-index: 9998;
   will-change: transform;
 }
@@ -1417,12 +1418,14 @@ input[type="file"] {
   transform: translateY(0);
   opacity: 1;
   will-change: transform;
+  transition: all 0s ease-in-out;
 }
 
 .burger-menu.close {
   opacity: 0;
-  transition: opacity 0.5s ease;
+  /* transition: opacity 0.5s ease; */
   will-change: transform;
+  transition: all 0s ease-in-out;
 }
 
 .burger-menu ul {
@@ -1443,7 +1446,7 @@ input[type="file"] {
   display: flex;
   align-items: center;
   gap: 12px;
-  transition: all 0.2s ease-in-out;
+  /* transition: all 0.2s ease-in-out; */
 }
 
 .burger-menu li a:hover {

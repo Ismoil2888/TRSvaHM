@@ -172,7 +172,7 @@ const DepartmentTeachers = () => {
           {teachers.length > 0 ? (
             teachers.map((teacher) => (
               <div className="dpt-teacher-card" key={teacher.id}>
-                <Link to={`/teacher-profile/${teacher.id}`} className="dpt-teacher-card-link">
+                <Link className="dpt-teacher-card-link">
                   <img
                     src={teacher.avatarUrl || defaultAvatar}
                     alt={teacher.username}

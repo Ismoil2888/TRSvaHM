@@ -1640,12 +1640,12 @@ const AdminPanel = () => {
           {showRequests ? 'Скрыть заявки' : 'Показать заявки'}
           {newRequestsCount > 0 && <div className="new-request-count-basic"><span className="new-requests-count">{newRequestsCount}</span> </div>}
         </button>
-        <button
+        {/* <button
           className='ap-buttons-add-edit'
           onClick={() => setShowScheduleModal(true)}
         >
           <FaPlus /> Добавить расписание уроков
-        </button>
+        </button> */}
         <button className='ap-buttons-add-edit' onClick={() => setShowScheduleEditor(true)}>
           <FaPlus /> Показать расписание уроков
         </button>
@@ -1832,7 +1832,7 @@ const AdminPanel = () => {
                 <div
                   className="request-user-info"
                   onClick={() => goToProfile(request.userId)}
-                  style={{ cursor: "pointer", display: "flex", alignItems: "center", marginBottom: "10px" }}
+                  style={{ cursor: "pointer", display: "flex", alignItems: "center", margin: "10px" }}
                 >
                   <img
                     src={request.userAvatar || defaultAvatar}
@@ -1844,7 +1844,7 @@ const AdminPanel = () => {
                 </div>
 
                 {request.status === 'pending' ? (
-                  <>
+                  <div className='request-card-info'>
                     <p>ФИО: {request.fio}</p>
                     <p>Кафедра: {request.faculty}</p>
                     <p>Курс: {request.course}</p>
@@ -1852,14 +1852,14 @@ const AdminPanel = () => {
                     {request.photoUrl && (
                       <img
                         src={request.photoUrl}
-                        alt="Фото студента"
+                        alt="Фото студенческого билета"
                         className="request-card-photo"
                         style={{ width: "100%", maxWidth: "300px", marginTop: "10px" }}
                       />
                     )}
                     <button onClick={() => handleAcceptRequest(request.id)}>Принять</button>
                     <button onClick={() => handleRejectRequest(request.id)}>Отклонить</button>
-                  </>
+                  </div>
                 ) : (
                   <div className="compact-content">
                     {request.photoUrl && (
