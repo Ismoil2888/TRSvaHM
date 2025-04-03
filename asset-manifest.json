@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.4951082e.css",
-    "main.js": "/static/js/main.b2e779ec.js",
+    "main.css": "/static/css/main.5e1733eb.css",
+    "main.js": "/static/js/main.6ff388fb.js",
     "static/js/206.3520b24c.chunk.js": "/static/js/206.3520b24c.chunk.js",
     "static/media/Ttulogo.png": "/static/media/Ttulogo.9f1ba24657d744625136.png",
     "static/media/basic-logo.png": "/static/media/basic-logo.b85a726a2b7cef73406c.png",
@@ -17,7 +17,7 @@
     "index.html": "/index.html"
   },
   "entrypoints": [
-    "static/css/main.4951082e.css",
-    "static/js/main.b2e779ec.js"
+    "static/css/main.5e1733eb.css",
+    "static/js/main.6ff388fb.js"
   ]
 }
