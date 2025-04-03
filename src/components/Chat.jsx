@@ -1078,14 +1078,15 @@ const Chat = () => {
             </div>
           )}
 
-          <input
+          <textarea  
+          style={{resize: "none", height: "25px"}}
             type="text"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Введите сообщение..."
             className="chat-input-field"
             onKeyPress={handleKeyPress}
-          />
+          ></textarea>
           {editingMessageId ? (
             <button onClick={handleSaveEditedMessage} className="chat-send-button">
               Изменить

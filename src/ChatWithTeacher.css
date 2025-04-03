@@ -137,7 +137,7 @@ object-fit: cover;
 .chat-input-field {
   /* flex: 1; */
   width: 65%;
-  padding: 10px;
+  padding: 8px;
   border: 1px solid #ddd;
   border-radius: 18px;
   font-size: 1rem;

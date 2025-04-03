@@ -1001,6 +1001,7 @@ import { LanguageContext } from '../contexts/LanguageContext';
 import { translations } from '../translations';
 import useTranslation from '../hooks/useTranslation';
 import { applyTheme, themes } from "../theme";
+import VoiceAssistant from "./VoiceAssistant";
 
 const AuthDetails = () => {
   const [authUser, setAuthUser] = useState(null);
@@ -1851,6 +1852,9 @@ const AuthDetails = () => {
 
             <div className="settings">
               <h3>{t('settings')}</h3>
+              
+<VoiceAssistant />
+
               <ul>
                 <li onClick={() => setShowThemeModal(true)}>{t('mode')}</li>
 
