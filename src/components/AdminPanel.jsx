@@ -1054,8 +1054,7 @@
 
 //original
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 import { getStorage, ref as storageReference, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getDatabase, ref as dbRef, onValue, set, get, push, update, remove } from "firebase/database";
@@ -1198,19 +1197,44 @@ const AdminPanel = () => {
     const postsRef = dbRef(db, "posts");
 
     // Подписка на обновления постов
-    onValue(postsRef, (snapshot) => {
+    onValue(postsRef, async (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        const postList = Object.keys(data)
-          .map((key) => ({
-            id: key,
-            ...data[key],
-          }))
-          .filter((post) => post.status === "pending"); // Отображать только ожидающие посты
-        setPosts(postList);
-        setPendingPostsCount(postList.length); // Обновление количества
+        const postList = await Promise.all(
+          Object.keys(data)
+            .map(async (key) => {
+              const post = data[key];
+              if (post.status !== "pending") return null;
+    
+              let userName = post.userName;
+              let userAvatar = post.userAvatar;
+    
+              if (post.userId) {
+                try {
+                  const userSnapshot = await get(dbRef(database, `users/${post.userId}`));
+                  const userData = userSnapshot.val();
+                  if (userData) {
+                    userName = userData.username || userName;
+                    userAvatar = userData.avatarUrl || userAvatar;
+                  }
+                } catch (err) {
+                  console.error("Ошибка загрузки пользователя:", err);
+                }
+              }
+    
+              return {
+                id: key,
+                ...post,
+                userName,
+                userAvatar,
+              };
+            })
+        );
+    
+        setPosts(postList.filter(Boolean));
+        setPendingPostsCount(postList.filter(Boolean).length);
       }
-    });
+    });    
   }, []);
 
   const handleApprove = (postId) => {

@@ -289,7 +289,7 @@ const SearchPage = () => {
                 </div>
               </Link>
 
-              <Link to="/schedule">
+              <Link to="/about">
                 <div className="schedule-search sb">
                   <FontAwesomeIcon icon={faCalendarAlt} className="footer-icon white-icon" />
                   <p className="txt">{t('schedule')}</p>

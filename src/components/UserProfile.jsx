@@ -975,31 +975,6 @@ const UserProfile = () => {
       >
         Идём к пользователю...
       </motion.p>
-      <style jsx>{`
-      .loading-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        background: radial-gradient(circle, #1a1a2e, #16213e);
-        color: white;
-        font-family: Arial, sans-serif;
-      }
-      .spinner {
-        width: 60px;
-        height: 60px;
-        border: 6px solid rgba(255, 255, 255, 0.3);
-        border-top-color: #00d4ff;
-        border-radius: 50%;
-        margin-bottom: 20px;
-      }
-      .loading-text {
-        font-size: 18px;
-        font-weight: bold;
-        letter-spacing: 1.5px;
-      }
-    `}</style>
     </div>;
   }
 

@@ -177,11 +177,19 @@ const showNotificationError = (message) => {
       description,
       mediaUrl,
       createdAt: new Date().toISOString(),
-      userName: userDetails.username,
-      userAvatar: userDetails.avatarUrl,
       userId: currentUser.uid,
-      status: "pending", // Статус по умолчанию: "pending"
+      status: "pending"
     };
+    
+    // const postData = {
+    //   description,
+    //   mediaUrl,
+    //   createdAt: new Date().toISOString(),
+    //   userName: userDetails.username,
+    //   userAvatar: userDetails.avatarUrl,
+    //   userId: currentUser.uid,
+    //   status: "pending", // Статус по умолчанию: "pending"
+    // };
   
     const newPostRef = push(postsRef);
     await set(newPostRef, postData);

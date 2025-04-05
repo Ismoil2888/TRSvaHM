@@ -2004,3 +2004,495 @@ const AuthDetails = () => {
 };
 
 export default AuthDetails;
+
+
+
+
+
+
+
+
+
+
+
+
+// import { onAuthStateChanged, signOut, getAuth, reauthenticateWithCredential, EmailAuthProvider, updatePassword } from "firebase/auth";
+// import { getStorage, ref as storageRef, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+// import { getDatabase, ref as databaseRef, onValue, push, update, get, query, orderByChild, equalTo, remove } from "firebase/database";
+// import React, { useEffect, useState, useRef } from "react";
+// import { auth, database, storage } from "../firebase";
+// import { Link, useNavigate } from "react-router-dom";
+// import { FaEllipsisV, FaTimes, FaPen, FaArrowLeft } from "react-icons/fa"; // Иконка карандаша
+// import imageCompression from 'browser-image-compression';
+// import useTranslation from '../hooks/useTranslation';
+
+// const AuthDetails = () => {
+//   const [authUser, setAuthUser] = useState(null);
+//   const [username, setUsername] = useState("");
+//   const [status, setStatus] = useState("offline");
+//   const [lastActive, setLastActive] = useState("");
+//   const [avatarUrl, setAvatarUrl] = useState("./default-image.png");
+//   const [showMenu, setShowMenu] = useState(false);
+//   const [newUsername, setNewUsername] = useState("");
+//   const [isEditingUsername, setIsEditingUsername] = useState(false);
+//   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
+//   const [notification, setNotification] = useState(""); // Для уведомления
+//   const [notificationType, setNotificationType] = useState(""); // Для типа уведомления
+//   const menuRef = useRef(null);
+
+//   const cathedra = ["Системахои Автоматикунонидашудаи Идоракуни", "Шабакахои Алока Ва Системахои Комутатсиони", "Технологияхои Иттилооти Ва Хифзи Маълумот", "Автоматонии Равандхои Технологи Ва Истехсолот", "Информатика Ва Техникаи Хисоббарор"];
+//   const courses = ["1", "2", "3", "4"];
+//   const groups = ["1-530102 - АСКИ", "1-400101 - ТБТИ", "1-450103-02 - ШАваТИ", "1-400102-04 - ТИваХМ", "1-98010101-03 - ТИваХМ", "1-98010101-05 - ТИваХМ", "1-530101 - АРТваИ", "1-530107 - АРТваИ", "1-400301-02 - АРТваИ", "1-400301-05 - АРТваИ", "1-080101-07 - ИваТХ"];
+//   const t = useTranslation();
+//   const navigate = useNavigate();
+
+//   const [identificationStatus, setIdentificationStatus] = useState(t('notident'));
+//   const [requestId, setRequestId] = useState(null); // New state for tracking request ID
+//   const user = auth.currentUser;
+
+//   // Состояние для формы заявки
+//   const [isRequestFormOpen, setIsRequestFormOpen] = useState(false);
+//   const [studentInfo, setStudentInfo] = useState({
+//     fio: "",
+//     faculty: "",
+//     course: "",
+//     group: "",
+//     photo: null,
+//   });
+
+//   const facultyDropdownRef = useRef(null);
+//   const courseDropdownRef = useRef(null);
+//   const groupDropdownRef = useRef(null);
+
+//   const handleOpenForm = () => {
+//     if (identificationStatus === t('notident')) {
+//       setIsRequestFormOpen(true);
+//     } else {
+//       showNotification("Вы уже идентифицированы.");
+//     }
+//   };
+//   const handleCloseForm = () => setIsRequestFormOpen(false);
+
+//   const handleInputChange = (e) => {
+//     const { name, value } = e.target;
+//     setStudentInfo((prev) => ({ ...prev, [name]: value }));
+//   };
+
+//   const handleFileChange = (e) => {
+//     setStudentInfo((prev) => ({ ...prev, photo: e.target.files[0] }));
+//   };
+
+//   const handleSubmitRequest = async () => {
+//     const { fio, faculty, course, group, photo } = studentInfo;
+
+//     if (!fio || !faculty || !course || !group || !photo) {
+//       showNotificationError("Все поля обязательны к заполнению.");
+//       return;
+//     }
+
+//     try {
+//       let photoUrl = "";
+//       if (photo) {
+//         const storageReference = ref(storage, `request_photos/${Date.now()}_${photo.name}`);
+//         const snapshot = await uploadBytes(storageReference, photo);
+//         photoUrl = await getDownloadURL(snapshot.ref);
+//       }
+
+//       // Сохранение заявки с дополнительными данными пользователя
+//       const requestRef = push(databaseRef(database, "requests"));
+//       await update(requestRef, {
+//         fio,
+//         faculty,
+//         course,
+//         group,
+//         photoUrl,
+//         status: "pending",
+//         email: authUser.email,          // Email пользователя
+//         username,                      // Имя пользователя (из состояния компонента)
+//         userAvatar: avatarUrl,         // URL аватарки пользователя
+//         userId: authUser.uid           // uid пользователя, чтобы можно было перейти в его профиль
+//       });
+
+//       setRequestId(requestRef.key);
+//       handleCloseForm();
+//       showNotification("Заявка отправлена успешно.");
+//     } catch (error) {
+//       console.error("Ошибка отправки заявки:", error);
+//       showNotificationError("Ошибка отправки заявки.");
+//     }
+//   };
+
+
+//   useEffect(() => {
+
+//     const handleClickOutside = (e) => {
+//       if (menuRef.current && !menuRef.current.contains(e.target)) {
+//         setShowMenu(false);
+//       }
+//       if (
+//         facultyDropdownRef.current && !facultyDropdownRef.current.contains(e.target) &&
+//         courseDropdownRef.current && !courseDropdownRef.current.contains(e.target) &&
+//         groupDropdownRef.current && !groupDropdownRef.current.contains(e.target)
+//       ) {
+//         setShowFacultyList(false);
+//         setShowCourseList(false);
+//         setShowGroupList(false);
+//       }
+//     };
+
+//     const listen = onAuthStateChanged(auth, (user) => {
+//       if (user) {
+//         setAuthUser(user);
+//         setEmail(user.email);
+
+//         const userRef = databaseRef(database, 'users/' + user.uid);
+//         onValue(userRef, (snapshot) => {
+//           const data = snapshot.val();
+//           if (data) {
+//             setUsername(data.username || "User");
+//             setPhoneNumber(data.phoneNumber ? data.phoneNumber : t('addtelnumber'));
+
+//             // Проверяем статус преподавателя ДО остальных обновлений
+//             if (data.role === 'teacher') {
+//               setIdentificationStatus(t('ident'));
+//               setStatus(data.status || "online");
+//               setLastActive(data.lastActive || "");
+//               setAvatarUrl(data.avatarUrl || "./default-image.png");
+//               setAboutMe(data.aboutMe || t('infonot'));
+//               return; // Прерываем выполнение для преподавателей
+//             }
+//             // Только для обычных пользователей продолжаем
+//             setStatus(data.status || "offline");
+//             setLastActive(data.lastActive || "");
+//             setAvatarUrl(data.avatarUrl || "./default-image.png");
+//             setAboutMe(data.aboutMe || t('infonot'));
+//             setIdentificationStatus(t('notident'));
+//           }
+//         });
+
+
+//         // Подписка на изменения статуса заявки пользователя
+//         const requestRef = query(
+//           databaseRef(database, "requests"),
+//           orderByChild("email"),
+//           equalTo(user.email)
+//         );
+//         onValue(requestRef, (snapshot) => {
+//           if (snapshot.exists()) {
+//             const requestData = Object.values(snapshot.val())[0];
+//             setRequestId(requestData.id); // Get request ID
+//             setIdentificationStatus(
+//               requestData.status === "accepted" ? t('ident') : t('notident')
+//             );
+//           } else {
+//             setRequestId(null); // No request found
+//             setIdentificationStatus(t('notident'));
+//           }
+//         });
+
+//         // Устанавливаем статус "online" при входе
+//         update(userRef, { status: "online" });
+
+//         // Отслеживаем активность приложения
+//         const handleVisibilityChange = () => {
+//           if (document.visibilityState === "hidden") {
+//             // Когда вкладка не активна
+//             update(userRef, {
+//               status: "offline",
+//               lastActive: new Date().toLocaleString()
+//             });
+//           } else {
+//             // Когда вкладка активна
+//             update(userRef, { status: "online" });
+//           }
+//         };
+
+//         document.addEventListener('visibilitychange', handleVisibilityChange);
+
+//         // Обновляем статус при закрытии окна
+//         window.addEventListener('beforeunload', () => {
+//           update(userRef, {
+//             status: "offline",
+//             lastActive: new Date().toLocaleString()
+//           });
+//         });
+//       } else {
+//         setAuthUser(null);
+//         setUsername("");
+//         setEmail("");
+//         setPhoneNumber("Добавить номер телефона");
+//         setStatus("offline");
+//         setLastActive("");
+//         setAvatarUrl("./default-image.png");
+//       }
+//     });
+
+//     return () => {
+//       listen();
+//       document.removeEventListener("mousedown", handleClickOutside);
+//     };
+//   }, [t]);
+
+//   // Функция для успешных уведомлений
+//   const showNotification = (message) => {
+//     setNotificationType("success");
+//     setNotification(message);
+//     setTimeout(() => {
+//       setNotification("");
+//       setNotificationType("");
+//     }, 3000);
+//   };
+
+//   // Функция для ошибочных уведомлений
+//   const showNotificationError = (message) => {
+//     setNotificationType("error");
+//     setNotification(message);
+//     setTimeout(() => {
+//       setNotification("");
+//       setNotificationType("");
+//     }, 3000);
+//   };
+
+//   const handleAvatarChange = async (e) => {
+//     const file = e.target.files[0];
+//     if (file && authUser) {
+//       try {
+//         // Опции для сжатия изображения
+//         const options = {
+//           maxSizeMB: 1, // Максимальный размер файла 1 МБ
+//           maxWidthOrHeight: 800, // Максимальная ширина или высота изображения
+//           useWebWorker: true,
+//         };
+
+//         // Сжимаем изображение
+//         const compressedFile = await imageCompression(file, options);
+
+//         // Загружаем сжатое изображение в Firebase
+//         const avatarStorageRef = storageRef(storage, `avatars/${authUser.uid}`);
+//         const snapshot = await uploadBytes(avatarStorageRef, compressedFile);
+//         const downloadURL = await getDownloadURL(avatarStorageRef);
+
+//         // Обновляем аватар пользователя
+//         setAvatarUrl(downloadURL);
+//         const userDatabaseRef = databaseRef(database, 'users/' + authUser.uid);
+//         await update(userDatabaseRef, { avatarUrl: downloadURL });
+
+//         setShowMenu(false);
+//         showNotification("Фото профиля успешно обновлено.");
+//       } catch (error) {
+//         console.error("Ошибка при загрузке изображения:", error);
+//         showNotificationError("Ошибка при загрузке фото.");
+//       }
+//     }
+//   };
+
+//   const deleteAvatar = async () => {
+//     if (authUser) {
+//       try {
+//         const avatarStorageRef = storageRef(storage, `avatars/${authUser.uid}`);
+//         await deleteObject(avatarStorageRef);
+//         const userDatabaseRef = databaseRef(database, 'users/' + authUser.uid);
+//         await update(userDatabaseRef, { avatarUrl: "./default-image.png" });
+//         setAvatarUrl("./default-image.png");
+//         setShowMenu(false);
+//       } catch (error) {
+//         console.error("Ошибка при удалении изображения:", error);
+//       }
+//     }
+//   };
+
+//   const handleUsernameChange = async () => {
+//     const usernameRegex = /^[a-zA-Z0-9._]+$/;
+//     if (authUser && newUsername.trim() !== "" && usernameRegex.test(newUsername)) {
+//       try {
+//         const userDatabaseRef = databaseRef(database, 'users/' + authUser.uid);
+//         const userSnapshot = await get(userDatabaseRef);
+//         const userData = userSnapshot.val();
+
+//         if (userData?.lastUsernameChange) {
+//           const lastChangeTimestamp = userData.lastUsernameChange;
+//           const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
+//           if (Date.now() - lastChangeTimestamp < oneWeekInMs) {
+//             showNotificationError("Вы можете менять имя только раз в неделю.");
+//             return;
+//           }
+//         }
+
+//         const usersRef = query(databaseRef(database, 'users'), orderByChild('username'), equalTo(newUsername));
+//         const snapshot = await get(usersRef);
+//         if (snapshot.exists()) {
+//           showNotificationError("Пользователь с таким именем уже существует, выберите другое имя.");
+//           return;
+//         }
+
+//         await update(userDatabaseRef, {
+//           username: newUsername,
+//           lastUsernameChange: Date.now(),
+//         });
+
+//         setUsername(newUsername);
+//         setIsEditingUsername(false);
+//         showNotification(`Имя изменено на "${newUsername}"`);
+//       } catch (error) {
+//         console.error("Ошибка при изменении имени пользователя:", error);
+//       }
+//     } else {
+//       showNotificationError("Имя пользователя может содержать только буквы, цифры, нижнее подчеркивание и точку.");
+//     }
+//   };
+
+//   const userSignOut = () => {
+//     const userRef = databaseRef(database, 'users/' + authUser.uid);
+//     update(userRef, {
+//       status: "offline",
+//       lastActive: new Date().toLocaleString()
+//     }).then(() => {
+//       signOut(auth).then(() => console.log("Successfully signed out!")).catch((e) => console.log(e));
+//     });
+//   };
+
+//   const deleteAccount = async () => {
+//     if (!authUser) return;
+
+//     const userId = authUser.uid; // Сохраняем UID для дальнейшего использования
+//     const userRef = databaseRef(database, 'users/' + userId);
+//     const avatarRef = storageRef(storage, `avatars/${userId}`);
+
+//     try {
+//       // Сначала выйти из аккаунта
+//       await signOut(auth);
+//       showNotification("Вы вышли из аккаунта.");
+
+//       // Удалить аватар из Firebase Storage
+//       await deleteObject(avatarRef).catch((error) => {
+//         console.warn("Ошибка удаления аватара:", error);
+//       });
+
+//       // Удалить данные из Realtime Database
+//       await remove(userRef).catch((error) => {
+//         console.error("Ошибка удаления данных из базы данных:", error);
+//       });
+
+//       showNotification("Аккаунт успешно удалён.");
+//       navigate("/"); // Перенаправить на главную страницу
+//     } catch (error) {
+//       console.error("Ошибка при удалении аккаунта:", error);
+//       showNotificationError("Не удалось удалить аккаунт. Пожалуйста, попробуйте снова.");
+//     }
+//   };
+
+
+//   const renderStatus = () => {
+//     if (status === "online") {
+//       return <span className="status-online">{t('status')}</span>;
+//     } else {
+//       return <span className="status-offline">{t('wasonline')}: {lastActive}</span>;
+//     }
+//   };
+
+//   return (
+//     <div className="profile-container">
+//       {notification && (
+//         <div className={`notification ${notificationType}`}>
+//           {notification}
+//         </div>
+//       )} {/* Уведомление */}
+//       {authUser ? (
+//         <div className="profile-content">
+//           <div className="profile-header">
+
+//             <Link className="back-button white-icon" onClick={() => navigate(-1)}>
+//               <FaArrowLeft />
+//             </Link>
+
+//             <div className="avatar-section">
+//               <img
+//                 src={avatarUrl}
+//                 alt="Avatar"
+//                 className="avatar"
+//                 onClick={() => setIsAvatarModalOpen(true)}
+//               />
+//               <label htmlFor="avatarInput" className="avatar-upload-btn">{t('uploadphoto')}</label>
+//               <input
+//                 type="file"
+//                 id="avatarInput"
+//                 accept="image/*"
+//                 onChange={handleAvatarChange}
+//                 style={{ display: 'none' }}
+//               />
+//             </div>
+
+//             <div className="username-section">
+//               <h2>{username}</h2>
+//               <p style={{ color: "lightgreen" }}>{renderStatus()}</p>
+//             </div>
+
+//             <div className="menu-icon" style={{ marginTop: "5px" }} onClick={() => setShowMenu(!showMenu)}>
+//               <FaEllipsisV />
+//             </div>
+
+//             {showMenu && (
+//               <div className="menu-dropdown" ref={menuRef}>
+//                 <button onClick={() => document.getElementById('avatarInput').click()}>{t('addphoto')}</button>
+//                 <button onClick={deleteAvatar}>{t('delphoto')}</button>
+//                 <button onClick={() => setIsEditingUsername(true)}>{t('changeusername')}</button>
+//               </div>
+//             )}
+
+//           </div>
+
+//           {isEditingUsername && (
+//             <div className="edit-username-section">
+//               <input
+//                 type="text"
+//                 value={newUsername}
+//                 onChange={(e) => setNewUsername(e.target.value)}
+//                 maxLength="12"
+//                 placeholder="Новое имя пользователя"
+//               />
+//               <button style={{ height: "35px" }} onClick={handleUsernameChange}>Изменить</button>
+//               <FaTimes className="close-icon" onClick={() => setIsEditingUsername(false)} /> {/* Кнопка крестика */}
+//             </div>
+//           )}
+
+//           <button className="signout-btn" onClick={userSignOut}>{t('logout')}</button>
+
+//           <button
+//             className="delete-account-btn"
+//             onClick={() => {
+//               if (window.confirm("Вы уверены, что хотите удалить свой аккаунт? Это действие необратимо.")) {
+//                 deleteAccount();
+//               }
+//             }}
+//           >
+//             {t('delaccount')}
+//           </button>
+
+
+//           {isAvatarModalOpen && (
+//             <div className="avatar-modal" onClick={() => setIsAvatarModalOpen(false)}>
+//               <div className="avatar-overlay">
+//                 <img
+//                   src={avatarUrl}
+//                   alt="Avatar"
+//                   className="full-size-avatar"
+//                   onClick={() => setIsAvatarModalOpen(false)}
+//                 />
+//               </div>
+//             </div>
+//           )}
+//         </div>
+//       ) : (
+//         <div className="signed-out-container">
+//           <div className="signed-out">
+//             <h2 className="signed-out-h2" data-text="T I K">T I K</h2>
+//             <p style={{ color: "white", fontSize: "25px" }}>Вы вышли из аккаунта</p>
+//             <Link className="authoutlink" to="/">Войти в аккаунт</Link>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default AuthDetails;

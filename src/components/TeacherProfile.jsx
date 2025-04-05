@@ -3,14 +3,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useLocation, useParams } from 'react-router-dom';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { getDatabase, ref as dbRef, push, set, get, update, remove, onValue } from "firebase/database";
+import { uploadBytesResumable } from "firebase/storage";
 import { auth } from "../firebase";
-import bookIcon from '../book-icon.png'; // Иконка для книг
-import editIcon from '../edit-icon.png'; // Иконка для редактирования (карандаш)
+import bookIcon from '../book-icon.png';
+import editIcon from '../edit-icon.png';
 import "../TeacherProfile.css";
 import defaultAvatar from "../default-image.png";
 import { FiHome, FiUser, FiArrowLeft, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
 import ttulogo from "../Ttulogo.png";
-import { CiTextAlignCenter } from 'react-icons/ci';
+// import { CiTextAlignCenter } from 'react-icons/ci';
 
 const TeacherProfile = () => {
   const { state } = useLocation();
@@ -28,91 +29,95 @@ const TeacherProfile = () => {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
   const [userRole, setUserRole] = useState('');
+  const [showVideoForm, setShowVideoForm] = useState(false);
+  const [newVideo, setNewVideo] = useState({ title: '', description: '', file: null });
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [showVideos, setShowVideos] = useState(false);
+  const [videos, setVideos] = useState([]);
+  const [editingVideo, setEditingVideo] = useState(null);
+  const [message, setMessage] = useState('');
+  const [audience, setAudience] = useState('');
+  const [selectedDepartment, setSelectedDepartment] = useState('');
 
- // Добавить новые состояния для формы уведомлений
- const [message, setMessage] = useState('');
- const [audience, setAudience] = useState('');
- const [selectedDepartment, setSelectedDepartment] = useState('');
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user) {
+      const userRef = dbRef(database, `users/${user.uid}`);
+      onValue(userRef, (snapshot) => {
+        const userData = snapshot.val();
+        setUserRole(userData?.role || '');
+      });
+    }
+  }, [database]);
 
- useEffect(() => {
-  const user = auth.currentUser;
-  if (user) {
-    const userRef = dbRef(database, `users/${user.uid}`);
-    onValue(userRef, (snapshot) => {
-      const userData = snapshot.val();
-      setUserRole(userData?.role || '');
-    });
-  }
-}, [database]);
+  // Список кафедр
+  const departments = [
+    "Системахои Автоматикунонидашудаи Идоракуни",
+    "Шабакахои Алока Ва Системахои Комутатсиони",
+    "Технологияхои Иттилооти Ва Хифзи Маълумот",
+    "Автоматонии Равандхои Технологи Ва Истехсолот",
+    "Информатика Ва Техникаи Хисоббарор"
+  ];
 
- // Список кафедр
- const departments = [
-   "Системахои Автоматикунонидашудаи Идоракуни",
-   "Шабакахои Алока Ва Системахои Комутатсиони",
-   "Технологияхои Иттилооти Ва Хифзи Маълумот",
-   "Автоматонии Равандхои Технологи Ва Истехсолот",
-   "Информатика Ва Техникаи Хисоббарор"
- ];
+  // Обработчик отправки уведомления
+  const handleSendNotification = async () => {
+    if (!message || !audience || (audience === 'department' && !selectedDepartment)) {
+      alert('Заполните все обязательные поля!');
+      return;
+    }
 
- // Обработчик отправки уведомления
- const handleSendNotification = async () => {
-   if (!message || !audience || (audience === 'department' && !selectedDepartment)) {
-     alert('Заполните все обязательные поля!');
-     return;
-   }
+    const db = getDatabase();
+    const usersRef = dbRef(db, 'users');
 
-   const db = getDatabase();
-   const usersRef = dbRef(db, 'users');
-   
-   try {
-     // Получаем всех пользователей
-     const snapshot = await get(usersRef);
-     const allUsers = snapshot.val();
-     const receivers = [];
+    try {
+      // Получаем всех пользователей
+      const snapshot = await get(usersRef);
+      const allUsers = snapshot.val();
+      const receivers = [];
 
-     // Фильтруем получателей
-     Object.keys(allUsers).forEach(userId => {
-       const user = allUsers[userId];
-       switch(audience) {
-         case 'all':
-           receivers.push(userId);
-           break;
-         case 'teachers':
-           if (user.role === 'teacher') receivers.push(userId);
-           break;
-         case 'department':
-           if (user.role === 'teacher' && user.cathedra === selectedDepartment) {
-             receivers.push(userId);
-           }
-           break;
-       }
-     });
+      // Фильтруем получателей
+      Object.keys(allUsers).forEach(userId => {
+        const user = allUsers[userId];
+        switch (audience) {
+          case 'all':
+            receivers.push(userId);
+            break;
+          case 'teachers':
+            if (user.role === 'teacher') receivers.push(userId);
+            break;
+          case 'department':
+            if (user.role === 'teacher' && user.cathedra === selectedDepartment) {
+              receivers.push(userId);
+            }
+            break;
+        }
+      });
 
-     // Создаем объект уведомления
-     const notification = {
-       type: 'dean_notification',
-       message: message,
-       deanName: `${teacher.name} ${teacher.surname}`,
-       deanAvatar: teacher.photo || defaultAvatar,
-       timestamp: new Date().toISOString(),
-     };
+      // Создаем объект уведомления
+      const notification = {
+        type: 'dean_notification',
+        message: message,
+        deanName: `${teacher.name} ${teacher.surname}`,
+        deanAvatar: teacher.photo || defaultAvatar,
+        timestamp: new Date().toISOString(),
+      };
 
-     // Отправляем каждому получателю
-     receivers.forEach(userId => {
-       const userNotificationsRef = dbRef(db, `notifications/${userId}`);
-       push(userNotificationsRef, notification);
-     });
+      // Отправляем каждому получателю
+      receivers.forEach(userId => {
+        const userNotificationsRef = dbRef(db, `notifications/${userId}`);
+        push(userNotificationsRef, notification);
+      });
 
-     // Сброс формы и уведомление
-     setMessage('');
-     setAudience('');
-     setSelectedDepartment('');
-     showNotification('Уведомление успешно отправлено!');
-   } catch (error) {
-     console.error('Ошибка отправки уведомления:', error);
-     alert('Произошла ошибка при отправке уведомления');
-   }
- };
+      // Сброс формы и уведомление
+      setMessage('');
+      setAudience('');
+      setSelectedDepartment('');
+      showNotification('Уведомление успешно отправлено!');
+    } catch (error) {
+      console.error('Ошибка отправки уведомления:', error);
+      alert('Произошла ошибка при отправке уведомления');
+    }
+  };
 
   const [isMenuOpen, setIsMenuOpen] = useState(() => {
     // Восстанавливаем состояние из localStorage при инициализации
@@ -170,6 +175,146 @@ const TeacherProfile = () => {
       }
     });
   }, [database, id]);
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user) {
+      const videosRef = dbRef(database, `users/${user.uid}/videos`);
+      onValue(videosRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          const loadedVideos = Object.keys(data).map(videoId => ({
+            id: videoId,
+            ...data[videoId]
+          }));
+          setVideos(loadedVideos);
+        }
+      });
+    }
+  }, [database]);
+
+  // 3. Хук загрузки видео с прогрессом
+  const handleUploadVideoLesson = async () => {
+    if (!newVideo.title || !newVideo.description) return;
+    setUploading(true);
+  
+    try {
+      let url = editingVideo?.url || '';
+      let storagePath = editingVideo?.storagePath || '';
+  
+      // Если выбран новый файл — загружаем и заменяем
+      if (newVideo.file) {
+        const storageReference = storageRef(storage, `videos/${newVideo.file.name}`);
+        const uploadTask = uploadBytesResumable(storageReference, newVideo.file);
+        await new Promise((resolve, reject) => {
+          uploadTask.on("state_changed",
+            (snapshot) => {
+              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              setUploadProgress(Math.round(progress));
+            },
+            (error) => {
+              console.error("Ошибка загрузки:", error);
+              reject(error);
+            },
+            async () => {
+              url = await getDownloadURL(uploadTask.snapshot.ref);
+              storagePath = uploadTask.snapshot.ref.fullPath;
+              resolve();
+            }
+          );
+        });
+      }
+  
+      const videoData = {
+        title: newVideo.title,
+        description: newVideo.description,
+        url,
+        storagePath,
+        cathedra: teacher.cathedra,
+        author: `${teacher.name} ${teacher.surname}`,
+        timestamp: new Date().toISOString(),
+      };
+  
+      const db = getDatabase();
+      const user = auth.currentUser;
+  
+      if (editingVideo) {
+        // 🔁 Обновляем существующую запись в users
+        await update(dbRef(db, `users/${user.uid}/videos/${editingVideo.id}`), videoData);
+  
+        // 🔁 Обновляем в videoLessons по совпадению url
+        const lessonsRef = dbRef(db, 'videoLessons');
+        onValue(lessonsRef, (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            Object.entries(data).forEach(([key, val]) => {
+              if (val.url === editingVideo.url) {
+                update(dbRef(db, `videoLessons/${key}`), videoData);
+              }
+            });
+          }
+        }, { onlyOnce: true });
+  
+        showNotification("Видео успешно обновлено!");
+      } else {
+        // 🆕 Добавляем новое видео
+        await push(dbRef(db, 'videoLessons'), videoData);
+        await push(dbRef(db, `users/${user.uid}/videos`), videoData);
+        showNotification("Видео успешно загружено!");
+      }
+  
+      setUploading(false);
+      setUploadProgress(0);
+      setNewVideo({ title: '', description: '', file: null });
+      setShowVideoForm(false);
+      setEditingVideo(null);
+    } catch (err) {
+      console.error(err);
+      alert("Ошибка при загрузке/обновлении видео");
+      setUploading(false);
+    }
+  };  
+
+  const handleEditVideo = (video) => {
+    setEditingVideo(video);
+    setNewVideo({ title: video.title, description: video.description, file: null });
+    setShowVideoForm(true);
+  };
+
+  const handleDeleteVideo = async (video) => {
+    if (window.confirm('Вы уверены, что хотите удалить этот видеоурок?')) {
+      try {
+        // Удаляем файл из хранилища
+        const videoRef = storageRef(storage, video.storagePath);
+        await deleteObject(videoRef);
+  
+        // Удаляем из users/UID/videos
+        const userVideoRef = dbRef(database, `users/${auth.currentUser.uid}/videos/${video.id}`);
+        await remove(userVideoRef);
+  
+        // Удаляем из глобального videoLessons по совпадению URL
+        const lessonsRef = dbRef(database, 'videoLessons');
+        onValue(lessonsRef, (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            Object.entries(data).forEach(([key, val]) => {
+              if (val.url === video.url) {
+                remove(dbRef(database, `videoLessons/${key}`));
+              }
+            });
+          }
+        }, { onlyOnce: true });
+  
+        // Удаляем из локального состояния мгновенно
+        setVideos(prev => prev.filter(v => v.id !== video.id));
+  
+        showNotification('Видеоурок успешно удален.');
+      } catch (error) {
+        console.error("Ошибка при удалении видеоурока: ", error);
+        alert("Ошибка при удалении видеоурока.");
+      }
+    }
+  };  
 
   const handleUploadBook = async () => {
     if (newBook.title && newBook.description && (newBook.file || editingBook)) {
@@ -328,61 +473,61 @@ const TeacherProfile = () => {
             <p><strong>Логин:</strong> {teacher.email}</p>
           </div>
 
-               {/* Форма для декана */}
-               {userRole === 'dean' && (
-  <div className="dean-notification-form">
-    <h3>Отправка официального уведомления</h3>
-    <textarea
-      value={message}
-      onChange={(e) => setMessage(e.target.value)}
-      placeholder="Текст уведомления..."
-      className="dean-textarea"
-    />
-    
-    <div className="audience-selector">
-      <button 
-        onClick={() => setAudience('all')}
-        className={audience === 'all' ? 'active' : ''}
-      >
-        Всем пользователям
-      </button>
-      
-      <button 
-        onClick={() => setAudience('teachers')}
-        className={audience === 'teachers' ? 'active' : ''}
-      >
-        Всем преподавателям
-      </button>
-      
-      <button 
-        onClick={() => setAudience('department')}
-        className={audience === 'department' ? 'active' : ''}
-      >
-        Кафедре
-      </button>
-    </div>
+          {/* Форма для декана */}
+          {userRole === 'dean' && (
+            <div className="dean-notification-form">
+              <h3>Отправка официального уведомления</h3>
+              <textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Текст уведомления..."
+                className="dean-textarea"
+              />
 
-    {audience === 'department' && (
-      <select
-        value={selectedDepartment}
-        onChange={(e) => setSelectedDepartment(e.target.value)}
-        className="department-select"
-      >
-        <option value="">Выберите кафедру</option>
-        {departments.map((dept, index) => (
-          <option key={index} value={dept}>{dept}</option>
-        ))}
-      </select>
-    )}
+              <div className="audience-selector">
+                <button
+                  onClick={() => setAudience('all')}
+                  className={audience === 'all' ? 'active' : ''}
+                >
+                  Всем пользователям
+                </button>
 
-    <button 
-      onClick={handleSendNotification}
-      className="send-notification-btn"
-    >
-      Отправить уведомление
-    </button>
-  </div>
-)}
+                <button
+                  onClick={() => setAudience('teachers')}
+                  className={audience === 'teachers' ? 'active' : ''}
+                >
+                  Всем преподавателям
+                </button>
+
+                <button
+                  onClick={() => setAudience('department')}
+                  className={audience === 'department' ? 'active' : ''}
+                >
+                  Кафедре
+                </button>
+              </div>
+
+              {audience === 'department' && (
+                <select
+                  value={selectedDepartment}
+                  onChange={(e) => setSelectedDepartment(e.target.value)}
+                  className="department-select"
+                >
+                  <option value="">Выберите кафедру</option>
+                  {departments.map((dept, index) => (
+                    <option key={index} value={dept}>{dept}</option>
+                  ))}
+                </select>
+              )}
+
+              <button
+                onClick={handleSendNotification}
+                className="send-notification-btn"
+              >
+                Отправить уведомление
+              </button>
+            </div>
+          )}
 
           <div className="spisok-button-block">
             <button onClick={() => setShowBooks(!showBooks)} className="toggle-books-button">
@@ -448,6 +593,61 @@ const TeacherProfile = () => {
                 </div>
               </div>
             )}
+
+            <button className="upload-book-button" onClick={() => setShowVideoForm(true)}>Опубликовать видеоурок</button>
+            <button onClick={() => setShowVideos(!showVideos)} className="upload-book-button">
+              {showVideos ? 'Скрыть мои видеоуроки' : 'Показать мои видеоуроки'}
+            </button>
+
+
+            {showVideoForm && (
+              <div className="modal">
+                <div className="modal-content">
+                <h3>{editingVideo ? 'Редактировать видеоурок' : 'Новый видеоурок'}</h3>
+                  <input
+                    type="text"
+                    placeholder="Название видеоурока"
+                    value={newVideo.title}
+                    onChange={(e) => setNewVideo({ ...newVideo, title: e.target.value })}
+                  />
+                  <textarea
+                    placeholder="Описание видеоурока"
+                    value={newVideo.description}
+                    onChange={(e) => setNewVideo({ ...newVideo, description: e.target.value })}
+                  />
+                  <input
+                    type="file"
+                    accept="video/mp4"
+                    onChange={(e) => setNewVideo({ ...newVideo, file: e.target.files[0] })}
+                  />
+                  {uploadProgress > 0 && <progress value={uploadProgress} max="100" />}
+                  <div className="modal-buttons">
+                    <button onClick={handleUploadVideoLesson} disabled={uploading}>
+                      {uploading ? `Загрузка ${uploadProgress}%` : 'Опубликовать'}
+                    </button>
+                    <button onClick={() => setShowVideoForm(false)}>Отмена</button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {showVideos && (
+              <div className="videos-list">
+                {videos.map((video) => (
+                  <div key={video.id} className="video-item">
+                    <h4>{video.title}</h4>
+                    <p>{video.description}</p>
+                    <video width="320" height="240" controls>
+                      <source src={video.url} type="video/mp4" />
+                      Ваш браузер не поддерживает видео тег.
+                    </video>
+                    <button onClick={() => handleEditVideo(video)}>Редактировать</button>
+                    <button onClick={() => handleDeleteVideo(video)}>Удалить</button>
+                  </div>
+                ))}
+              </div>
+            )}
+
           </div>
         </div>
         {/* Уведомление */}

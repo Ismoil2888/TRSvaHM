@@ -372,3 +372,62 @@
   font-size: 0.9rem;
   margin-top: 0.5rem;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+.video-item {
+  background: #f9f9f9;
+  border-radius: 16px;
+  padding: 15px;
+  width: 320px;
+  margin: 10px 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: 0.3s;
+}
+
+.video-item:hover {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.video-item video {
+  border-radius: 12px;
+  width: 100%;
+  max-height: 240px;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.video-item h4 {
+  margin: 0 0 5px;
+  color: #333;
+  font-size: 18px;
+}
+
+.video-item p {
+  color: #666;
+  font-size: 14px;
+}
+
+.video-item button {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  margin: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.video-item button:hover {
+  background: #0056b3;
+}

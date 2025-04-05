@@ -1532,6 +1532,68 @@ const HomePage = () => {
     setMenuPostId(postId === menuPostId ? null : postId);
   };
 
+  const [usersMap, setUsersMap] = useState({});
+
+useEffect(() => {
+  const db = getDatabase();
+  const postsRef = dbRef(db, "posts");
+
+  onValue(postsRef, async (snapshot) => {
+    const postsData = snapshot.val();
+    if (postsData) {
+      const approvedPosts = Object.keys(postsData)
+        .map((key) => ({ id: key, ...postsData[key] }))
+        .filter((post) => post.status === "approved");
+
+      setPosts(approvedPosts);
+
+      // Загрузка авторов постов
+      const userIds = [...new Set(approvedPosts.map((post) => post.userId))];
+      const usersData = {};
+
+      for (const uid of userIds) {
+        const snap = await get(dbRef(db, `users/${uid}`));
+        usersData[uid] = snap.val();
+      }
+
+      setUsersMap(usersData);
+    }
+  });
+}, []);
+
+useEffect(() => {
+  const db = getDatabase();
+  const currentUser = auth.currentUser;
+
+  if (!currentUser) return;
+
+  const userRef = dbRef(db, `users/${currentUser.uid}`);
+  onValue(userRef, (snapshot) => {
+    const userData = snapshot.val();
+    if (!userData) return;
+
+    const { username, avatarUrl } = userData;
+
+    const postCommentsRef = dbRef(db, "postComments");
+    onValue(postCommentsRef, (snapshot) => {
+      const commentsData = snapshot.val();
+      if (!commentsData) return;
+
+      Object.entries(commentsData).forEach(([postId, comments]) => {
+        Object.entries(comments).forEach(([commentId, comment]) => {
+          if (comment.userId === currentUser.uid && comment.username !== "Анонимно") {
+            const commentRef = dbRef(db, `postComments/${postId}/${commentId}`);
+            update(commentRef, {
+              username: username || "User",
+              avatarUrl: avatarUrl || defaultAvatar,
+            });
+          }
+        });
+      });
+    }, { onlyOnce: true }); // Один раз, чтобы не зациклилось
+  });
+}, []);
+
   useEffect(() => {
     const db = getDatabase();
     const user = auth.currentUser;
@@ -2120,7 +2182,7 @@ const HomePage = () => {
                       <div className="post-header">
                         <div className="post-author">
                           <img
-                            src={post.userAvatar || defaultAvatar}
+                            src={usersMap[post.userId]?.avatarUrl || defaultAvatar}
                             alt=""
                             className="post-avatar skeleton-media-avatars"
                             onClick={() => goToProfile(post.userId)}
@@ -2132,7 +2194,7 @@ const HomePage = () => {
                           <span
                             className="post-username"
                             onClick={() => goToProfile(post.userId)}
-                          >{post.userName}</span>
+                          >{usersMap[post.userId]?.username || "User"}</span>
                         </div>
                         {post.userId === auth.currentUser?.uid && (
                           <div className="three-dot-menu">
@@ -2196,7 +2258,7 @@ const HomePage = () => {
                       </p>
 
                       <p className="post-content">
-                        <span className="post-username">{post.userName}</span>{" "}
+                        <span className="post-username">{usersMap[post.userId]?.username || "User"}</span>{" "}
                         {post.description.length > MAX_TEXT_LENGTH && !expandedPosts[post.id] ? (
                           <>
                             {post.description.slice(0, MAX_TEXT_LENGTH)} ...
