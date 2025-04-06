@@ -35,6 +35,7 @@ import DepartmentTeachers from "./components/DepartmentTeachers";
 import DeanLogin from './components/DeanLogin';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { applyTheme } from "./theme";
+import JarvisIntroPage from "./components/JarvisIntroPage";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -200,6 +201,7 @@ useEffect(() => {
       <Route path="/chats" element={<PrivateRoute> <ChatList /> </PrivateRoute>} />
       <Route path="/group/:course/:groupName" element={<GroupPage />} />
       <Route path="/department-teachers/:cathedra" element={<DepartmentTeachers />} />
+      <Route path="/jarvisintropage" element={<JarvisIntroPage />} />
       </Routes>
     </>
     </LanguageProvider>

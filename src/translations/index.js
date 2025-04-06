@@ -40,6 +40,8 @@ export const translations = {
     findstudent: "Ҷустуҷӯи донишӯён",
     //TeachersPage
     teachcollective: "Омӯзгорон",
+    rank: "Унвони илмӣ",
+    selectcathedra: "Кафедраро интихоб кунед",
     //Chats
     mychats: "Чатҳои ман",
     messages: "Паёмҳо",
@@ -51,6 +53,8 @@ export const translations = {
     group: "Гурӯҳ",
     //Library
     library: "Китобхона",
+    facultylibrary: "Китобхонаи факултет",
+    videolessons: "Видео дарсҳо",
     //GroupPage
     monday: "Душанбе",
     tuesday: "Сешанбе",
@@ -58,10 +62,15 @@ export const translations = {
     thursday: "Панчшабе",
     friday: "Чумъа",
     saturday: "Шанбе",
-    subject: "фан",
+    subject: "Фан",
     startTime: "огоз",
     endTime: "анчом",
     teacher: "омузгор",
+    //jarvic
+    jarvistitle: "Хуш омадед ба Платформа",
+    jarvissubtitle: "Ёвари овозии «Платформа» — ёвари шахсии шумо дар ин платформа мебошад. Танҳо бигӯед, ба куҷо гузаштан мехоҳед, сана пурсед, обу ҳаворо фаҳмед ё ибораҳоро тарҷума кунед. Бо суръат. Зирак. Бо овоз.",
+    jarvisinfo: "Дастгирии фармонҳо: «Платформа, гузар ба китобхона», «имрӯз чӣ рӯз аст», «обу ҳаво дар Душанбе», «тарҷумаи себ ба забони англисӣ» ва дигар фармонҳо.",
+    jarvisbutton: "Активацияи Ёвари овозии «Платформа»",
   },
   russian: {
     facultname: "ЦТСиЗИ",
@@ -104,6 +113,8 @@ export const translations = {
     findstudent: "Поиск студентов",
     //TeachersPage
     teachcollective: "Преподавательский Состав",
+    rank: "Звание",
+    selectcathedra: "Выберите кафедру",
     //Chats
     mychats: "Мои чаты",
     messages: "Сообщения",
@@ -115,6 +126,8 @@ export const translations = {
     group: "Группа",
     //Library
     library: "Библиотека",
+    facultylibrary: "Библиотека факультета",
+    videolessons: "Видео уроки",
     //GroupPage
     monday: "Понедельник",
     tuesday: "Вторник",
@@ -122,10 +135,15 @@ export const translations = {
     thursday: "Четверг",
     friday: "Пятница",
     saturday: "Суббота",
-    subject: "предмет",
+    subject: "Предмет",
     startTime: "начало",
     endTime: "конец",
     teacher: "преподаватель",
+    //jarvic
+    jarvistitle: "Добро пожаловать в Платформу",
+    jarvissubtitle: "Голосовой помощник «Платформа» — это ваш персональный голосовой помощник на платформе. Просто скажите, куда перейти, спросите дату, погоду или переведите фразы. Быстро. Умно. Голосом.",
+    jarvisinfo: "Поддерживает команды: Платформа, перейди в библиотеку», «какой сегодня день», «погода в Душанбе», «переведи яблоко на английский» и другие.",
+    jarvisbutton: "Активировать голосового помощника",
   },
   english: {
     facultname: "DTSandIS",
@@ -168,6 +186,8 @@ export const translations = {
     findstudent: "Find students",
     //TeachersPage
     teachcollective: "Teaching staff",
+    rank: "Rank",
+    selectcathedra: "Select cathedra",
     //Chats
     mychats: "My chats",
     messages: "Messages",
@@ -179,6 +199,8 @@ export const translations = {
     group: "Group",
     //Library
     library: "Librariy",
+    facultylibrary: "Library of the faculty",
+    videolessons: "Video lessons",
     //GroupPage
     monday: "Monday",
     tuesday: "Tuesday",
@@ -186,9 +208,13 @@ export const translations = {
     thursday: "Thursday",
     friday: "Friday",
     saturday: "Saturday",
-    subject: "subject",
+    subject: "Subject",
     startTime: "startTime",
     endTime: "endTime",
     teacher: "teacher",
+    //jarvic
+    jarvistitle: "",
+    jarvissubtitle: "",
+    jarvisinfo: "",
   }
 };

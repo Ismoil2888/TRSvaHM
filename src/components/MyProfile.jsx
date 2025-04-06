@@ -702,12 +702,12 @@ const MyProfile = () => {
                   <p>{teacherCathedra}</p>
                 </div>
 
-                <div className="rsl" style={{ display: "flex" }}>
-                  <h3>Звание:</h3>
+                <div className="rsl info-section" style={{ display: "flex" }}>
+                  <h3>{t('rank')}:</h3>
                   <p style={{ fontSize: "17px", marginLeft: "15px" }}>{teacherTitle}</p>
                 </div>
-                <div className="rsl" style={{ display: "flex" }}>
-                  <h3>Предмет:</h3>
+                <div className="rsl info-section" style={{ display: "flex" }}>
+                  <h3>{t('subject')}:</h3>
                   <p style={{ fontSize: "17px", marginLeft: "15px" }}>{TeacherSubject}</p>
                 </div>
               </>
@@ -731,7 +731,7 @@ const MyProfile = () => {
                  {/* Дополнительные разделы для декана */}
             {(role === "teacher" || role === "dean") && (
               <>
-                <div style={{ marginTop: "15px" }}>
+                <div style={{ marginTop: "15px", textAlign: "center" }}>
                   <Link className="txt" to={`/teacher-profile/${userUid}`} state={{ teacher: teacherData }}>Перейти в личный Кабинет</Link>
                 </div>
               </>

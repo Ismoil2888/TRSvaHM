@@ -1,18 +1,33 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaMicrophone, FaMicrophoneSlash } from "react-icons/fa";
+import { LanguageContext } from '../contexts/LanguageContext';
+import { translations } from '../translations';
+import useTranslation from '../hooks/useTranslation';
 
 const VoiceAssistant = () => {
   const [isActive, setIsActive] = useState(false);
   const recognitionRef = useRef(null);
   const navigate = useNavigate();
   const lastCommandRef = useRef("");
+  const t = useTranslation();
 
   const speak = (message) => {
     const synth = window.speechSynthesis;
     const utterance = new SpeechSynthesisUtterance(message);
     utterance.lang = "ru-RU";
+
+    utterance.onend = () => {
+      if (isActive && recognitionRef.current) {
+        setTimeout(() => recognitionRef.current.start(), 200);
+      }
+    };
+
     synth.speak(utterance);
+
+    if (isActive && recognitionRef.current) {
+      recognitionRef.current.stop();
+    }
   };
 
   const translateText = async (text, to = "en") => {
@@ -50,6 +65,7 @@ const VoiceAssistant = () => {
 
   const handleLocalCommands = (transcript) => {
     const lower = transcript.toLowerCase();
+    let matched = false;
 
     if (lower.includes("переведи")) {
       const match = lower.match(/переведи (.+?) на (английский|русский|таджикский)/);
@@ -120,7 +136,11 @@ const VoiceAssistant = () => {
         go_main: () => { navigate("/"); speak("Главная страница"); }
       };
 
-      actions[intent]?.() || speak("Эта команда пока не реализована.");
+      if (actions[intent]) {
+        actions[intent]();
+      } else {
+        speak("Эта команда пока не реализована.");
+      }
     } catch (error) {
       console.error("Ошибка wit.ai:", error);
       speak("Ошибка подключения к серверу.");
@@ -146,7 +166,9 @@ const VoiceAssistant = () => {
       lastCommandRef.current = transcript;
 
       const handled = handleLocalCommands(transcript);
-      if (!handled) processWithWitAI(transcript);
+      if (!handled) {
+        setTimeout(() => processWithWitAI(transcript), 500);
+      }
     };
 
     recognition.onerror = (event) => {
@@ -195,13 +217,12 @@ const VoiceAssistant = () => {
         cursor: "pointer"
       }}
     >
-      {isActive ? <FaMicrophone /> : <FaMicrophoneSlash />} {isActive ? "Выключить Джарвис" : "Активировать Джарвис"}
+      {isActive ? <FaMicrophone /> : <FaMicrophoneSlash />} {isActive ? "Выключить голосового помощника" : t('jarvisbutton')}
     </button>
   );
 };
 
 export default VoiceAssistant;
-
 
 
 

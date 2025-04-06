@@ -1852,9 +1852,6 @@ const AuthDetails = () => {
 
             <div className="settings">
               <h3>{t('settings')}</h3>
-              
-<VoiceAssistant />
-
               <ul>
                 <li onClick={() => setShowThemeModal(true)}>{t('mode')}</li>
 

@@ -1,0 +1,54 @@
+.jarvis-page {
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #040421, #03011b, #120120);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+  }
+  
+  .jarvis-container {
+    max-width: 700px;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .jarvis-icon .icon-robot {
+    font-size: 64px;
+    color: #22d3ee;
+    animation: pulse 2s infinite;
+    margin-bottom: 1rem;
+  }
+  
+  .jarvis-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .jarvis-subtitle {
+    font-size: 1.1rem;
+    color: #cbd5e1;
+    margin-bottom: 2rem;
+  }
+  
+  .jarvis-button-wrapper {
+    margin-bottom: 2rem;
+  }
+  
+  .jarvis-info {
+    font-size: 0.9rem;
+    color: #888;
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.9;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 1;
+    }
+  }  

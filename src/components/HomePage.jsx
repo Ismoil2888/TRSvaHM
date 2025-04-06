@@ -2082,7 +2082,7 @@ const HomePage = () => {
         <header>
           <nav className="header-nav" style={HeaderDesktop}>
             <ul className="header-ul">
-              <li><Link to="/home" className="txt">Главная</Link></li>
+              <li><Link to="/jarvisintropage" className="txt">Голосовой помощник</Link></li>
               <li><Link to="/about" className="txt">О факультете</Link></li>
               <li><Link to="/teachers" className="txt">Преподаватели</Link></li>
 

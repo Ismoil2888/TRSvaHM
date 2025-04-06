@@ -1527,11 +1527,20 @@ const Library = ({ userId }) => {
     onValue(ref, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        const loaded = Object.keys(data).map(id => ({ id, ...data[id] }));
-        setVideoLessons(loaded);
+        const loaded = Object.keys(data).map(id => ({ id, ...data[id], commentCount: 0 }));
+  
+        // Загружаем количество комментариев
+        loaded.forEach(video => {
+          const commentsRef = dbRef(database, `comments/${video.id}`);
+          onValue(commentsRef, (snapshot) => {
+            const commentsData = snapshot.val();
+            video.commentCount = commentsData ? Object.keys(commentsData).length : 0;
+            setVideoLessons([...loaded]);
+          });
+        });
       }
     });
-  }, []);  
+  }, []);
 
   // 3. Фильтрация по кафедре
 
@@ -1685,15 +1694,7 @@ const Library = ({ userId }) => {
       );
       setFilteredVideos(filtered);
     }
-  };  
-
-  // const handleSearch = (query) => {
-  //   setSearchQuery(query);
-  //   const filtered = books.filter((book) =>
-  //     book.title.toLowerCase().includes(query.toLowerCase())
-  //   );
-  //   setFilteredBooks(filtered);
-  // };
+  };
 
   const clearSearch = () => {
     setSearchQuery("");
@@ -1990,7 +1991,7 @@ const Library = ({ userId }) => {
         <motion.nav variants={navbarVariants} initial="hidden" animate="visible">
           <div className="library-main">
             <section className="library-header">
-              <h1 className="txt">Библиотека Факультета Информационной Безопасности</h1>
+              <h1 className="txt">{t("facultylibrary")}</h1>
               <div className="search-filter">
                 <input
                   type="search"
@@ -2029,7 +2030,7 @@ const Library = ({ userId }) => {
 
               <div className="department-dropdown txt" style={{ margin: "20px 0", textAlign: "center" }}>
                 <label htmlFor="department-select" style={{ marginRight: "10px", fontWeight: "bold" }}>
-                  Выберите кафедру:
+                {t("selectcathedra")}:
                 </label>
                 <select
                   id="department-select"
@@ -2044,8 +2045,8 @@ const Library = ({ userId }) => {
               </div>
 
               <div className="tabs">
-                <button onClick={() => setActiveTab("books")} className={activeTab === "books" ? "active" : ""}>Книги</button>
-                <button onClick={() => setActiveTab("videos")} className={activeTab === "videos" ? "active" : ""}>Видео уроки</button>
+                <button onClick={() => setActiveTab("books")} className={activeTab === "books" ? "active" : ""}>{t("books")}</button>
+                <button onClick={() => setActiveTab("videos")} className={activeTab === "videos" ? "active" : ""}>{t("videolessons")}</button>
               </div>
             </section>
 
@@ -2083,11 +2084,20 @@ const Library = ({ userId }) => {
               <section className="video-grid">
                 {displayedVideos.map(video => (
                   <div key={video.id} className="video-card">
-                    <video src={video.url} controls width="100%" />
-                    <h4>{video.title}</h4>
-                    <p>{video.description}</p>
-                    <small>Автор: {video.author}</small>
+                  <video src={video.url} controls width="100%" />
+                  <h4>{video.title}</h4>
+                  <p>{video.description}</p>
+                  <small>Автор: {video.author}</small>
+                  <div className="book-actions">
+                    <div className="comment-icon-and-count">
+                      <FaCommentDots
+                        className="comment-icon"
+                        onClick={() => openCommentModal(video.id)}
+                      />
+                      <span className="comment-count">{video.commentCount}</span>
+                    </div>
                   </div>
+                </div>                
                 ))}
               </section>
             )}
