@@ -126,6 +126,67 @@
     padding: 10px;
     gap: 15px;
   }
+
+  .edit-post-section {
+    margin: 10px;
+    padding: 10px;
+    background-color: #1e1e1e;
+    border: 1px solid #444;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .edit-textarea {
+    width: 94%;
+    min-height: 80px;
+    resize: vertical;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #555;
+    background-color: #2b2b2b;
+    color: #fff;
+    font-size: 16px;
+    outline: none;
+  }
+  
+  .edit-textarea::placeholder {
+    color: #888;
+  }
+  
+  .edit-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  
+  .edit-buttons button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .edit-buttons button:first-child {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .edit-buttons button:first-child:hover {
+    background-color: #218838;
+  }
+  
+  .edit-buttons button:last-child {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .edit-buttons button:last-child:hover {
+    background-color: #5a6268;
+  }  
   
   .post-icon {
     font-size: 24px;

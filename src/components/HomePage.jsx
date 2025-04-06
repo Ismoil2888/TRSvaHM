@@ -1394,6 +1394,8 @@ const HomePage = () => {
   const [userAvatarUrl, setUserAvatarUrl] = useState(null);
   const [posts, setPosts] = useState([]);
   const [menuPostId, setMenuPostId] = useState(null);
+  const [editingPostId, setEditingPostId] = useState(null);
+  const [editedDescription, setEditedDescription] = useState("");
   const [expandedPosts, setExpandedPosts] = useState({}); // Для отслеживания состояния каждого поста
   const [commentModal, setCommentModal] = useState({ isOpen: false, postId: null });
   const [comments, setComments] = useState([]);
@@ -1529,70 +1531,75 @@ const HomePage = () => {
   };
 
   const toggleMenu = (postId) => {
-    setMenuPostId(postId === menuPostId ? null : postId);
+    if (menuPostId === postId) {
+      setMenuPostId(null);
+      setEditingPostId(null);
+    } else {
+      setMenuPostId(postId);
+    }
   };
 
   const [usersMap, setUsersMap] = useState({});
 
-useEffect(() => {
-  const db = getDatabase();
-  const postsRef = dbRef(db, "posts");
+  useEffect(() => {
+    const db = getDatabase();
+    const postsRef = dbRef(db, "posts");
 
-  onValue(postsRef, async (snapshot) => {
-    const postsData = snapshot.val();
-    if (postsData) {
-      const approvedPosts = Object.keys(postsData)
-        .map((key) => ({ id: key, ...postsData[key] }))
-        .filter((post) => post.status === "approved");
+    onValue(postsRef, async (snapshot) => {
+      const postsData = snapshot.val();
+      if (postsData) {
+        const approvedPosts = Object.keys(postsData)
+          .map((key) => ({ id: key, ...postsData[key] }))
+          .filter((post) => post.status === "approved");
 
-      setPosts(approvedPosts);
+        setPosts(approvedPosts);
 
-      // Загрузка авторов постов
-      const userIds = [...new Set(approvedPosts.map((post) => post.userId))];
-      const usersData = {};
+        // Загрузка авторов постов
+        const userIds = [...new Set(approvedPosts.map((post) => post.userId))];
+        const usersData = {};
 
-      for (const uid of userIds) {
-        const snap = await get(dbRef(db, `users/${uid}`));
-        usersData[uid] = snap.val();
+        for (const uid of userIds) {
+          const snap = await get(dbRef(db, `users/${uid}`));
+          usersData[uid] = snap.val();
+        }
+
+        setUsersMap(usersData);
       }
+    });
+  }, []);
 
-      setUsersMap(usersData);
-    }
-  });
-}, []);
+  useEffect(() => {
+    const db = getDatabase();
+    const currentUser = auth.currentUser;
 
-useEffect(() => {
-  const db = getDatabase();
-  const currentUser = auth.currentUser;
+    if (!currentUser) return;
 
-  if (!currentUser) return;
+    const userRef = dbRef(db, `users/${currentUser.uid}`);
+    onValue(userRef, (snapshot) => {
+      const userData = snapshot.val();
+      if (!userData) return;
 
-  const userRef = dbRef(db, `users/${currentUser.uid}`);
-  onValue(userRef, (snapshot) => {
-    const userData = snapshot.val();
-    if (!userData) return;
+      const { username, avatarUrl } = userData;
 
-    const { username, avatarUrl } = userData;
+      const postCommentsRef = dbRef(db, "postComments");
+      onValue(postCommentsRef, (snapshot) => {
+        const commentsData = snapshot.val();
+        if (!commentsData) return;
 
-    const postCommentsRef = dbRef(db, "postComments");
-    onValue(postCommentsRef, (snapshot) => {
-      const commentsData = snapshot.val();
-      if (!commentsData) return;
-
-      Object.entries(commentsData).forEach(([postId, comments]) => {
-        Object.entries(comments).forEach(([commentId, comment]) => {
-          if (comment.userId === currentUser.uid && comment.username !== "Анонимно") {
-            const commentRef = dbRef(db, `postComments/${postId}/${commentId}`);
-            update(commentRef, {
-              username: username || "User",
-              avatarUrl: avatarUrl || defaultAvatar,
-            });
-          }
+        Object.entries(commentsData).forEach(([postId, comments]) => {
+          Object.entries(comments).forEach(([commentId, comment]) => {
+            if (comment.userId === currentUser.uid && comment.username !== "Анонимно") {
+              const commentRef = dbRef(db, `postComments/${postId}/${commentId}`);
+              update(commentRef, {
+                username: username || "User",
+                avatarUrl: avatarUrl || defaultAvatar,
+              });
+            }
+          });
         });
-      });
-    }, { onlyOnce: true }); // Один раз, чтобы не зациклилось
-  });
-}, []);
+      }, { onlyOnce: true }); // Один раз, чтобы не зациклилось
+    });
+  }, []);
 
   useEffect(() => {
     const db = getDatabase();
@@ -2201,7 +2208,12 @@ useEffect(() => {
                             <span onClick={() => toggleMenu(post.id)}>...</span>
                             {menuPostId === post.id && (
                               <div ref={menuRef} className="menu-options">
-                                <span>Изменить</span>
+                                <span onClick={() => {
+                                  setEditingPostId(post.id);
+                                  setEditedDescription(post.description);
+                                  setMenuPostId(null);
+                                }}>Изменить</span>
+
                                 <span onClick={() => handleDeletePost(post.id)}>Удалить</span>
                               </div>
                             )}
@@ -2257,33 +2269,63 @@ useEffect(() => {
                         Нравится: {likesCount}
                       </p>
 
-                      <p className="post-content">
-                        <span className="post-username">{usersMap[post.userId]?.username || "User"}</span>{" "}
-                        {post.description.length > MAX_TEXT_LENGTH && !expandedPosts[post.id] ? (
-                          <>
-                            {post.description.slice(0, MAX_TEXT_LENGTH)} ...
-                            <span
-                              className="toggle-text"
-                              onClick={() => toggleTextExpansion(post.id)}
+                      {editingPostId === post.id ? (
+                        <div className="edit-post-section">
+                          <textarea
+                            className="edit-textarea"
+                            value={editedDescription}
+                            onChange={(e) => setEditedDescription(e.target.value)}
+                          />
+                          <div className="edit-buttons">
+                            <button
+                              onClick={() => {
+                                const db = getDatabase();
+                                const postRef = dbRef(db, `posts/${post.id}`);
+                                update(postRef, { description: editedDescription })
+                                  .then(() => {
+                                    setEditingPostId(null);
+                                    showNotification("Публикация обновлена");
+                                  })
+                                  .catch((error) => {
+                                    console.error("Ошибка обновления:", error);
+                                    showNotificationError("Ошибка при обновлении");
+                                  });
+                              }}
                             >
-                              ещё
-                            </span>
-                          </>
-                        ) : (
-                          <>
-                            {post.description}
-                            {post.description.length > MAX_TEXT_LENGTH && (
+                              Редактировать
+                            </button>
+                            <button onClick={() => setEditingPostId(null)}>Отмена</button>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="post-content">
+                          <span className="post-username">{usersMap[post.userId]?.username || "User"}</span>{" "}
+                          {post.description.length > MAX_TEXT_LENGTH && !expandedPosts[post.id] ? (
+                            <>
+                              {post.description.slice(0, MAX_TEXT_LENGTH)} ...
                               <span
                                 className="toggle-text"
                                 onClick={() => toggleTextExpansion(post.id)}
-                                style={{ marginLeft: "5px" }}
                               >
-                                свернуть
+                                ещё
                               </span>
-                            )}
-                          </>
-                        )}
-                      </p>
+                            </>
+                          ) : (
+                            <>
+                              {post.description}
+                              {post.description.length > MAX_TEXT_LENGTH && (
+                                <span
+                                  className="toggle-text"
+                                  onClick={() => toggleTextExpansion(post.id)}
+                                  style={{ marginLeft: "5px" }}
+                                >
+                                  свернуть
+                                </span>
+                              )}
+                            </>
+                          )}
+                        </p>
+                      )}
 
                       <p
                         style={{ color: "grey", marginLeft: "10px", marginTop: "5px" }}

@@ -261,14 +261,14 @@ const About = () => {
       </header>
 
       <section className="about-hero">
-        <h1>О факультете Технологияхои Раками, Системахо ва Хифзи Иттилоот</h1>
+        <h1>Факультет Технологияхои Раками, Системахо ва Хифзи Иттилоот</h1>
         <div className="faculty-image">
           <img width={300} src={basiclogo} alt="Факультет" />
         </div>
       </section>
 
       <section className="slider-section">
-        <h2 className="section-title" style={{ color: "black" }}>Галерея</h2>
+        <h2 className="section-title txt">Галерея</h2>
         <Swiper className="swiper-container"
           modules={[Navigation, Pagination, Autoplay]}
           navigation

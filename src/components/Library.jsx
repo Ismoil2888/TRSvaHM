@@ -1447,6 +1447,7 @@ const Library = ({ userId }) => {
   const [books, setBooks] = useState([]);
   const [videoLessons, setVideoLessons] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
+  const [filteredVideos, setFilteredVideos] = useState([]);
   const [selectedBook, setSelectedBook] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [searchHistory, setSearchHistory] = useState([]);
@@ -1543,7 +1544,7 @@ const Library = ({ userId }) => {
     "Информатика Ва Техникаи Хисоббарор"
   ];
   const [activeDepartment, setActiveDepartment] = useState(departments[0]);
-  const filteredVideos = videoLessons.filter(v => v.cathedra === activeDepartment);
+  // const filteredVideos = videoLessons.filter(v => v.cathedra === activeDepartment);
 
   //   // Загрузка пользовательских данных и статуса идентификации
   useEffect(() => {
@@ -1672,11 +1673,27 @@ const Library = ({ userId }) => {
 
   const handleSearch = (query) => {
     setSearchQuery(query);
-    const filtered = books.filter((book) =>
-      book.title.toLowerCase().includes(query.toLowerCase())
-    );
-    setFilteredBooks(filtered);
-  };
+  
+    if (activeTab === "books") {
+      const filtered = books.filter((book) =>
+        book.title.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredBooks(filtered);
+    } else if (activeTab === "videos") {
+      const filtered = videoLessons.filter((video) =>
+        video.title.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredVideos(filtered);
+    }
+  };  
+
+  // const handleSearch = (query) => {
+  //   setSearchQuery(query);
+  //   const filtered = books.filter((book) =>
+  //     book.title.toLowerCase().includes(query.toLowerCase())
+  //   );
+  //   setFilteredBooks(filtered);
+  // };
 
   const clearSearch = () => {
     setSearchQuery("");
@@ -1830,6 +1847,10 @@ const Library = ({ userId }) => {
   const displayedBooks = searchQuery
     ? filteredBooks
     : filteredBooks.filter(book => book.cathedra === activeDepartment);
+
+    const displayedVideos = searchQuery
+  ? filteredVideos
+  : videoLessons.filter(v => v.cathedra === activeDepartment);
 
   if (identificationStatus === t('notident')) {
     return (
@@ -2060,7 +2081,7 @@ const Library = ({ userId }) => {
               </section>
             ) : (
               <section className="video-grid">
-                {filteredVideos.map(video => (
+                {displayedVideos.map(video => (
                   <div key={video.id} className="video-card">
                     <video src={video.url} controls width="100%" />
                     <h4>{video.title}</h4>

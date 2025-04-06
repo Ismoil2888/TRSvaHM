@@ -656,10 +656,10 @@ nav ul li a {
 
 /* Видеоплеер */
 .video-card video {
-  border-radius: 10px;
+  border-radius: 25px;
   width: 100%;
   outline: none;
-  height: 200px;
+  height: 125px;
 }
 
 /* Заголовок и описание */
