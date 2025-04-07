@@ -2082,9 +2082,8 @@ const HomePage = () => {
         <header>
           <nav className="header-nav" style={HeaderDesktop}>
             <ul className="header-ul">
-              <li><Link to="/jarvisintropage" className="txt">Голосовой помощник</Link></li>
-              <li><Link to="/about" className="txt">О факультете</Link></li>
-              <li><Link to="/teachers" className="txt">Преподаватели</Link></li>
+              <li><Link to="/jarvisintropage" className="txt">{t('voiceassistant')}</Link></li>
+              <li><Link to="/about" className="txt">{t('aboutefaculty')}</Link></li>
 
               {/* Дополнительные разделы для декана */}
               {userRole === 'dean' && (
@@ -2101,7 +2100,7 @@ const HomePage = () => {
             {(role === "teacher" || role === "dean") && (
               <>
                 <ul className="header-ul">
-                  <li><Link to="/post" className="txt">Выложить пост</Link></li>
+                  <li><Link to="/post" className="txt">{t('addpost')}</Link></li>
                 </ul>
               </>
             )}
@@ -2159,6 +2158,7 @@ const HomePage = () => {
                 <li><Link to="/library"><FontAwesomeIcon icon={faBook} /> Библиотека</Link></li>
                 <li><Link to="/contacts"><FontAwesomeIcon icon={faPhone} /> Контакты</Link></li>
                 <li><Link to="/authdetails"><FontAwesomeIcon icon={faUserCog} /> Настройки Профиля</Link></li>
+                <li><Link to="/jarvisintropage"><FontAwesomeIcon icon={faUserCog} /> {t('voiceassistant')}</Link></li>
               </ul>
             </div>
 

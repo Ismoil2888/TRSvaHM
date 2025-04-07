@@ -939,9 +939,8 @@ const Teachers = () => {
         <header>
           <nav className="header-nav" style={HeaderDesktop}>
             <ul className="header-ul">
-              <li><Link to="/home" className="txt">Главная</Link></li>
-              <li><Link to="/about" className="txt">О факультете</Link></li>
-              <li><Link to="/teachers" className="txt">Преподаватели</Link></li>
+              <li><Link to="/jarvisintropage" className="txt">{t('voiceassistant')}</Link></li>
+              <li><Link to="/about" className="txt">{t('aboutefaculty')}</Link></li>
 
               {/* Дополнительные разделы для декана */}
               {userRole === 'dean' && (
@@ -954,6 +953,14 @@ const Teachers = () => {
                 </>
               )}
             </ul>
+
+            {(role === "teacher" || role === "dean") && (
+              <>
+                <ul className="header-ul">
+                  <li><Link to="/post" className="txt">{t('addpost')}</Link></li>
+                </ul>
+              </>
+            )}
 
             <Link to="/myprofile">
               <div className="currentUserHeader" style={currentUserHeader}>
@@ -970,6 +977,7 @@ const Teachers = () => {
             </Link>
           </nav>
           <div className="header-nav-2">
+
             <img src={basiclogo} width="50px" alt="logo" style={{ marginLeft: "10px" }} />
             <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>
               {t("teachcollective")}
@@ -1005,7 +1013,7 @@ const Teachers = () => {
         <motion.nav className="dropdown-search" variants={navbarVariants} initial="hidden" animate="visible">
           <div className="department-dropdown txt" style={{ margin: "20px 0", textAlign: "center" }}>
             <label htmlFor="department-select" style={{ marginRight: "10px", fontWeight: "bold" }}>
-            {t("selectcathedra")}:
+              {t("selectcathedra")}:
             </label>
             <select
               id="department-select"
@@ -1052,7 +1060,7 @@ const Teachers = () => {
                       <strong>{t('cathedra')}:</strong> {teacher.cathedra}
                     </p>
                     <div className="comment-icon-and-count">
-                      <span style={{color: "grey", marginRight: "15px"}}>Отзывы</span><FaCommentDots className="comment-icon" onClick={() => openCommentModal(teacher.id)} />
+                      <span style={{ color: "grey", marginRight: "15px" }}>Отзывы</span><FaCommentDots className="comment-icon" onClick={() => openCommentModal(teacher.id)} />
                       <span className="comment-count">{teacher.commentCount || 0}</span>
                     </div>
                     <div className="gototeachprofile" onClick={() => goToProfile(teacher.id)}>

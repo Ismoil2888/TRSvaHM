@@ -2,6 +2,7 @@ export const translations = {
   tajik: {
     facultname: "ТРСваҲИ",
     rights: "Ҳама ҳуқуқ маҳфуз аст",
+    aboutefaculty: "Дар бораи факултет",
     //AuthDetails
     language: "Забон",
     greeting: "Салом",
@@ -47,6 +48,7 @@ export const translations = {
     messages: "Паёмҳо",
     //HomePage
     main: "Асосӣ",
+    addpost: "Нашрияро ба намоиш гузоштан",
     //MyProfile, UserProfile
     cathedra: "Кафедра",
     course: "Курс",
@@ -66,15 +68,17 @@ export const translations = {
     startTime: "огоз",
     endTime: "анчом",
     teacher: "омузгор",
-    //jarvic
+    //jarvis
     jarvistitle: "Хуш омадед ба Платформа",
     jarvissubtitle: "Ёвари овозии «Платформа» — ёвари шахсии шумо дар ин платформа мебошад. Танҳо бигӯед, ба куҷо гузаштан мехоҳед, сана пурсед, обу ҳаворо фаҳмед ё ибораҳоро тарҷума кунед. Бо суръат. Зирак. Бо овоз.",
     jarvisinfo: "Дастгирии фармонҳо: «Платформа, гузар ба китобхона», «имрӯз чӣ рӯз аст», «обу ҳаво дар Душанбе», «тарҷумаи себ ба забони англисӣ» ва дигар фармонҳо.",
     jarvisbutton: "Активацияи Ёвари овозии «Платформа»",
+    voiceassistant: "Ёвари овозии «Платформа»",
   },
   russian: {
     facultname: "ЦТСиЗИ",
     rights: "Все права защищены",
+    aboutefaculty: "О факультете",
     //AuthDetails
     language: "Язык",
     greeting: "Привет",
@@ -120,6 +124,7 @@ export const translations = {
     messages: "Сообщения",
     //HomePage
     main: "Главная",
+    addpost: "Выложить пост",
     //MyProfile, UserProfile
     cathedra: "Кафедра",
     course: "Курс",
@@ -139,15 +144,17 @@ export const translations = {
     startTime: "начало",
     endTime: "конец",
     teacher: "преподаватель",
-    //jarvic
+    //jarvis
     jarvistitle: "Добро пожаловать в Платформу",
     jarvissubtitle: "Голосовой помощник «Платформа» — это ваш персональный голосовой помощник на платформе. Просто скажите, куда перейти, спросите дату, погоду или переведите фразы. Быстро. Умно. Голосом.",
     jarvisinfo: "Поддерживает команды: Платформа, перейди в библиотеку», «какой сегодня день», «погода в Душанбе», «переведи яблоко на английский» и другие.",
     jarvisbutton: "Активировать голосового помощника",
+    voiceassistant: "Голосовой помощник «Платформа»",
   },
   english: {
     facultname: "DTSandIS",
     rights: "All rights reserved",
+    aboutefaculty: "",
     //AuthDetails
     language: "Language",
     greeting: "Hello",
@@ -193,6 +200,7 @@ export const translations = {
     messages: "Messages",
     //HomePage
     main: "Main",
+    addpost: "Add post",
     //MyProfile, UserProfile
     cathedra: "Cathedra",
     course: "Course",
@@ -212,9 +220,10 @@ export const translations = {
     startTime: "startTime",
     endTime: "endTime",
     teacher: "teacher",
-    //jarvic
+    //jarvis
     jarvistitle: "",
     jarvissubtitle: "",
     jarvisinfo: "",
+    voiceassistant: "Voice assistent «Platforma»",
   }
 };
