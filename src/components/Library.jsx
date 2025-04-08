@@ -1508,7 +1508,7 @@ const Library = ({ userId }) => {
 
   const currentUserHeader = {
     marginRight: isMenuOpen ? "400px" : "116px",
-    marginBottom: isMenuOpen ? "11px" : "8px",
+    marginBottom: isMenuOpen ? "0px" : "0px",
     transition: "margin 0.3s ease",
   };
 
@@ -1901,7 +1901,7 @@ const Library = ({ userId }) => {
               {isMenuOpen && <span className="txt">{t('teachers')}</span>}
             </Link>
             <Link to="/library" className="menu-item">
-              <FiBookOpen className="menu-icon" style={{ color: "orange" }} />
+              <FiBookOpen className="menu-icon" style={{ background: "linear-gradient(60deg, rgb(219, 98, 98), rgba(0, 128, 107, 0.575), rgba(108, 108, 216, 0.66))", color: "white" }} />
               {isMenuOpen && <span className="txt">{t('library')}</span>}
             </Link>
           </div>
@@ -1968,9 +1968,8 @@ const Library = ({ userId }) => {
                       src={userDetails.avatarUrl || "./default-image.png"}
                       alt="User Avatar"
                       className="user-avatar"
-                      style={{ width: "35px", height: "35px" }}
                     />
-                    <span style={{ fontSize: "20px", color: "lightgreen" }}>
+                    <span style={{ fontSize: "18px", color: "lightgreen" }}>
                       {userDetails.username}
                     </span>
                   </div>
@@ -2116,7 +2115,7 @@ const Library = ({ userId }) => {
 
         {commentModal.isOpen && (
           <div className="comment-modal-overlay">
-            <div className="comment-modal">
+            <div className="comment-modal txt">
               <div className="modal-header">
                 <h3>Комментарии</h3>
                 <button className="close-modal" onClick={closeCommentModal}>

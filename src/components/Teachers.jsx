@@ -677,7 +677,7 @@ const Teachers = () => {
 
   const currentUserHeader = {
     marginRight: isMenuOpen ? "400px" : "80px",
-    marginBottom: isMenuOpen ? "11px" : "8px",
+    marginBottom: isMenuOpen ? "0px" : "0px",
     transition: "margin 0.3s ease",
   };
 
@@ -898,7 +898,7 @@ const Teachers = () => {
               {isMenuOpen && <span className="txt">{t('findstudents')}</span>}
             </Link>
             <Link to="/teachers" className="menu-item">
-              <FiUserCheck className="menu-icon" style={{ color: "orange" }} />
+              <FiUserCheck className="menu-icon" style={{ background: "linear-gradient(60deg, rgb(219, 98, 98), rgba(0, 128, 107, 0.575), rgba(108, 108, 216, 0.66))", color: "white" }} />
               {isMenuOpen && <span className="txt">{t('teachers')}</span>}
             </Link>
             <Link to="/library" className="menu-item">
@@ -968,9 +968,9 @@ const Teachers = () => {
                   src={userDetails.avatarUrl || "./default-image.png"}
                   alt="User Avatar"
                   className="user-avatar"
-                  style={{ width: "35px", height: "35px" }}
+                  // style={{ width: "35px", height: "35px" }}
                 />
-                <span style={{ fontSize: "20px", color: "lightgreen" }}>
+                <span style={{ fontSize: "18px", color: "lightgreen" }}>
                   {userDetails.username}
                 </span>
               </div>
@@ -1000,6 +1000,7 @@ const Teachers = () => {
                 <li><Link to="/library"><FontAwesomeIcon icon={faBook} /> Библиотека</Link></li>
                 <li><Link to="/contacts"><FontAwesomeIcon icon={faPhone} /> Контакты</Link></li>
                 <li><Link to="/authdetails"><FontAwesomeIcon icon={faUserCog} /> Настройки Профиля</Link></li>
+                <li><Link to="/jarvisintropage"><FontAwesomeIcon icon={faUserCog} /> {t('voiceassistant')}</Link></li>
               </ul>
             </div>
           </div>
@@ -1076,7 +1077,7 @@ const Teachers = () => {
           <div className="comment-modal-overlay">
             <div className="comment-modal">
               <div className="modal-header">
-                <h3>Комментарии</h3>
+                <h3 className="txt">Комментарии</h3>
                 <button className="close-modal" onClick={closeCommentModal}>
                   &times;
                 </button>
@@ -1110,10 +1111,10 @@ const Teachers = () => {
                         style={{ cursor: "pointer" }}
                       />
                       <div className="comment-content">
-                        <Link to={`/profile/${comment.userId}`} className="comment-username" style={{ cursor: "pointer" }}>
+                        <Link to={`/profile/${comment.userId}`} className="comment-username txt" style={{ cursor: "pointer" }}>
                           <p>{comment.username}</p>
                         </Link>
-                        <p className="comment-text">{comment.comment}</p>
+                        <p className="comment-text txt">{comment.comment}</p>
                         <span className="comment-timestamp">{comment.timestamp}</span>
                       </div>
                       <div ref={actionMenuRef} className="menu-icon-container">

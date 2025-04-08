@@ -1462,7 +1462,7 @@ const HomePage = () => {
 
   const currentUserHeader = {
     marginRight: isMenuOpen ? "400px" : "80px",
-    marginBottom: isMenuOpen ? "11px" : "8px",
+    marginBottom: isMenuOpen ? "0px" : "0px",
     transition: "margin 0.3s ease",
   };
 
@@ -2026,7 +2026,7 @@ const HomePage = () => {
 
         <nav className="menu-items">
           <Link to="/" className="menu-item" style={{ paddingRight: "15px" }}>
-            <FiHome className="menu-icon" style={{ color: "orange" }} />
+            <FiHome className="menu-icon" style={{ background: "linear-gradient(60deg, rgb(219, 98, 98), rgba(0, 128, 107, 0.575), rgba(108, 108, 216, 0.66))", color: "white" }} />
             {isMenuOpen && <span className="txt">{t('main')}</span>}
           </Link>
           <div className="menu-find-block">
@@ -2111,9 +2111,8 @@ const HomePage = () => {
                   src={userAvatarUrl || defaultAvatar}
                   alt="User Avatar"
                   className="user-avatar"
-                  style={{ width: "35px", height: "35px" }}
                 />
-                <span style={{ fontSize: "20px", color: "lightgreen" }}>{userDetails.username}</span>
+                <span style={{ fontSize: "18px", color: "lightgreen" }}>{userDetails.username}</span>
               </div>
             </Link>
           </nav>

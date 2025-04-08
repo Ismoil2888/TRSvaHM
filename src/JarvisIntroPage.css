@@ -1,5 +1,5 @@
 .jarvis-page {
-    min-height: 100vh;
+    height: 100vh;
     background: linear-gradient(to bottom right, #040421, #03011b, #120120);
     color: white;
     display: flex;

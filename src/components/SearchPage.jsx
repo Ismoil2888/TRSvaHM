@@ -65,7 +65,7 @@ const SearchPage = () => {
 
   const currentUserHeader = {
     marginRight: isMenuOpen ? "40px" : "30px",
-    marginBottom: isMenuOpen ? "11px" : "8px",
+    marginBottom: isMenuOpen ? "0px" : "0px",
     transition: "margin 0.3s ease",
   };
 
@@ -156,7 +156,7 @@ const SearchPage = () => {
           </Link>
           <div className="menu-find-block">
             <Link to="/searchpage" className="menu-item">
-              <FiSearch className="menu-icon" style={{ color: "orange" }} />
+              <FiSearch className="menu-icon" style={{ background: "linear-gradient(60deg, rgb(219, 98, 98), rgba(0, 128, 107, 0.575), rgba(108, 108, 216, 0.66))", color: "white" }} />
               {isMenuOpen && <span className="txt">{t('findstudents')}</span>}
             </Link>
             <Link to="/teachers" className="menu-item">
@@ -230,9 +230,8 @@ const SearchPage = () => {
                         src={userDetails.avatarUrl || "./default-image.png"}
                         alt="User Avatar"
                         className="user-avatar"
-                        style={{ width: "35px", height: "35px" }}
                       />
-                      <span style={{ fontSize: "20px", color: "lightgreen" }}>
+                      <span style={{ fontSize: "18px", color: "lightgreen" }}>
                         {userDetails.username}
                       </span>
                     </div>

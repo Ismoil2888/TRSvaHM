@@ -425,12 +425,12 @@ nav ul li a {
   align-items: center;
 }
 
-.user-avatar {
+/* .user-avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   margin-right: 10px;
-}
+} */
 
 .user-info {
   display: flex;
@@ -600,7 +600,7 @@ nav ul li a {
   justify-content: center;
   align-items: center;
   margin: 20px 0;
-  border-radius: 12px;
+  border-radius: 20px;
   background: #11819827;
   overflow: hidden;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);

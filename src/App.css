@@ -882,7 +882,12 @@ header nav ul li a:hover::before {
         .menu-icon {
           cursor: pointer;
           font-size: 24px;
-          color: var(--menu-icon-color);
+          color: var(--menu-icon-color); 
+          /* color: #008cff;  */
+          /* background: rgb(205, 255, 243); */
+          /* background: linear-gradient(60deg, rgb(219, 98, 98), rgba(0, 128, 107, 0.575), rgba(0, 0, 255, 0.466)); */
+          border-radius: 7px;
+          padding: 2px;
         }
 
         .back-button{

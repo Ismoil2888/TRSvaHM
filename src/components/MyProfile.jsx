@@ -546,7 +546,7 @@ const MyProfile = () => {
             </Link>
           </div>
           <Link to="/myprofile" className="menu-item">
-            <FiUser className="menu-icon" style={{ color: "orange" }} />
+            <FiUser className="menu-icon" style={{ background: "linear-gradient(60deg, rgb(219, 98, 98), rgba(0, 128, 107, 0.575), rgba(108, 108, 216, 0.66))", color: "white" }} />
             {isMenuOpen && <span className="txt">{t('profile')}</span>}
           </Link>
           <div className="menu-find-block">

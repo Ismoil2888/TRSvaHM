@@ -1006,7 +1006,7 @@ const UserProfile = () => {
           </Link>
           <div className="menu-find-block">
             <Link to="/searchpage" className="menu-item">
-              <FiSearch className="menu-icon" style={{ color: "orange" }} />
+              <FiSearch className="menu-icon" style={{ background: "linear-gradient(60deg, rgb(219, 98, 98), rgba(0, 128, 107, 0.575), rgba(108, 108, 216, 0.66))", color: "white" }} />
               {isMenuOpen && <span className="txt">{t('findstudents')}</span>}
             </Link>
             <Link to="/teachers" className="menu-item">

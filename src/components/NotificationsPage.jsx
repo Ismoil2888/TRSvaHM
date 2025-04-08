@@ -251,7 +251,7 @@ const NotificationsPage = () => {
               {isMenuOpen && <span className="txt">{t('messages')}</span>}
             </Link>
             <Link to="/notifications" className="menu-item">
-              <FiBell className="menu-icon" style={{ color: "orange" }} />
+              <FiBell className="menu-icon" style={{ background: "linear-gradient(60deg, rgb(219, 98, 98), rgba(0, 128, 107, 0.575), rgba(108, 108, 216, 0.66))", color: "white" }} />
               {isMenuOpen && <span className="txt">{t('notifications')}</span>}
             </Link>
           </div>
