@@ -141,12 +141,12 @@ useEffect(() => {
       <div className="pwa-install-overlay">
         <div className="pwa-install-modal">
           <div className='close-button-and-icon'>
-          <button 
+          {/* <button 
             className="pwa-close-btn"
             onClick={() => setShowPWAInstallPrompt(false)}
           >
             ×
-          </button>
+          </button> */}
           <img className='pwa-icon' src="/logoapp512.png"/>
           </div>
           <div style={{ marginTop: "20px" }}>
@@ -159,12 +159,12 @@ useEffect(() => {
             >
               Установить
             </button>
-            <button 
+            {/* <button 
               className="skip-btn"
               onClick={() => setShowPWAInstallPrompt(false)}
             >
               Пропустить
-            </button>
+            </button> */}
             </div>
           </div>
         </div>

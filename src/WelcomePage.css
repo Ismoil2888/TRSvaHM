@@ -194,6 +194,11 @@
   .hp-main-content.serious-content {
     padding-top: 80px;
   }
+
+.hp-header-icon  .basiclogomobile{
+    width: 44px;
+    margin-right: 17px;
+  }
 }
 
 
@@ -316,6 +321,7 @@
   position: relative;
   display: inline-block;
   margin: 0 10px;
+  margin-top: 10px;
   cursor: pointer;
 }
 
@@ -329,6 +335,7 @@
 
 .arrow {
   margin-left: 5px;
+  font-size: 10px;
 }
 
 .dropdown-list {
@@ -400,8 +407,9 @@
   margin-top: 20px;
   text-align: center;
   padding: 15px;
-  background: #f9f9f9;
+  background: var(--bg-container-color);
   border-radius: 10px;
+  color: var(--text-color);
 }
 
 .departments-grid {

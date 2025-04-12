@@ -996,7 +996,6 @@ const Teachers = () => {
                     <FontAwesomeIcon icon={faChalkboardTeacher} style={{ color: "red" }} /> Преподаватели
                   </Link>
                 </li>
-                <li><Link to="/schedule"><FontAwesomeIcon icon={faCalendarAlt} /> Расписание</Link></li>
                 <li><Link to="/library"><FontAwesomeIcon icon={faBook} /> Библиотека</Link></li>
                 <li><Link to="/contacts"><FontAwesomeIcon icon={faPhone} /> Контакты</Link></li>
                 <li><Link to="/authdetails"><FontAwesomeIcon icon={faUserCog} /> Настройки Профиля</Link></li>

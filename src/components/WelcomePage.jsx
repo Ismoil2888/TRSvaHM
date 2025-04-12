@@ -322,7 +322,7 @@ const WelcomePage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.4, type: 'spring', stiffness: 80 }}
         >
-          <img src={basiclogo} alt="Логотип 2" />
+          <img className='basiclogomobile' src={basiclogo} alt="Логотип 2" />
         </motion.div>
       </div>
 

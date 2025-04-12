@@ -10,7 +10,8 @@ import editIcon from '../edit-icon.png';
 import "../TeacherProfile.css";
 import defaultAvatar from "../default-image.png";
 import { FiHome, FiUser, FiArrowLeft, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
-import ttulogo from "../Ttulogo.png";
+import useTranslation from '../hooks/useTranslation';
+import basiclogo from "../basic-logo.png";
 // import { CiTextAlignCenter } from 'react-icons/ci';
 
 const TeacherProfile = () => {
@@ -26,6 +27,7 @@ const TeacherProfile = () => {
   const [notification, setNotification] = useState(null); // Уведомления
   const storage = getStorage();
   const database = getDatabase();
+  const t = useTranslation();
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
   const [userRole, setUserRole] = useState('');
@@ -388,10 +390,10 @@ const TeacherProfile = () => {
     <div className="glva">
       <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
-          <img style={{ width: "50px", height: "45px" }} src={ttulogo} alt="" />
+          <img style={{ width: "50px", height: "45px" }} src={basiclogo} alt="" />
           {isMenuOpen ? (
             <>
-              <h2>TTU</h2>
+              <h2>{t('facultname')}</h2>
               <FiChevronLeft
                 className="toggle-menu"
                 onClick={toggleMenuDesktop}
@@ -408,47 +410,47 @@ const TeacherProfile = () => {
         <nav className="menu-items">
           <Link to="/" className="menu-item" style={{ paddingRight: "15px" }}>
             <FiHome className="menu-icon" />
-            {isMenuOpen && <span>Главная</span>}
+            {isMenuOpen && <span className="txt">{t('main')}</span>}
           </Link>
           <div className="menu-find-block">
             <Link to="/searchpage" className="menu-item">
               <FiSearch className="menu-icon" />
-              {isMenuOpen && <span>Поиск</span>}
+              {isMenuOpen && <span className="txt">{t('findstudents')}</span>}
             </Link>
             <Link to="/teachers" className="menu-item">
               <FiUserCheck className="menu-icon" />
-              {isMenuOpen && <span>Преподаватели</span>}
+              {isMenuOpen && <span className="txt">{t('teachers')}</span>}
             </Link>
             <Link to="/library" className="menu-item">
               <FiBookOpen className="menu-icon" />
-              {isMenuOpen && <span>Библиотека</span>}
+              {isMenuOpen && <span className="txt">{t('library')}</span>}
             </Link>
           </div>
           <Link to="/myprofile" className="menu-item">
-            <FiUser className="menu-icon" style={{ color: "lightgreen" }} />
-            {isMenuOpen && <span>Профиль</span>}
+            <FiUser className="menu-icon" style={{ background: "linear-gradient(60deg, rgb(219, 98, 98), rgba(0, 128, 107, 0.575), rgba(108, 108, 216, 0.66))", color: "white" }} />
+            {isMenuOpen && <span className="txt">{t('profile')}</span>}
           </Link>
           <div className="menu-find-block">
             <Link to="/chats" className="menu-item">
               <FiMessageSquare className="menu-icon" />
-              {isMenuOpen && <span>Сообщения</span>}
+              {isMenuOpen && <span className="txt">{t('messages')}</span>}
             </Link>
             <Link to="/notifications" className="menu-item">
               <FiBell className="menu-icon" />
-              {isMenuOpen && <span>Уведомления</span>}
+              {isMenuOpen && <span className="txt">{t('notifications')}</span>}
             </Link>
           </div>
           <Link to="/authdetails" className="menu-item">
             <FiSettings className="menu-icon" />
-            {isMenuOpen && <span>Настройки</span>}
+            {isMenuOpen && <span className="txt">{t('settings')}</span>}
           </Link>
         </nav>
 
         <div className="logo-and-tik">
-          TRSvaHM
+          {t('facultname')}
           {isMenuOpen &&
             <div>
-              <p>&copy; 2025 Все права защищены.</p>
+              <p className="txt">&copy; 2025 {t("rights")}.</p>
             </div>
           }
         </div>

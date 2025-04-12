@@ -22,6 +22,10 @@ body {
   color: var(--text-color);
 }
 
+textarea{
+  resize: none;
+}
+
 /* ::-webkit-scrollbar{
   display: none;
 } */
@@ -1870,7 +1874,7 @@ color: transparent;
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.7);
-  z-index: 1000;
+  z-index: 99999;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1884,6 +1888,8 @@ color: transparent;
   width: 90%;
   max-width: 400px;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .close-button-and-icon{
@@ -1895,7 +1901,6 @@ color: transparent;
 .pwa-icon{
   width: 100px;
   border-radius: 17px;
-  position: absolute;
 }
 
 .pwa-close-btn {
