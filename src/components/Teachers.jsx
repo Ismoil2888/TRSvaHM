@@ -586,7 +586,7 @@ import { auth } from "../firebase";
 import "../App.css";
 import "../teachers.css";
 import logoTip from "../basic-logo.png";
-import defaultTeacherImg from "../teacher.png";
+import defaultTeacherImg from "../teacher.svg";
 import { FaCommentDots } from "react-icons/fa";
 import basiclogo from "../basic-logo.png";
 import { FaPlusCircle, FaUserSecret, FaInfo } from "react-icons/fa";
@@ -597,7 +597,6 @@ import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPho
 import { GoKebabHorizontal } from "react-icons/go";
 import anonymAvatar from "../anonym2.jpg";
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
-import ttulogo from "../Ttulogo.png";
 import useTranslation from "../hooks/useTranslation";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
@@ -968,7 +967,6 @@ const Teachers = () => {
                   src={userDetails.avatarUrl || "./default-image.png"}
                   alt="User Avatar"
                   className="user-avatar"
-                  // style={{ width: "35px", height: "35px" }}
                 />
                 <span style={{ fontSize: "18px", color: "lightgreen" }}>
                   {userDetails.username}
@@ -1046,7 +1044,7 @@ const Teachers = () => {
                   <div className="teacher-card" key={teacher.id}>
                     <LazyLoadImage
                       src={teacher.photo || defaultTeacherImg}
-                      alt={`${teacher.name} ${teacher.surname}`}
+                      alt={`${teacher.name} ${teacher.surname}`}    
                       className="skeleton-media-avatars"
                     />
                     <h4>{`${teacher.name} ${teacher.surname}`}</h4>

@@ -566,12 +566,24 @@ width: 90%; */
   display: flex;
   width: 150px;
   height: 24px;
-  background-color: var(--bg-header-ul-color);
+  background: var(--bg-currentheader-color);
+  /* background-color: var(--bg-header-ul-color); */
+  background-size: 200% 100%;
   align-items: center;
   border-radius: 15px;
   padding: 10px;
   transition: background-color 5s ease;
   box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+0% {
+  background-position: -200% 0;
+}
+100% {
+  background-position: 200% 0;
+}
 }
 
 .currentUserHeader:hover{

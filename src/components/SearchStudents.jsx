@@ -334,42 +334,50 @@ const SearchStudents = () => {
         </div>
       </div>
       <div className="search-students-page" style={mainContentStyle}>
-        <header>
-          <nav className="header-nav" style={HeaderDesktop}>
-            <ul className="header-ul">
-              <li><Link to="/home" className="txt">Главная</Link></li>
-              <li><Link to="/about" className="txt">О факультете</Link></li>
-              <li><Link to="/teachers" className="txt">Преподаватели</Link></li>
+      <header>
+             <nav className="header-nav" style={HeaderDesktop}>
+                  <ul className="header-ul">
+                    <li><Link to="/jarvisintropage" className="txt">{t('voiceassistant')}</Link></li>
+                    <li><Link to="/about" className="txt">{t('aboutefaculty')}</Link></li>
+      
                     {/* Дополнительные разделы для декана */}
-                            {userRole === 'dean' && (
-                              <>
-                                <li>
-                                  <Link to="/admin">
-                                    <span className="txt">Админ-Панель</span>
-                                  </Link>
-                                </li>
-                              </>
-                            )}
-            </ul>
-            <Link to="/myprofile">
-              <div className="currentUserHeader" style={currentUserHeader}>
-                <img
-                  src={userDetails.avatarUrl || "./default-image.png"}
-                  alt="User Avatar"
-                  className="user-avatar"
-                />
-                <span style={{ fontSize: "18px", color: "lightgreen" }}>{userDetails.username}</span>
-              </div>
-            </Link>
-          </nav>
+                    {userRole === 'dean' && (
+                      <>
+                        <li>
+                          <Link to="/admin">
+                            <span className="txt">Админ-Панель</span>
+                          </Link>
+                        </li>
+                      </>
+                    )}
+                  </ul>
+      
+                  {(role === "teacher" || role === "dean") && (
+                    <>
+                      <ul className="header-ul">
+                        <li><Link to="/post" className="txt">{t('addpost')}</Link></li>
+                      </ul>
+                    </>
+                  )}
+      
+                  <Link to="/myprofile">
+                    <div className="currentUserHeader" style={currentUserHeader}>
+                      <img
+                        src={userDetails.avatarUrl || "./default-image.png"}
+                        alt="User Avatar"
+                        className="user-avatar"
+                      />
+                      <span style={{ fontSize: "18px", color: "lightgreen" }}>
+                        {userDetails.username}
+                      </span>
+                    </div>
+                  </Link>
+                </nav>
 
           <div className="header-nav-2">
+            <img src={basiclogo} width="50px" alt="logo" style={{ marginLeft: "10px" }} />
 
-            <Link className="back-button white-icon" style={{ marginLeft: "15px" }} onClick={() => navigate(-1)}>
-              <FaArrowLeft />
-            </Link>
-
-            <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>{t('findstudent')}</ul>
+            <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>{t('findstudents')}</ul>
 
             <div className={`burger-menu-icon ${isMenuOpenMobile ? 'open' : ''}`} onClick={toggleMenuMobile}>
               <span className="bm-span"></span>
@@ -388,14 +396,13 @@ const SearchStudents = () => {
                 <li><Link to="/authdetails"><FontAwesomeIcon icon={faUserCog} /> Настройки Профиля</Link></li>
               </ul>
             </div>
-
           </div>
         </header>
 
         <div className="chat-page-header">
           <h2 className="txt">{t('findstudents')}</h2>
           <div className="chat-page-search-icon" onClick={() => setShowSearch(!showSearch)}>
-            <FaSearch />
+            <FaSearch className="fasearch"/>
           </div>
         </div>
 

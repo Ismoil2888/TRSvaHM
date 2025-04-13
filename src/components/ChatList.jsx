@@ -86,44 +86,44 @@ const ChatList = () => {
     }, 3000);
   };
 
-useEffect(() => {
-  if (!currentUserId || !chatList.length) return;
-  
-  const db = getDatabase();
-  const recipientsData = {};
+  useEffect(() => {
+    if (!currentUserId || !chatList.length) return;
 
-  // Для каждого чата подписываемся на данные собеседника
-  chatList.forEach(chat => {
-    const recipientId = chat.chatRoomId.split('_').find(id => id !== currentUserId);
-    
-    if (recipientId && !recipientsData[recipientId]) {
-      const recipientRef = databaseRef(db, `users/${recipientId}`);
-      
-      const unsubscribe = onValue(recipientRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          setChatList(prev => prev.map(c => {
-            if (c.chatRoomId === chat.chatRoomId) {
-              return {
-                ...c,
-                recipientName: data.username,
-                recipientAvatar: data.avatarUrl
+    const db = getDatabase();
+    const recipientsData = {};
+
+    // Для каждого чата подписываемся на данные собеседника
+    chatList.forEach(chat => {
+      const recipientId = chat.chatRoomId.split('_').find(id => id !== currentUserId);
+
+      if (recipientId && !recipientsData[recipientId]) {
+        const recipientRef = databaseRef(db, `users/${recipientId}`);
+
+        const unsubscribe = onValue(recipientRef, (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            setChatList(prev => prev.map(c => {
+              if (c.chatRoomId === chat.chatRoomId) {
+                return {
+                  ...c,
+                  recipientName: data.username,
+                  recipientAvatar: data.avatarUrl
+                }
               }
-            }
-            return c;
-          }));
-        }
-      });
-      
-      recipientsData[recipientId] = unsubscribe;
-    }
-  });
+              return c;
+            }));
+          }
+        });
 
-  // Cleanup function
-  return () => {
-    Object.values(recipientsData).forEach(unsubscribe => unsubscribe());
-  };
-}, [chatList, currentUserId]);
+        recipientsData[recipientId] = unsubscribe;
+      }
+    });
+
+    // Cleanup function
+    return () => {
+      Object.values(recipientsData).forEach(unsubscribe => unsubscribe());
+    };
+  }, [chatList, currentUserId]);
 
   useEffect(() => {
     if (!currentUserId) return;
@@ -227,8 +227,8 @@ useEffect(() => {
   };
 
   return (
-    <div className="glava" style={{height: "100%"}}>
-    <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
+    <div className="glava" style={{ height: "100%" }}>
+      <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <img style={{ width: "50px", height: "45px" }} src={basiclogo} alt="" />
           {isMenuOpen ? (
@@ -287,7 +287,7 @@ useEffect(() => {
         </nav>
 
         <div className="logo-and-tik">
-        {t('facultname')}
+          {t('facultname')}
           {isMenuOpen &&
             <div>
               <p className="txt">&copy; 2025 {t("rights")}.</p>
@@ -305,68 +305,80 @@ useEffect(() => {
           <FaChevronLeft style={{ fontSize: "25px" }} onClick={() => navigate(-1)} />
           <h2 className="txt" style={{ marginRight: "160px" }}>{t('mychats')}</h2>
         </div>
-        <ul className="chat-list" style={{overflowY: "scroll"}}>
-          {chatList.map((chat) => (
-            <li key={chat.chatRoomId} className="chat-list-item" onContextMenu={(e) => {
-              e.preventDefault();
-              setSelectedChatId(chat.chatRoomId);
+        <ul className="chat-list" style={{ overflowY: "scroll" }}>
+          {chatList.length === 0 ? (
+            <div style={{
+              textAlign: "center",
+              color: "#888",
+              marginTop: "100px",
+              fontSize: "25px",
+              fontWeight: "500",
+              opacity: 0.6
             }}>
-              <Link to={`/chat/${chat.chatRoomId}`} className="chat-link">
-                <div className="chat-list-avatar-info">
-                  <img
-                    src={chat.recipientAvatar || "./default-image.png"}
-                    alt={chat.recipientName}
-                    className="chat-avatar skeleton-media-avatars"
-                    onError={(e) => {
-                      e.target.onerror = null; 
-                      e.target.src = "./default-image.png";
-                    }}
-                  />
-                  <div className="chat-info">
-                    <h3 className="chat-name">{chat.recipientName}</h3>
-                    <p className="chat-last-message">{chat.lastMessage || "Откройте чат"}</p>
+              💬 {t("nochats")}
+            </div>
+          ) : (
+            chatList.map((chat) => (
+              <li key={chat.chatRoomId} className="chat-list-item" onContextMenu={(e) => {
+                e.preventDefault();
+                setSelectedChatId(chat.chatRoomId);
+              }}>
+                <Link to={`/chat/${chat.chatRoomId}`} className="chat-link">
+                  <div className="chat-list-avatar-info">
+                    <img
+                      src={chat.recipientAvatar || "./default-image.png"}
+                      alt={chat.recipientName}
+                      className="chat-avatar skeleton-media-avatars"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "./default-image.png";
+                      }}
+                    />
+                    <div className="chat-info">
+                      <h3 className="chat-name">{chat.recipientName}</h3>
+                      <p className="chat-last-message">{chat.lastMessage || "Откройте чат"}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="chat-status">
-                  <span className="chat-timestamp">
-                    {new Date(chat.lastMessageTimestamp || chat.timestamp).toLocaleTimeString([], {
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                  </span>
-                  {unreadCounts[chat.chatRoomId] > 0 && (
-                    <span className="unread-count">
-                      {unreadCounts[chat.chatRoomId]}
+                  <div className="chat-status">
+                    <span className="chat-timestamp">
+                      {new Date(chat.lastMessageTimestamp || chat.timestamp).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
                     </span>
-                  )}
-                </div>
-              </Link>
-              {selectedChatId && (
-                <div className="actions-modal">
-                  <div className="actions-modal-content">
-                    <button
-                      className="modal-close-button"
-                      onClick={() => setSelectedChatId(null)}
-                    >
-                      &times;
-                    </button>
-                    <button
-                      className="action-button"
-                      onClick={() => handleClearHistory(selectedChatId)}
-                    >
-                      Очистить историю
-                    </button>
-                    <button
-                      className="action-button delete-button"
-                      onClick={() => setShowDeleteModal(true)}
-                    >
-                      Удалить чат
-                    </button>
+                    {unreadCounts[chat.chatRoomId] > 0 && (
+                      <span className="unread-count">
+                        {unreadCounts[chat.chatRoomId]}
+                      </span>
+                    )}
                   </div>
-                </div>
-              )}
-            </li>
-          ))}
+                </Link>
+                {selectedChatId && (
+                  <div className="actions-modal">
+                    <div className="actions-modal-content">
+                      <button
+                        className="modal-close-button"
+                        onClick={() => setSelectedChatId(null)}
+                      >
+                        &times;
+                      </button>
+                      <button
+                        className="action-button"
+                        onClick={() => handleClearHistory(selectedChatId)}
+                      >
+                        Очистить историю
+                      </button>
+                      <button
+                        className="action-button delete-button"
+                        onClick={() => setShowDeleteModal(true)}
+                      >
+                        Удалить чат
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </li>
+            )))}
         </ul>
 
         {showDeleteModal && (

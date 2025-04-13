@@ -1935,7 +1935,7 @@ const Library = ({ userId }) => {
         </div>
       </div>
       <div className="glav-container" style={mainContentStyle}>
-        <p className="back-text">Библиотека</p>
+        <p className="back-text">{t("electroniclibrary")}</p>
         <header>
            <nav className="header-nav" style={HeaderDesktop}>
                 <ul className="header-ul">

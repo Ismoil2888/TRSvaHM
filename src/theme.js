@@ -13,6 +13,8 @@ export const themes = {
       '--bg-sidebar-menu-find-block': '#384f64',
       '--menu-icon-color': '#00eaff',
       '--bg-register-login-button-color': 'white',
+      '--bg-currentheader-color': 'linear-gradient(90deg, #334454c6 25%,rgba(79, 112, 143, 0.78) 50%, #334454c6 75%)',
+      '--up-info-content-color': '#cfdae3',
     },
     light: {
       '--bg-container-color': '#F8F9FB',
@@ -28,6 +30,8 @@ export const themes = {
       '--bg-sidebar-menu-find-block': '#08213e21',
       '--menu-icon-color': '#1b68c0',
       '--bg-register-login-button-color': 'linear-gradient(90deg, #00e5ff, #9b00ff)',
+      '--bg-currentheader-color': 'linear-gradient(90deg,rgb(255, 255, 255) 25%, #e0e0e0 50%,rgb(255, 255, 255) 75%)',
+      '--up-info-content-color': '#116ca5',
     },
     dark: {
       '--bg-container-color': '#00040f',
@@ -43,6 +47,8 @@ export const themes = {
       '--bg-sidebar-menu-find-block': '#151d2cb5',
       '--menu-icon-color': '#00eaff',
       '--bg-register-login-button-color': 'white',
+      '--bg-currentheader-color': 'linear-gradient(90deg, #000103ce 25%, rgb(29, 42, 52) 50%, #000103ce 75%)',
+      '--up-info-content-color': '#cfdae3',
     }
   };
   

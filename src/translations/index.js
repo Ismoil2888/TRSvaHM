@@ -46,6 +46,7 @@ export const translations = {
     //Chats
     mychats: "Чатҳои ман",
     messages: "Паёмҳо",
+    nochats: "Ҳоло шумо ҳеҷ сӯҳбат надоред. Шахсеро барои сӯҳбат пайдо кунед ва муоширатро оғоз намоед!",
     //HomePage
     main: "Асосӣ",
     addpost: "Нашрияро ба намоиш гузоштан",
@@ -57,6 +58,7 @@ export const translations = {
     library: "Китобхона",
     facultylibrary: "Китобхонаи факултет",
     videolessons: "Видео дарсҳо",
+    electroniclibrary: "Китобхонаи электронӣ",
     //GroupPage
     monday: "Душанбе",
     tuesday: "Сешанбе",
@@ -122,6 +124,7 @@ export const translations = {
     //Chats
     mychats: "Мои чаты",
     messages: "Сообщения",
+    nochats: "У вас пока нет чатов. Найдите собеседника и начните общение!",
     //HomePage
     main: "Главная",
     addpost: "Выложить пост",
@@ -133,6 +136,7 @@ export const translations = {
     library: "Библиотека",
     facultylibrary: "Библиотека факультета",
     videolessons: "Видео уроки",
+    electroniclibrary: "Электронная библиотека",
     //GroupPage
     monday: "Понедельник",
     tuesday: "Вторник",
@@ -198,6 +202,7 @@ export const translations = {
     //Chats
     mychats: "My chats",
     messages: "Messages",
+    nochats: "You have no chats yet. Find the interlocutor and start communication!",
     //HomePage
     main: "Main",
     addpost: "Add post",
@@ -209,6 +214,7 @@ export const translations = {
     library: "Librariy",
     facultylibrary: "Library of the faculty",
     videolessons: "Video lessons",
+    electroniclibrary: "Electronic library",
     //GroupPage
     monday: "Monday",
     tuesday: "Tuesday",

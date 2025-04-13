@@ -39,15 +39,15 @@ nav ul li a {
 }
 
 .back-text{
-    position: fixed;              /* Фиксированное позиционирование относительно окна браузера */
-    top: 50%;                     /* Центрирование по вертикали */
-    left: 50%;                    /* Центрирование по горизонтали */
+    position: fixed;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
-    font-weight: bold; /* Корректное смещение для точного центрирования */
-    font-size: 50px;              /* Размер текста (можно изменить по необходимости) */
-    color: rgba(167, 161, 161, 0.1);     /* Светлый полупрозрачный цвет для эффекта водяного знака */
-    z-index: 0;                  /* Расположение за остальными элементами */
-    white-space: nowrap;     
+    font-weight: bold;
+    font-size: clamp(40px, 8vw, 60px);
+    color: rgba(167, 161, 161, 0.1);
+    z-index: 0;
+    white-space: nowrap;
 }
 
 .search-filter {

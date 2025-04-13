@@ -870,17 +870,6 @@ header nav ul li a:hover::before {
             transform: translateY(0);
             opacity: 1;
           }
-        }        
-        
-        .username-section h2 {
-          font-size: 24px;
-          margin-bottom: 5px;
-          color: rgb(204, 214, 235);
-        }
-        
-        .username-section p {
-          font-size: 14px;
-          color: #777;
         }
         
         .menu-icon {

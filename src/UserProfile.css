@@ -102,8 +102,8 @@
   
   .up-info-content {
     font-size: 0.95em;
-    color: #cfdae3;
     font-weight: 500;
+    color: var(--up-info-content-color);
   }
   
   .up-icon-verified {

@@ -1064,6 +1064,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import '../AdminPanel.css';
 import '../App.css';
 import defaultAvatar from "../default-image.png";
+import defaultTeacherImg from "../teacher.svg";
 import useTranslation from '../hooks/useTranslation';
 
 const initialScheduleData = {
@@ -1991,9 +1992,9 @@ const AdminPanel = () => {
 
           <div className="teachers-grid">
             {filteredTeachers.map(teacher => (
-              <div key={teacher.id} className="teacher-card">
+              <div key={teacher.id} className="admin-teacher-card">
                 <div className="card-header">
-                  <img src={teacher.photo || 'default-photo-url.jpg'} alt={`${teacher.name} ${teacher.surname}`} />
+                  <img src={teacher.photo || defaultTeacherImg} alt={`${teacher.name} ${teacher.surname}`} />
                   <FaEdit className="edit-icon" onClick={() => handleEditTeacher(teacher)} />
                 </div>
                 <div className="card-body">
