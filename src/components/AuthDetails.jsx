@@ -986,7 +986,7 @@
 
 
 
-import { onAuthStateChanged, signOut, getAuth, reauthenticateWithCredential, EmailAuthProvider, updatePassword } from "firebase/auth";
+import { onAuthStateChanged, signOut, getAuth, reauthenticateWithCredential, EmailAuthProvider, updatePassword, sendEmailVerification, verifyBeforeUpdateEmail  } from "firebase/auth";
 import { getStorage, ref as storageRef, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { getDatabase, ref as databaseRef, onValue, push, update, get, query, orderByChild, equalTo, remove } from "firebase/database";
 import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
@@ -1034,6 +1034,10 @@ const AuthDetails = () => {
   const [showFacultyList, setShowFacultyList] = useState(false);
   const [showCourseList, setShowCourseList] = useState(false);
   const [showGroupList, setShowGroupList] = useState(false);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+const [isEditingEmail, setIsEditingEmail] = useState(false);
+const [newEmail, setNewEmail] = useState("");
+const [isVerified, setIsVerified] = useState(false);
 
   const cathedra = ["Системахои Автоматикунонидашудаи Идоракуни", "Шабакахои Алока Ва Системахои Комутатсиони", "Технологияхои Иттилооти Ва Хифзи Маълумот", "Автоматонии Равандхои Технологи Ва Истехсолот", "Информатика Ва Техникаи Хисоббарор"];
   const courses = ["1", "2", "3", "4"];
@@ -1083,6 +1087,91 @@ const AuthDetails = () => {
   };
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (authUser) {
+      setIsVerified(authUser.emailVerified);
+    }
+  }, [authUser]);
+
+  const handleSendVerification = () => {
+    if (!auth.currentUser) return;
+  
+    if (auth.currentUser.emailVerified) {
+      showNotification("Вы уже подтверждали свой email.");
+      return;
+    }
+  
+    sendEmailVerification(auth.currentUser)
+      .then(() => showNotification("Письмо с подтверждением отправлено на вашу почту."))
+      .catch(() => showNotificationError("Ошибка при отправке письма."));
+  };  
+
+  const handleChangeEmail = async () => {
+    if (!authUser) return;
+  
+    try {
+      const userRef = databaseRef(database, `users/${authUser.uid}`);
+      const userSnapshot = await get(userRef);
+      const userData = userSnapshot.val();
+  
+      // 1. Только один раз
+      if (userData?.emailChanged) {
+        showNotificationError("Вы уже меняли email. Повторная смена запрещена.");
+        return;
+      }
+  
+      const currentPassword = prompt("Введите текущий пароль для подтверждения:");
+      const credential = EmailAuthProvider.credential(auth.currentUser.email, currentPassword);
+      await reauthenticateWithCredential(auth.currentUser, credential);
+  
+      // 🔁 Используем verifyBeforeUpdateEmail — САМЫЙ ПРАВИЛЬНЫЙ способ
+      await verifyBeforeUpdateEmail(auth.currentUser, newEmail);
+  
+      // ⚠ НЕ меняем email в Realtime Database, пока не подтверждён
+  
+      setIsEditingEmail(false);
+      setIsEmailModalOpen(false);
+      showNotification("Письмо для подтверждения нового email отправлено. Подтвердите, чтобы завершить смену.");
+    } catch (error) {
+      console.error(error);
+      if (error.code === "auth/wrong-password") {
+        showNotificationError("Неверный пароль.");
+      } else {
+        showNotificationError("Ошибка при смене email.");
+      }
+    }
+  };
+  
+  useEffect(() => {
+    const checkEmailUpdate = async () => {
+      if (!auth.currentUser) return;
+  
+      // Перезагружаем данные пользователя
+      await auth.currentUser.reload();
+  
+      const userRef = databaseRef(database, `users/${auth.currentUser.uid}`);
+      const snapshot = await get(userRef);
+      const userData = snapshot.val();
+  
+      // Если email изменился и еще не был зафиксирован в базе
+      if (
+        auth.currentUser.email !== userData.email &&
+        !userData.emailChanged
+      ) {
+        await update(userRef, {
+          email: auth.currentUser.email,
+          emailChanged: true
+        });
+  
+        setEmail(auth.currentUser.email);
+        setIsVerified(auth.currentUser.emailVerified); // обновить статус
+        showNotification("Email подтвержден и успешно обновлён.");
+      }
+    };
+  
+    checkEmailUpdate();
+  }, []);  
 
   const [identificationStatus, setIdentificationStatus] = useState(t('notident'));
   const [requestId, setRequestId] = useState(null); // New state for tracking request ID
@@ -1159,46 +1248,6 @@ const AuthDetails = () => {
       showNotificationError("Ошибка отправки заявки.");
     }
   };
-
-
-  // const handleSubmitRequest = async () => {
-  //   const { fio, faculty, course, group, photo } = studentInfo;
-
-  //   // Проверка на пустые поля
-  //   if (!fio || !faculty || !course || !group || !photo) {
-  //     showNotificationError("Все поля обязательны к заполнению.");
-  //     return;
-  //   }
-
-  //   try {
-  //     // Отправка фото студента в Firebase Storage (если выбрано)
-  //     let photoUrl = "";
-  //     if (photo) {
-  //       const storageReference = ref(storage, `request_photos/${Date.now()}_${photo.name}`);
-  //       const snapshot = await uploadBytes(storageReference, photo);
-  //       photoUrl = await getDownloadURL(snapshot.ref);
-  //     }
-
-  //     // Сохранение данных заявки в Firebase Database
-  //     const requestRef = push(databaseRef(database, "requests"));
-  //     await update(requestRef, {
-  //       fio,
-  //       faculty,
-  //       course,
-  //       group,
-  //       photoUrl,
-  //       status: "pending",
-  //       email: authUser.email // Save the user's email to link request with user
-  //     });
-
-  //     setRequestId(requestRef.key); // Set the request ID state
-  //     handleCloseForm();
-  //     showNotification("Заявка отправлена успешно.");
-  //   } catch (error) {
-  //     console.error("Ошибка отправки заявки:", error);
-  //     showNotificationError("Ошибка отправки заявки.");
-  //   }
-  // };
 
 
   useEffect(() => {
@@ -1845,10 +1894,39 @@ const AuthDetails = () => {
               </div>
             )}
 
-            <div className="info-section">
-              <h3>{t('email')}</h3>
-              <p>{email}</p>
-            </div>
+<div className="info-section" onClick={() => setIsEmailModalOpen(true)}>
+  <h3>{t('email')}</h3>
+  <p>{email}</p>
+  <p style={{ color: isVerified ? "lightgreen" : "red", fontSize: "14px" }}>
+    {isVerified ? "Подтвержден" : "Не подтвержден"}
+  </p>
+</div>
+
+{isEmailModalOpen && (
+  <div className="email-modal-backdrop" onClick={() => setIsEmailModalOpen(false)}>
+    <div className="email-modal-window" onClick={(e) => e.stopPropagation()}>
+      {!isEditingEmail ? (
+        <>
+          <h3 style={{ color: "grey" }}>{email}</h3>
+          <button onClick={() => setIsEditingEmail(true)}>Изменить email</button>
+          <button onClick={handleSendVerification}>Подтвердить email</button>
+          <button onClick={() => setIsEmailModalOpen(false)}>Закрыть</button>
+        </>
+      ) : (
+        <>
+          <input
+            type="email"
+            value={newEmail}
+            onChange={(e) => setNewEmail(e.target.value)}
+            placeholder="Новый email"
+          />
+          <button onClick={handleChangeEmail}>Сохранить</button>
+          <button onClick={() => setIsEditingEmail(false)}>Отмена</button>
+        </>
+      )}
+    </div>
+  </div>
+)}
 
             <div className="settings">
               <h3>{t('settings')}</h3>

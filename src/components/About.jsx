@@ -290,7 +290,7 @@ const About = () => {
       </section>
 
       {/* Раздел "Кафедры" с вложенными списками – элементы всегда отрисовываются, а класс "open" добавляется по состоянию */}
-      <section className="departments-section">
+      <section className="about-departments-section">
         <div className="departments-container">
           <h2>Кафедры</h2>
           <ul className="departments-list">

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { ref, set } from "firebase/database";
 import { auth, database } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
@@ -18,6 +19,16 @@ const SignUp = () => {
   const [showCopyPassword, setShowCopyPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // Состояние для спиннера
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigate("/home", { replace: true });
+      }
+    });
+  
+    return () => unsubscribe();
+  }, []);  
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -148,7 +159,7 @@ const SignUp = () => {
           <button className="reg-login-button" type="submit" disabled={isLoading}>
             {isLoading ? (
               // Пример простого спиннера через CSS
-              <span className="spinner"></span>
+              <span className="reg-spinner"></span>
             ) : (
               "Зарегистрироваться"
             )}

@@ -499,6 +499,9 @@ header nav ul li a:hover::before {
     font-size: 1em;
     color: #000;
     font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     }
 
     button{

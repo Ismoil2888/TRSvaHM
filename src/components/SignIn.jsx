@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +13,16 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false); // Состояние для показа/скрытия пароля
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigate("/home", { replace: true });
+      }
+    });
+  
+    return () => unsubscribe();
+  }, []);  
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
