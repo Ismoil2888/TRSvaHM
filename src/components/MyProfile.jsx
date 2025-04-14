@@ -695,7 +695,7 @@ const MyProfile = () => {
               </div>
             </div>
 
-            {role === "teacher" ? (
+            {(role === "teacher" || role === "dean") ? (
               <>
                 <div className="info-section">
                   <h3>{t('cathedra')}:</h3>
@@ -703,8 +703,8 @@ const MyProfile = () => {
                 </div>
 
                 <div className="rsl info-section" style={{ display: "flex" }}>
-                  <h3>{t('rank')}:</h3>
-                  <p style={{ fontSize: "17px", marginLeft: "15px" }}>{teacherTitle}</p>
+                  <h3>{role === 'dean' ? 'Должность:' : 'Звание:'}</h3>
+                  <p style={{ fontSize: "17px", marginLeft: "15px" }}>{role === 'dean' ? 'Декан' : teacherTitle}</p>
                 </div>
                 <div className="rsl info-section" style={{ display: "flex" }}>
                   <h3>{t('subject')}:</h3>

@@ -456,12 +456,23 @@ const TeacherProfile = () => {
         </div>
       </div>
       <div className="tch-profile-container" style={mainContentStyle}>
+        <div className="teacher-profile-header">
         <Link className="tch-profile-back-button" onClick={() => navigate(-1)}>
           <FiArrowLeft />
         </Link>
         <h2>Личный кабинет преподавателя</h2>
+        {/* <div className="tch-profile-info">
+        <div className="teach-img-name-surname">
+              <img
+                src={teacher.photo || defaultAvatar}
+                alt={`${teacher.name}`}
+              />
+              <p> {teacher.name} {teacher.surname}</p>
+            </div>
+            </div> */}
+            </div>
         <div className="tch-profile-info-books-list">
-          <div className="tch-profile-info">
+          {/* <div className="tch-profile-info">
             <div className="teach-img-name-surname">
               <img
                 src={teacher.photo || defaultAvatar}
@@ -473,7 +484,7 @@ const TeacherProfile = () => {
             <p><strong>Кафедра:</strong> {teacher.cathedra}</p>
             <p><strong>Звание:</strong> {teacher.runk}</p>
             <p><strong>Логин:</strong> {teacher.email}</p>
-          </div>
+          </div> */}
 
           {/* Форма для декана */}
           {userRole === 'dean' && (
@@ -489,21 +500,24 @@ const TeacherProfile = () => {
               <div className="audience-selector">
                 <button
                   onClick={() => setAudience('all')}
-                  className={audience === 'all' ? 'active' : ''}
+                  className={audience === 'all' ? 'techer-active-button' : ''}
+                  style={{color: "blue", marginTop: "10px"}}
                 >
                   Всем пользователям
                 </button>
 
                 <button
                   onClick={() => setAudience('teachers')}
-                  className={audience === 'teachers' ? 'active' : ''}
+                  className={audience === 'teachers' ? 'techer-active-button' : ''}
+                  style={{color: "blue", marginTop: "10px"}}
                 >
                   Всем преподавателям
                 </button>
 
                 <button
                   onClick={() => setAudience('department')}
-                  className={audience === 'department' ? 'active' : ''}
+                  className={audience === 'department' ? 'techer-active-button' : ''}
+                  style={{color: "blue", marginTop: "10px"}}
                 >
                   Кафедре
                 </button>
@@ -525,6 +539,7 @@ const TeacherProfile = () => {
               <button
                 onClick={handleSendNotification}
                 className="send-notification-btn"
+                style={{color: "darkblue", fontWeight: "bold", marginTop: "15px"}}
               >
                 Отправить уведомление
               </button>

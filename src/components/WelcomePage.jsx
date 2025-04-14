@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import ttulogo from "../Ttulogo.png";
@@ -10,7 +10,9 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { RiTranslate2 } from "react-icons/ri";
 import { FcCollaboration, FcLibrary, FcPlanner, FcGraduationCap } from "react-icons/fc";
 import { FiUser } from "react-icons/fi";
-
+import { LanguageContext } from '../contexts/LanguageContext';
+import { translations } from '../translations';
+import useTranslation from '../hooks/useTranslation';
 // Вспомогательный компонент для карточек
 const Card = ({ image, title, description }) => (
   <motion.div
@@ -28,7 +30,8 @@ const WelcomePage = () => {
   const [activeTab, setActiveTab] = useState("Факултет");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDept, setOpenDept] = useState(null); // для раскрытия специальностей в Бакалавриате
-
+  const t = useTranslation();
+    const { handleLanguageChange } = useContext(LanguageContext);
   // Состояния для темы и языка
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'standard');
   const [language, setLanguage] = useState(localStorage.getItem('language') || 'russian');
@@ -47,7 +50,7 @@ const WelcomePage = () => {
   const tabContents = {
     "Факултет": (
       <div>
-        <h2 style={{ color: "grey" }}>Факултет информационной безопасности</h2>
+        <h2 className="txt">{t('facultname')}</h2>
         <p>
           Наш факультет – это гарантия востребованности специалистов в области информационной безопасности. Учитесь у нас и получите практические навыки, востребованные ведущими мировыми компаниями, такими как Google, Apple и Amazon. Наши выпускники успешно строят карьеру в сфере информационной безопасности, ИТ-инженерии и системного администрирования.
         </p>
@@ -375,9 +378,9 @@ const WelcomePage = () => {
                 </div>
                 {showLanguageDropdown && (
                   <div className="dropdown-list">
-                    <div className="dropdown-item" onClick={() => selectLanguage('tajik')}>Тоҷикӣ</div>
-                    <div className="dropdown-item" onClick={() => selectLanguage('russian')}>Русский</div>
-                    <div className="dropdown-item" onClick={() => selectLanguage('english')}>English</div>
+                    <div className="dropdown-item" onClick={() => handleLanguageChange('tajik')}>Тоҷикӣ</div>
+                    <div className="dropdown-item" onClick={() => handleLanguageChange('russian')}>Русский</div>
+                    <div className="dropdown-item" onClick={() => handleLanguageChange('english')}>English</div>
                   </div>
                 )}
               </div>
@@ -484,9 +487,9 @@ const WelcomePage = () => {
                 </div>
                 {showLanguageDropdown && (
                   <div className="dropdown-list">
-                    <div className="dropdown-item" onClick={() => selectLanguage('tajik')}>Тоҷикӣ</div>
-                    <div className="dropdown-item" onClick={() => selectLanguage('russian')}>Русский</div>
-                    <div className="dropdown-item" onClick={() => selectLanguage('english')}>English</div>
+                    <div className="dropdown-item" onClick={() => handleLanguageChange('tajik')}>Тоҷикӣ</div>
+                    <div className="dropdown-item" onClick={() => handleLanguageChange('russian')}>Русский</div>
+                    <div className="dropdown-item" onClick={() => handleLanguageChange('english')}>English</div>
                   </div>
                 )}
               </div>
@@ -499,7 +502,7 @@ const WelcomePage = () => {
       <div className="hp-footer serious-footer">
         <p>
           Донишгоҳи техникии Тоҷикистон ба номи академик М.С. Осимӣ<br />
-          Ҷумҳурии Тоҷикистон, 734042, ш. Душанбе, хиёбони академик Раҳимҷонов 10
+          Ҷумҳурии Тоҷикистон, 734042, ш. Душанбе, хиёбони академик Раҷабов 10
         </p>
         <p>Email: info@ttu.tj, ttu@ttu.tj</p>
         <p>+992 (372) 21-35-11 | +992 (372) 23-02-46</p>

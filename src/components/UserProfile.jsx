@@ -710,7 +710,6 @@ const UserProfile = () => {
   const [teacherTitle, setTeacherTitle] = useState("");
   const [teacherCathedra, setTeacherCathedra] = useState("");
   const [TeacherSubject, setTeacherSubject] = useState("");
-  // В начале UserProfile.jsx, например после объявления существующих useState:
   const [userFaculty, setUserFaculty] = useState("не известно");
   const [userCourse, setUserCourse] = useState("не известно");
   const [userGroup, setUserGroup] = useState("не известно");
