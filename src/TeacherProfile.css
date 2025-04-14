@@ -73,8 +73,9 @@
 }
 
 .tch-profile-back-button{
+  font-size: 30px;
   position: absolute;
-  left: 0;
+  left: 350px;
   top: 0;
 }
 
@@ -224,6 +225,11 @@
 
   .book-item img {
       margin-bottom: 10px;
+  }
+
+  .tch-profile-back-button{
+    position: absolute;
+    left: 10px;
   }
 }
 

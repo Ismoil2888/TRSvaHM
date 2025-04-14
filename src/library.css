@@ -44,7 +44,7 @@ nav ul li a {
     left: 50%;
     transform: translate(-50%, -50%);
     font-weight: bold;
-    font-size: clamp(40px, 8vw, 60px);
+    font-size: clamp(5px, 7vw, 60px);
     color: rgba(167, 161, 161, 0.1);
     z-index: 0;
     white-space: nowrap;

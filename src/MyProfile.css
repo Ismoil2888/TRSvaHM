@@ -123,7 +123,8 @@
   }        
   
   .username-section h2 {
-    font-size: 24px;
+    /* font-size: 24px; */
+    font-size: clamp(15px, 5vw, 20px);
     margin-bottom: 5px;
     color: rgb(137, 161, 214);
   }

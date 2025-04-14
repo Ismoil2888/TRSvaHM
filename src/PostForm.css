@@ -564,14 +564,17 @@ width: 90%; */
 
 .currentUserHeader {
   display: flex;
-  width: 150px;
-  height: 24px;
+  /* width: 150px; */
+  max-width: 450px;
+  /* height: 24px; */
+  max-height: 50px;
   background: var(--bg-currentheader-color);
   /* background-color: var(--bg-header-ul-color); */
   background-size: 200% 100%;
   align-items: center;
   border-radius: 15px;
   padding: 10px;
+  margin-left: 10px;
   transition: background-color 5s ease;
   box-shadow: 2px 0 10px rgba(0,0,0,0.1);
   animation: shimmer 3s infinite;

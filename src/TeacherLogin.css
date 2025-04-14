@@ -67,7 +67,7 @@
   /* TeacherLogin.css – неоновый, полупрозрачный, современный стиль */
 
   .reg-teach-basic-container{
-    background: #1e2c39;
+    background: var(--bg-container-color);
     width: 100%;
     height: 100vh;
     display: flex;
@@ -80,8 +80,7 @@
   margin: 5vh auto;
   padding: 15px;
   border-radius: 20px;
-  background: #2c3e50;
-  /* background: rgba(20, 20, 30, 0.65); */
+  background: var(--bg-content-color);
   backdrop-filter: blur(10px);
   box-shadow: 0 0 40px rgba(0, 255, 255, 0.2);
   color: #fff;
@@ -103,8 +102,8 @@
   padding: 8px;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
+  background: rgba(0, 114, 114, 0.05);
+  color: #8abfcb;
   font-size: 15px;
   transition: all 0.3s ease;
 }
