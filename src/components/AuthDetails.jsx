@@ -986,7 +986,7 @@
 
 
 
-import { onAuthStateChanged, signOut, getAuth, reauthenticateWithCredential, EmailAuthProvider, updatePassword, sendEmailVerification, verifyBeforeUpdateEmail  } from "firebase/auth";
+import { onAuthStateChanged, signOut, getAuth, reauthenticateWithCredential, EmailAuthProvider, updatePassword, sendEmailVerification, verifyBeforeUpdateEmail } from "firebase/auth";
 import { getStorage, ref as storageRef, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { getDatabase, ref as databaseRef, onValue, push, update, get, query, orderByChild, equalTo, remove } from "firebase/database";
 import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
@@ -1035,9 +1035,9 @@ const AuthDetails = () => {
   const [showCourseList, setShowCourseList] = useState(false);
   const [showGroupList, setShowGroupList] = useState(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
-const [isEditingEmail, setIsEditingEmail] = useState(false);
-const [newEmail, setNewEmail] = useState("");
-const [isVerified, setIsVerified] = useState(false);
+  const [isEditingEmail, setIsEditingEmail] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
+  const [isVerified, setIsVerified] = useState(false);
 
   const cathedra = ["Системахои Автоматикунонидашудаи Идоракуни", "Шабакахои Алока Ва Системахои Комутатсиони", "Технологияхои Иттилооти Ва Хифзи Маълумот", "Автоматонии Равандхои Технологи Ва Истехсолот", "Информатика Ва Техникаи Хисоббарор"];
   const courses = ["1", "2", "3", "4"];
@@ -1089,6 +1089,27 @@ const [isVerified, setIsVerified] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
+    const handleVoiceAction = (e) => {
+      const action = e.detail;
+      if (action === "editUsername") setIsEditingUsername(true);
+      if (action === "addPhoto") document.getElementById("avatarInput").click();
+      if (action === "changePassword") setIsPasswordModalOpen(true);
+      if (action === "themeModal") setShowThemeModal(true);
+      if (action === "emailModal") setIsEmailModalOpen(true);
+      if (action === "phoneModal") handlePhoneModalOpen();
+      if (action === "closeEditUsername") setIsEditingUsername(false);
+      if (action === "closePhotoModal") setIsAvatarModalOpen(false);
+      if (action === "closePasswordModal") setIsPasswordModalOpen(false);
+      if (action === "closeThemeModal") setShowThemeModal(false);
+      if (action === "closeEmailModal") setIsEmailModalOpen(false);
+      if (action === "closePhoneModal") setIsPhoneModalOpen(false);
+    };
+
+    window.addEventListener("voiceAssistantAuthAction", handleVoiceAction);
+    return () => window.removeEventListener("voiceAssistantAuthAction", handleVoiceAction);
+  }, []);
+
+  useEffect(() => {
     if (authUser) {
       setIsVerified(authUser.emailVerified);
     }
@@ -1096,40 +1117,40 @@ const [isVerified, setIsVerified] = useState(false);
 
   const handleSendVerification = () => {
     if (!auth.currentUser) return;
-  
+
     if (auth.currentUser.emailVerified) {
       showNotification("Вы уже подтверждали свой email.");
       return;
     }
-  
+
     sendEmailVerification(auth.currentUser)
       .then(() => showNotification("Письмо с подтверждением отправлено на вашу почту."))
       .catch(() => showNotificationError("Ошибка при отправке письма."));
-  };  
+  };
 
   const handleChangeEmail = async () => {
     if (!authUser) return;
-  
+
     try {
       const userRef = databaseRef(database, `users/${authUser.uid}`);
       const userSnapshot = await get(userRef);
       const userData = userSnapshot.val();
-  
+
       // 1. Только один раз
       if (userData?.emailChanged) {
         showNotificationError("Вы уже меняли email. Повторная смена запрещена.");
         return;
       }
-  
+
       const currentPassword = prompt("Введите текущий пароль для подтверждения:");
       const credential = EmailAuthProvider.credential(auth.currentUser.email, currentPassword);
       await reauthenticateWithCredential(auth.currentUser, credential);
-  
+
       // 🔁 Используем verifyBeforeUpdateEmail — САМЫЙ ПРАВИЛЬНЫЙ способ
       await verifyBeforeUpdateEmail(auth.currentUser, newEmail);
-  
+
       // ⚠ НЕ меняем email в Realtime Database, пока не подтверждён
-  
+
       setIsEditingEmail(false);
       setIsEmailModalOpen(false);
       showNotification("Письмо для подтверждения нового email отправлено. Подтвердите, чтобы завершить смену.");
@@ -1142,18 +1163,18 @@ const [isVerified, setIsVerified] = useState(false);
       }
     }
   };
-  
+
   useEffect(() => {
     const checkEmailUpdate = async () => {
       if (!auth.currentUser) return;
-  
+
       // Перезагружаем данные пользователя
       await auth.currentUser.reload();
-  
+
       const userRef = databaseRef(database, `users/${auth.currentUser.uid}`);
       const snapshot = await get(userRef);
       const userData = snapshot.val();
-  
+
       // Если email изменился и еще не был зафиксирован в базе
       if (
         auth.currentUser.email !== userData.email &&
@@ -1163,15 +1184,15 @@ const [isVerified, setIsVerified] = useState(false);
           email: auth.currentUser.email,
           emailChanged: true
         });
-  
+
         setEmail(auth.currentUser.email);
         setIsVerified(auth.currentUser.emailVerified); // обновить статус
         showNotification("Email подтвержден и успешно обновлён.");
       }
     };
-  
+
     checkEmailUpdate();
-  }, []);  
+  }, []);
 
   const [identificationStatus, setIdentificationStatus] = useState(t('notident'));
   const [requestId, setRequestId] = useState(null); // New state for tracking request ID
@@ -1886,7 +1907,7 @@ const [isVerified, setIsVerified] = useState(false);
                     )}
                   </div>
 
-                  <label style={{color: "grey", fontSize: "14px"}}>Фото студенческого билета</label>
+                  <label style={{ color: "grey", fontSize: "14px" }}>Фото студенческого билета</label>
                   <input type="file" name="photo" accept="image/*" onChange={handleFileChange} />
                   <button onClick={handleSubmitRequest}>Отправить</button>
                   <button onClick={handleCloseForm}>Закрыть</button>
@@ -1894,39 +1915,39 @@ const [isVerified, setIsVerified] = useState(false);
               </div>
             )}
 
-<div className="info-section" onClick={() => setIsEmailModalOpen(true)}>
-  <h3>{t('email')}</h3>
-  <p>{email}</p>
-  <p style={{ color: isVerified ? "lightgreen" : "red", fontSize: "14px" }}>
-    {isVerified ? "Подтвержден" : "Не подтвержден"}
-  </p>
-</div>
+            <div className="info-section" onClick={() => setIsEmailModalOpen(true)}>
+              <h3>{t('email')}</h3>
+              <p>{email}</p>
+              <p style={{ color: isVerified ? "lightgreen" : "red", fontSize: "14px" }}>
+                {isVerified ? "Подтвержден" : "Не подтвержден"}
+              </p>
+            </div>
 
-{isEmailModalOpen && (
-  <div className="email-modal-backdrop" onClick={() => setIsEmailModalOpen(false)}>
-    <div className="email-modal-window" onClick={(e) => e.stopPropagation()}>
-      {!isEditingEmail ? (
-        <>
-          <h3 style={{ color: "grey" }}>{email}</h3>
-          <button onClick={() => setIsEditingEmail(true)}>Изменить email</button>
-          <button onClick={handleSendVerification}>Подтвердить email</button>
-          <button onClick={() => setIsEmailModalOpen(false)}>Закрыть</button>
-        </>
-      ) : (
-        <>
-          <input
-            type="email"
-            value={newEmail}
-            onChange={(e) => setNewEmail(e.target.value)}
-            placeholder="Новый email"
-          />
-          <button onClick={handleChangeEmail}>Сохранить</button>
-          <button onClick={() => setIsEditingEmail(false)}>Отмена</button>
-        </>
-      )}
-    </div>
-  </div>
-)}
+            {isEmailModalOpen && (
+              <div className="email-modal-backdrop" onClick={() => setIsEmailModalOpen(false)}>
+                <div className="email-modal-window" onClick={(e) => e.stopPropagation()}>
+                  {!isEditingEmail ? (
+                    <>
+                      <h3 style={{ color: "grey" }}>{email}</h3>
+                      <button onClick={() => setIsEditingEmail(true)}>Изменить email</button>
+                      <button onClick={handleSendVerification}>Подтвердить email</button>
+                      <button onClick={() => setIsEmailModalOpen(false)}>Закрыть</button>
+                    </>
+                  ) : (
+                    <>
+                      <input
+                        type="email"
+                        value={newEmail}
+                        onChange={(e) => setNewEmail(e.target.value)}
+                        placeholder="Новый email"
+                      />
+                      <button onClick={handleChangeEmail}>Сохранить</button>
+                      <button onClick={() => setIsEditingEmail(false)}>Отмена</button>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
 
             <div className="settings">
               <h3>{t('settings')}</h3>

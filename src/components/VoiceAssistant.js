@@ -30,6 +30,10 @@ const VoiceAssistant = () => {
     }
   };
 
+  const triggerAuthAction = (action) => {
+    window.dispatchEvent(new CustomEvent("voiceAssistantAuthAction", { detail: action }));
+  };  
+
   const translateText = async (text, to = "en") => {
     try {
       const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${to}&dt=t&q=${encodeURIComponent(text)}`);
@@ -92,15 +96,36 @@ const VoiceAssistant = () => {
     }
 
     const commands = [
+      // 📍 Навигация
       { keyword: "библиотек", action: () => navigate("/library"), response: "Переход в библиотеку выполнен" },
       { keyword: "главн", action: () => navigate("/"), response: "Вот главная страница" },
       { keyword: "поиск", action: () => navigate("/searchpage"), response: "Открыт раздел поиска" },
+      { keyword: "настройки", action: () => navigate("/authdetails"), response: "Переход в настройки" },
+      { keyword: "профиль", action: () => navigate("/myprofile"), response: "Переход в профиль" },
+    
+      // 📍 Открытие окон
+      { keyword: "имя", action: () => triggerAuthAction("editUsername"), response: "Открываю окно смены имени" },
+      { keyword: "фото", action: () => triggerAuthAction("addPhoto"), response: "Открываю окно загрузки фото" },
+      { keyword: "пароль", action: () => triggerAuthAction("changePassword"), response: "Открываю окно смены пароля" },
+      { keyword: "тема", action: () => triggerAuthAction("themeModal"), response: "Открываю настройки темы" },
+      { keyword: "email", action: () => triggerAuthAction("emailModal"), response: "Открываю окно смены почты" },
+      { keyword: "номер", action: () => triggerAuthAction("phoneModal"), response: "Открываю окно добавления номера" },
+    
+      // 📍 Закрытие окон
+      { keyword: "закрой имя", action: () => triggerAuthAction("closeEditUsername"), response: "Закрываю окно смены имени" },
+      { keyword: "закрой фото", action: () => triggerAuthAction("closePhotoModal"), response: "Закрываю окно фото" },
+      { keyword: "закрой пароль", action: () => triggerAuthAction("closePasswordModal"), response: "Закрываю окно смены пароля" },
+      { keyword: "закрой тему", action: () => triggerAuthAction("closeThemeModal"), response: "Закрываю настройки темы" },
+      { keyword: "закрой почту", action: () => triggerAuthAction("closeEmailModal"), response: "Закрываю окно почты" },
+      { keyword: "закрой номер", action: () => triggerAuthAction("closePhoneModal"), response: "Закрываю окно номера телефона" },
+    
+      // 📍 Просто ответы
       { keyword: "привет", response: "Привет босс, как ваши дела?" },
       { keyword: "салам алейкум", response: "Воалейкум салом, чихел шумо? соз? хуб? ба шумо чи кумак расонам сардор?" },
       { keyword: "декан факультета", response: "Декан факультета Цифровые технологии системы и защита информации Абдурасулов Далер Анварович" },
       { keyword: "ректор университета", response: "Ректором ТТУ имени академика М. Осими является Давлатзода Кудрат Камбар" },
       { keyword: "заведующий кафедры", response: "Заведующий кафедры информационной безопасности Мусинов Абдували" }
-    ];
+    ];    
 
     for (const cmd of commands) {
       if (lower.includes(cmd.keyword)) {
