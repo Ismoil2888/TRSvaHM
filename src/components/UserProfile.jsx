@@ -813,7 +813,12 @@ const UserProfile = () => {
     };
 
     // Сохраняем запрос
-    await set(databaseRef(db, `requests/${currentUserId}_${userId}`), requestData);
+    // await set(databaseRef(db, `requests/${currentUserId}_${userId}`), requestData);
+    const pairId = [currentUserId, userId].sort().join("_");
+await set(databaseRef(db, `requests/${pairId}`), {
+  ...requestData,
+  pairId
+});
 
     // Создаем уведомление
     const notificationData = {

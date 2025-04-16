@@ -2,7 +2,7 @@ export const translations = {
   tajik: {
     facultname: "ТРСваҲИ",
     rights: "Ҳама ҳуқуқ маҳфуз аст",
-    aboutefaculty: "Дар бораи факултет",
+    aboutefaculty: "Дар бораи факулта",
     //AuthDetails
     language: "Забон",
     greeting: "Салом",
@@ -56,7 +56,7 @@ export const translations = {
     group: "Гурӯҳ",
     //Library
     library: "Китобхона",
-    facultylibrary: "Китобхонаи факултет",
+    facultylibrary: "Китобхонаи факулта",
     videolessons: "Видео дарсҳо",
     electroniclibrary: "Китобхонаи электронӣ",
     //GroupPage

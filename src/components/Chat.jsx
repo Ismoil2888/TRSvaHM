@@ -643,7 +643,8 @@ const Chat = () => {
         <div className="chat-background"></div>
         <div className="chat-header">
           <FaChevronLeft
-            style={{ marginLeft: "10px", color: "white", fontSize: "25px" }}
+          className="white-icon"
+            style={{ marginLeft: "10px", fontSize: "25px" }}
             onClick={() => navigate(-1)}
           />
           <div style={{ display: "flex", gap: "20px", alignItems: "center" }} onClick={() => goToProfile(recipientId)}>
@@ -661,7 +662,8 @@ const Chat = () => {
 
           {/* Добавляем иконку меню */}
           <FaEllipsisV
-            style={{ marginRight: "10px", cursor: "pointer", color: "white", fontSize: "25px" }}
+          className="white-icon"
+            style={{ marginRight: "10px", cursor: "pointer", fontSize: "25px" }}
             onClick={() => setShowChatActions(!showChatActions)}
           />
 

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Routes, Route } from "react-router-dom";
 import './App.css';
 import { auth } from './firebase';
+import { getDatabase, ref as dbRef, get, set } from 'firebase/database';
 import SignUp from './components/SignUp';
 import SignIn from './components/SignIn';
 import AuthDetails from './components/AuthDetails';
@@ -84,9 +85,26 @@ useEffect(() => {
       const { outcome } = await deferredPrompt.userChoice;
       if (outcome === 'accepted') {
         setShowPWAInstallPrompt(false);
+  
+        // 🔥 Увеличиваем счётчик установок
+        const db = getDatabase();
+        const installsRef = dbRef(db, 'pwaInstalls');
+        const snapshot = await get(installsRef);
+        const currentCount = snapshot.exists() ? snapshot.val() : 0;
+        await set(installsRef, currentCount + 1);
       }
     }
   };
+
+  // const handleInstall = async () => {
+  //   if (deferredPrompt) {
+  //     deferredPrompt.prompt();
+  //     const { outcome } = await deferredPrompt.userChoice;
+  //     if (outcome === 'accepted') {
+  //       setShowPWAInstallPrompt(false);
+  //     }
+  //   }
+  // };
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {

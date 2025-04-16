@@ -97,12 +97,17 @@ const NotificationsPage = () => {
     const currentUserId = auth.currentUser?.uid;
     if (!currentUserId) return;
   
-    const requestKey = `${notification.senderId}_${currentUserId}`;
-    const requestRef = dbRef(db, `requests/${requestKey}`);
-  
+    // const requestKey = `${notification.senderId}_${currentUserId}`;
+    // const requestRef = dbRef(db, `requests/${requestKey}`);
+    const sortedPair = [notification.senderId, currentUserId].sort();
+    const pairId = sortedPair.join("_");
+    
+    const requestRef = dbRef(db, `requests/${pairId}`);
+
     try {
       // Обновляем статус запроса
-      await update(requestRef, { status: "accepted", pairId: requestKey });
+      // await update(requestRef, { status: "accepted", pairId: requestKey });
+      await update(requestRef, { status: "accepted", pairId });
   
       // Отправляем уведомление отправителю
       const senderNotification = {

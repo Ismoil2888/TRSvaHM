@@ -1118,6 +1118,41 @@ const AdminPanel = () => {
   const [selectedCourse, setSelectedCourse] = useState(""); // Новое состояние для курса
   const t = useTranslation();
   const daysOrder = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+  const [pwaInstallCount, setPwaInstallCount] = useState(0);
+  const [showUsersList, setShowUsersList] = useState(false);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const installsRef = dbRef(database, 'pwaInstalls');
+    onValue(installsRef, (snapshot) => {
+      if (snapshot.exists()) {
+        setPwaInstallCount(snapshot.val());
+      } else {
+        setPwaInstallCount(0);
+      }
+    });
+  }, []);
+
+  const fetchUsers = () => {
+    const usersRef = dbRef(database, 'users');
+    onValue(usersRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const usersArray = Object.keys(data).map((key) => ({ id: key, ...data[key] }));
+        setUsers(usersArray);
+      } else {
+        setUsers([]);
+      }
+    });
+  };
+
+  const toggleUsersList = () => {
+    setShowUsersList((prev) => {
+      const newState = !prev;
+      if (newState) fetchUsers();
+      return newState;
+    });
+  };
 
   const handleCourseSelect = (e) => {
     const course = e.target.value;
@@ -1206,10 +1241,10 @@ const AdminPanel = () => {
             .map(async (key) => {
               const post = data[key];
               if (post.status !== "pending") return null;
-    
+
               let userName = post.userName;
               let userAvatar = post.userAvatar;
-    
+
               if (post.userId) {
                 try {
                   const userSnapshot = await get(dbRef(database, `users/${post.userId}`));
@@ -1222,7 +1257,7 @@ const AdminPanel = () => {
                   console.error("Ошибка загрузки пользователя:", err);
                 }
               }
-    
+
               return {
                 id: key,
                 ...post,
@@ -1231,11 +1266,11 @@ const AdminPanel = () => {
               };
             })
         );
-    
+
         setPosts(postList.filter(Boolean));
         setPendingPostsCount(postList.filter(Boolean).length);
       }
-    });    
+    });
   }, []);
 
   const handleApprove = (postId) => {
@@ -1549,7 +1584,7 @@ const AdminPanel = () => {
         console.error("Ошибка при принятии заявки:", error);
         toast.error('Ошибка при принятии заявки');
       });
-  };  
+  };
 
   const handleRejectRequest = (id) => {
     update(dbRef(database, `requests/${id}`), { status: "rejected" });
@@ -1674,7 +1709,30 @@ const AdminPanel = () => {
         <button className='ap-buttons-add-edit' onClick={() => setShowScheduleEditor(true)}>
           <FaPlus /> Показать расписание уроков
         </button>
+        <button className='ap-buttons-add-edit' onClick={toggleUsersList}>
+          {showUsersList ? 'Скрыть пользователей' : 'Показать всех пользователей'}
+        </button>
+        <div className="txt" style={{ fontSize: "18px" }}>
+          📲 Установок приложения: <strong>{pwaInstallCount}</strong>
+        </div>
       </div>
+
+      {showUsersList && (
+        <div className="users-list">
+          <h2>Все зарегистрированные пользователи:</h2>
+          {users.length > 0 ? (
+            <ul className="txt">
+              {users.map((user) => (
+                <li key={user.id} style={{ marginBottom: '8px' }}>
+                  <strong>{user.username}</strong> — {user.email || 'email не указан'}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>Пользователи не найдены.</p>
+          )}
+        </div>
+      )}
 
       {isLoading && <div className="loading-bar">Подождите немного...</div>}
 

@@ -14,6 +14,8 @@
   .admin-buttons {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
     margin-top: 50px;
   }
 
