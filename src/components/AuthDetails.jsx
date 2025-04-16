@@ -1038,7 +1038,7 @@ const AuthDetails = () => {
   const [isEditingEmail, setIsEditingEmail] = useState(false);
   const [newEmail, setNewEmail] = useState("");
   const [isVerified, setIsVerified] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false); // Состояние для спиннера
   const cathedra = ["Системахои Автоматикунонидашудаи Идоракуни", "Шабакахои Алока Ва Системахои Комутатсиони", "Технологияхои Иттилооти Ва Хифзи Маълумот", "Автоматонии Равандхои Технологи Ва Истехсолот", "Информатика Ва Техникаи Хисоббарор"];
   const courses = ["1", "2", "3", "4"];
   const groups = ["1-530102 - АСКИ", "1-400101 - ТБТИ", "1-450103-02 - ШАваТИ", "1-400102-04 - ТИваХМ", "1-98010101-03 - ТИваХМ", "1-98010101-05 - ТИваХМ", "1-530101 - АРТваИ", "1-530107 - АРТваИ", "1-400301-02 - АРТваИ", "1-400301-05 - АРТваИ", "1-080101-07 - ИваТХ"];
@@ -1238,6 +1238,8 @@ const AuthDetails = () => {
       return;
     }
 
+    setIsLoading(true); // Включаем спиннер
+
     try {
       let photoUrl = "";
       if (photo) {
@@ -1255,15 +1257,16 @@ const AuthDetails = () => {
         group,
         photoUrl,
         status: "pending",
-        email: authUser.email,          // Email пользователя
-        username,                      // Имя пользователя (из состояния компонента)
-        userAvatar: avatarUrl,         // URL аватарки пользователя
-        userId: authUser.uid           // uid пользователя, чтобы можно было перейти в его профиль
+        email: authUser.email,
+        username,
+        userAvatar: avatarUrl,
+        userId: authUser.uid
       });
 
       setRequestId(requestRef.key);
       handleCloseForm();
       showNotification("Заявка отправлена успешно.");
+      setIsLoading(false);
     } catch (error) {
       console.error("Ошибка отправки заявки:", error);
       showNotificationError("Ошибка отправки заявки.");
@@ -1909,7 +1912,14 @@ const AuthDetails = () => {
 
                   <label style={{ color: "grey", fontSize: "14px" }}>Фото студенческого билета</label>
                   <input type="file" name="photo" accept="image/*" onChange={handleFileChange} />
-                  <button onClick={handleSubmitRequest}>Отправить</button>
+                  <button className="sendstudentsrequest-button" onClick={handleSubmitRequest}>
+                    {isLoading ? (
+                      // Пример простого спиннера через CSS
+                      <span className="reg-spinner"></span>
+                    ) : (
+                      "Отправить"
+                    )}
+                  </button>
                   <button onClick={handleCloseForm}>Закрыть</button>
                 </div>
               </div>
