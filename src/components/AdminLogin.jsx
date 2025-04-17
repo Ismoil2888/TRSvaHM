@@ -18,7 +18,7 @@ const AdminLogin = () => {
 
       setShowWelcome(true);
       setTimeout(() => {
-        navigate('/admin');
+        navigate('/987654321admin');
       }, 2000);
     } else {
       setError('Неверный пароль');

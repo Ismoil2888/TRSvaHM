@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Routes, Route } from "react-router-dom";
 import './App.css';
 import { auth } from './firebase';
-import { getDatabase, ref as dbRef, get, set } from 'firebase/database';
+import { getDatabase, ref as dbRef, onValue, get, set } from 'firebase/database';
 import SignUp from './components/SignUp';
 import SignIn from './components/SignIn';
 import AuthDetails from './components/AuthDetails';
@@ -37,12 +37,24 @@ import DeanLogin from './components/DeanLogin';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { applyTheme } from "./theme";
 import JarvisIntroPage from "./components/JarvisIntroPage";
+import { RoleRoute } from './components/ProtectedRoute';
 
 function App() {
+    const [userRole, setUserRole] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // состояние для загрузки
   const [showPWAInstallPrompt, setShowPWAInstallPrompt] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (!user) return;
+    const db = getDatabase();
+    const userRef = dbRef(db, `users/${user.uid}`);
+    onValue(userRef, snapshot => {
+      setUserRole(snapshot.val()?.role || '')
+    });
+  }, []);    
 
 useEffect(() => {
   // Считываем сохранённую тему или задаём стандартную
@@ -211,8 +223,23 @@ useEffect(() => {
       <Route path="/teacher-login" element={<TeacherLogin />} />
       <Route path="/dean-login" element={<DeanLogin />} />
       <Route path="/teacher-profile/:id" element={<TeacherProfile />} />
-      <Route path="/admin" element={<AdminPrivateRoute> <AdminPanel /> </AdminPrivateRoute>} />
-      <Route path="/admin-login" element={<AdminLogin />} />
+      <Route path="/987654321admin" element={<AdminPrivateRoute> <AdminPanel /> </AdminPrivateRoute>} />
+      <Route path="/987654321admin-login" element={ <AdminLogin /> } />
+        {/* Только dean */}
+       {/* {userRole === 'dean' && (
+                <Route
+                path="/admin"
+                element={<AdminPrivateRoute> <AdminPanel /> </AdminPrivateRoute>  } />
+                )} */}
+                  {/* <Route
+    path="/admin"
+    element={
+      <RoleRoute allowedRoles={['dean']}>
+        <AdminPanel/>
+      </RoleRoute>
+    }
+  /> */}
+
       <Route path="/blank" element={<BlankForm />} />
       <Route path="*" element={<NotfoundPage />} />
       <Route path="/chat/:chatRoomId" element={<PrivateRoute> <Chat /> </PrivateRoute>} />

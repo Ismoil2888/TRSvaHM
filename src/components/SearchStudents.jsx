@@ -344,7 +344,7 @@ const SearchStudents = () => {
                     {userRole === 'dean' && (
                       <>
                         <li>
-                          <Link to="/admin">
+                          <Link to="/987654321admin-login">
                             <span className="txt">Админ-Панель</span>
                           </Link>
                         </li>
