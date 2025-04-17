@@ -159,6 +159,7 @@ footer {
 /* Футер для десктопа */
 .footer-desktop {
   display: block;
+  background-color: var(--bg-content-color);
 }
 
 .footer-nav {
@@ -989,6 +990,12 @@ header nav ul li a:hover::before {
           justify-content: space-between;
           align-items: center;
           color: red;
+        }
+
+        .basic-email-block{
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
         }
 
         /* Стили для модального окна формы */

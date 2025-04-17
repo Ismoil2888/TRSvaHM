@@ -251,7 +251,7 @@ const About = () => {
               <li><Link to="/home"><FontAwesomeIcon icon={faHome} /> Главная</Link></li>
               <li><Link to="/about"><FontAwesomeIcon icon={faInfoCircle} style={{ color: "red" }} /> О факультете</Link></li>
               <li><Link to="/teachers"><FontAwesomeIcon icon={faChalkboardTeacher} /> Преподаватели</Link></li>
-              <li><Link to="/schedule"><FontAwesomeIcon icon={faCalendarAlt} /> Расписание</Link></li>
+              {/* <li><Link to="/schedule"><FontAwesomeIcon icon={faCalendarAlt} /> Расписание</Link></li> */}
               <li><Link to="/library"><FontAwesomeIcon icon={faBook} /> Библиотека</Link></li>
               <li><Link to="/contacts"><FontAwesomeIcon icon={faPhone} /> Контакты</Link></li>
               <li><Link to="/authdetails"><FontAwesomeIcon icon={faUserCog} /> Настройки Профиля</Link></li>
@@ -261,14 +261,14 @@ const About = () => {
       </header>
 
       <section className="about-hero">
-        <h1>Факултаи технологияҳои рақами, системаҳо ва ҳифзи иттилоот</h1>
+        <h1>{t('facultnamefull')}</h1>
         <div className="faculty-image">
           <img width={300} src={basiclogo} alt="Факультет" />
         </div>
       </section>
 
       <section className="slider-section">
-        <h2 className="section-title txt">Галерея</h2>
+        <h2 className="section-title txt">{t('gallery')}</h2>
         <Swiper className="swiper-container"
           modules={[Navigation, Pagination, Autoplay]}
           navigation
@@ -292,7 +292,7 @@ const About = () => {
       {/* Раздел "Кафедры" с вложенными списками – элементы всегда отрисовываются, а класс "open" добавляется по состоянию */}
       <section className="about-departments-section">
         <div className="departments-container">
-          <h2>Кафедры</h2>
+          <h2>{t('departments')}</h2>
           <ul className="departments-list">
             {departments.map((dept) => (
               <li key={dept.id} className="department-item">

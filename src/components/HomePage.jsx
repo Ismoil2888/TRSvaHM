@@ -1385,6 +1385,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FaPlusCircle, FaHeart, FaInfo, FaRegHeart, FaRegComment, FaRegBookmark } from "react-icons/fa";
 import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPhone, faUserCog, faSearch, faBell } from "@fortawesome/free-solid-svg-icons";
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
+import forbiddenNames from "./forbiddenNames"; // Импорт списка запрещённых имён
 import useTranslation from '../hooks/useTranslation';
 
 const HomePage = () => {
@@ -1751,12 +1752,21 @@ const HomePage = () => {
   };
 
   const handleCommentSubmit = (isAnonymous = false) => {
-    if (newComment.trim() === "") return;
+    // if (newComment.trim() === "") return;
+    const text = newComment.trim();
+    if (!text) return;
+
+    const foundBad = forbiddenNames.some(
+      bad => text.toLowerCase().includes(bad.toLowerCase())
+    );
+    if (foundBad) {
+      showNotificationError("Нельзя писать такие комментарии");
+      return;
+    }
 
     const database = getDatabase();
     const commentRef = dbRef(database, `postComments/${commentModal.postId}`);
     const postRef = dbRef(database, `posts/${commentModal.postId}`);
-
     const formattedTimestamp = new Date().toLocaleString("ru-RU"); // Форматируем дату для записи
 
     if (editingCommentId) {
@@ -2083,7 +2093,7 @@ const HomePage = () => {
           <nav className="header-nav" style={HeaderDesktop}>
             <ul className="header-ul">
               <li><Link to="/jarvisintropage" className="txt">{t('voiceassistant')}</Link></li>
-              <li><Link to="/about" className="txt">{t('aboutefaculty')}</Link></li>
+              <li><Link to="/about" className="txt">{t('aboutfaculty')}</Link></li>
 
               {/* Дополнительные разделы для декана */}
               {userRole === 'dean' && (
@@ -2153,7 +2163,7 @@ const HomePage = () => {
                 <li><Link to="/home"><FontAwesomeIcon icon={faHome} style={{ color: "red" }} /> Главная</Link></li>
                 <li><Link to="/about"><FontAwesomeIcon icon={faInfoCircle} /> О факультете</Link></li>
                 <li><Link to="/teachers"><FontAwesomeIcon icon={faChalkboardTeacher} /> Преподаватели</Link></li>
-                <li><Link to="/schedule"><FontAwesomeIcon icon={faCalendarAlt} /> Расписание</Link></li>
+                {/* <li><Link to="/schedule"><FontAwesomeIcon icon={faCalendarAlt} /> Расписание</Link></li> */}
                 <li><Link to="/library"><FontAwesomeIcon icon={faBook} /> Библиотека</Link></li>
                 <li><Link to="/contacts"><FontAwesomeIcon icon={faPhone} /> Контакты</Link></li>
                 <li><Link to="/authdetails"><FontAwesomeIcon icon={faUserCog} /> Настройки Профиля</Link></li>
@@ -2458,7 +2468,7 @@ const HomePage = () => {
             <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon active-icon" style={{}} /></Link>
             <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon" /></Link>
             <Link to="/about"><FaInfo className="footer-icon" /></Link>
-            {role === "teacher" && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
+            {(role === "teacher" || role === "dean") && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
             <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
             <Link to="/myprofile">
               <img src={userAvatarUrl} alt="" className="footer-avatar skeleton-media-avatars" />

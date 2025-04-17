@@ -993,7 +993,7 @@ import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { auth, database, storage } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
-import { FaEllipsisV, FaTimes, FaPen, FaArrowLeft, FaLock, FaEye, FaEyeSlash, FaRegAddressBook } from "react-icons/fa"; // Иконка карандаша
+import { FaEllipsisV, FaTimes, FaPen, FaArrowLeft, FaLock, FaEye, FaEyeSlash, FaRegAddressBook, FaAt } from "react-icons/fa"; // Иконка карандаша
 import imageCompression from 'browser-image-compression';
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
 import basiclogo from "../basic-logo.png";
@@ -1926,11 +1926,18 @@ const AuthDetails = () => {
             )}
 
             <div className="info-section" onClick={() => setIsEmailModalOpen(true)}>
+              <div className="basic-email-block">
+              <div className="email-block1">
               <h3>{t('email')}</h3>
               <p>{email}</p>
               <p style={{ color: isVerified ? "lightgreen" : "red", fontSize: "14px" }}>
-                {isVerified ? "Подтвержден" : "Не подтвержден"}
+                {isVerified ? t('confirmed') : t('notconfirmed')}
               </p>
+              </div>
+              <div className="email-block2">
+                  <FaAt style={{ color: isVerified ? "#0AFFFF" : "red" }} />
+              </div>
+              </div>
             </div>
 
             {isEmailModalOpen && (

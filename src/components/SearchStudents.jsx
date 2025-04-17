@@ -338,7 +338,7 @@ const SearchStudents = () => {
              <nav className="header-nav" style={HeaderDesktop}>
                   <ul className="header-ul">
                     <li><Link to="/jarvisintropage" className="txt">{t('voiceassistant')}</Link></li>
-                    <li><Link to="/about" className="txt">{t('aboutefaculty')}</Link></li>
+                    <li><Link to="/about" className="txt">{t('aboutfaculty')}</Link></li>
       
                     {/* Дополнительные разделы для декана */}
                     {userRole === 'dean' && (
@@ -390,7 +390,7 @@ const SearchStudents = () => {
                 <li><Link to="/home"><FontAwesomeIcon icon={faHome} /> Главная</Link></li>
                 <li><Link to="/about"><FontAwesomeIcon icon={faInfoCircle} /> О факультете</Link></li>
                 <li><Link to="/teachers"><FontAwesomeIcon icon={faChalkboardTeacher} /> Преподаватели</Link></li>
-                <li><Link to="/schedule"><FontAwesomeIcon icon={faCalendarAlt} /> Расписание</Link></li>
+                {/* <li><Link to="/schedule"><FontAwesomeIcon icon={faCalendarAlt} /> Расписание</Link></li> */}
                 <li><Link to="/library"><FontAwesomeIcon icon={faBook} /> Библиотека</Link></li>
                 <li><Link to="/contacts"><FontAwesomeIcon icon={faPhone} /> Контакты</Link></li>
                 <li><Link to="/authdetails"><FontAwesomeIcon icon={faUserCog} /> Настройки Профиля</Link></li>
@@ -478,7 +478,7 @@ const SearchStudents = () => {
           <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon" /></Link>
           <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon  active-icon" /></Link>
           <Link to="/about"><FaInfo className="footer-icon" /></Link>
-          {role === "teacher" && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
+          {(role === "teacher" || role === "dean") && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
           <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
           <Link to="/myprofile">
             <img src={userAvatarUrl} alt="" className="footer-avatar skeleton-media-avatars" />

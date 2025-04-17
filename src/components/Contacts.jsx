@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../contact.css";
 import basiclogo from "../basic-logo.png";
 import { auth } from "../firebase";
 import { getDatabase, ref as dbRef, onValue } from "firebase/database";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { FaUser } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import { FaPlusCircle } from "react-icons/fa";
 import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPhone, faUserCog, faSearch } from "@fortawesome/free-solid-svg-icons";
+import useTranslation from '../hooks/useTranslation';
 
 const ContactsPage = () => {
+  const navigate = useNavigate();
+  const t = useTranslation();
   const [showButton, setShowButton] = useState(false); // Управление состоянием кнопки
 
   useEffect(() => {
@@ -72,26 +75,6 @@ const ContactsPage = () => {
 
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [userAvatarUrl, setUserAvatarUrl] = useState(null);
-
-  useEffect(() => {
-    const user = auth.currentUser;
-    if (user) {
-
-      // Получаем URL аватарки пользователя
-      const db = getDatabase();
-      const userRef = dbRef(db, `users/${user.uid}`);
-      onValue(userRef, (snapshot) => {
-        const userData = snapshot.val();
-        if (userData && userData.avatarUrl) {
-          setUserAvatarUrl(userData.avatarUrl);
-        } else {
-          setUserAvatarUrl("./default-image.png"); // Изображение по умолчанию
-        }
-      });
-
-    }
-  }, []);
   
   const toggleMenu = () => {
     if (isMenuOpen) {
@@ -109,57 +92,34 @@ const ContactsPage = () => {
 
   return (
 <div className="cont-body" onContextMenu={handleContextMenu}>
-      {/* Theme Toggle */}
-      <div className="cont-theme-toggle" id="theme-toggle">
-        <div className="cont-toggle-circle"></div>
-      </div>
+     <header className="head-line">
+          <div className="header-nav-2">
 
-      <header>
-        <nav>
-          <ul>
-            <li><Link to="/home">Главная</Link></li>
-            <li><Link to="/about">О факультете</Link></li>
-            <li><Link to="/teachers">Преподаватели</Link></li>
-            <li><Link to="/schedule">Расписание</Link></li>
-            <li><Link to="/library">Библиотека</Link></li>
-            <li><Link to="/contacts">Контакты</Link></li>
-          </ul>
-          <ul style={{color: "#58a6ff", fontSize: "25px"}}>Контакты</ul>
-          <ul>
-            <li>
-              <Link to="/myprofile">
-              <FaUser className="user-icon"></FaUser>
-              </Link>
-            </li>
-          </ul>
-        </nav>
+            <Link className="back-button white-icon" style={{ marginLeft: "15px" }} onClick={() => navigate(-1)}>
+              <FaArrowLeft />
+            </Link>
 
-        <div className="header-nav-2">
+            <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>Контакты</ul>
 
-        <img src={basiclogo} width="50px" alt="logo" style={{marginLeft: "10px"}} />
+            <div className={`burger-menu-icon ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenu}>
+              <span className="bm-span"></span>
+              <span className="bm-span"></span>
+              <span className="bm-span"></span>
+            </div>
 
-        <ul className="logo-app" style={{color: "#58a6ff", fontSize: "25px"}}>Контакты</ul>
+            <div className={`burger-menu ${isMenuOpen ? 'open' : ''}`}>
+              <ul>
+                <li><Link to="/home"><FontAwesomeIcon icon={faHome} style={{ color: "red" }} /> Главная</Link></li>
+                <li><Link to="/about"><FontAwesomeIcon icon={faInfoCircle} /> О факультете</Link></li>
+                <li><Link to="/teachers"><FontAwesomeIcon icon={faChalkboardTeacher} /> Преподаватели</Link></li>
+                <li><Link to="/library"><FontAwesomeIcon icon={faBook} /> Библиотека</Link></li>
+                <li><Link to="/contacts"><FontAwesomeIcon icon={faPhone} /> Контакты</Link></li>
+                <li><Link to="/authdetails"><FontAwesomeIcon icon={faUserCog} /> Настройки Профиля</Link></li>
+              </ul>
+            </div>
 
-        <div className={`burger-menu-icon ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenu}>          
-          <span className="bm-span"></span>
-          <span className="bm-span"></span>
-          <span className="bm-span"></span>
-        </div>
-
-        <div className={`burger-menu ${isMenuOpen ? 'open' : ''}`}>         
-        <ul>
-           <li><Link to="/home"><FontAwesomeIcon icon={faHome} /> Главная</Link></li>
-           <li><Link to="/about"><FontAwesomeIcon icon={faInfoCircle} /> О факультете</Link></li>
-           <li><Link to="/teachers"><FontAwesomeIcon icon={faChalkboardTeacher} /> Преподаватели</Link></li>
-           <li><Link to="/schedule"><FontAwesomeIcon icon={faCalendarAlt} /> Расписание</Link></li>
-           <li><Link to="/library"><FontAwesomeIcon icon={faBook} /> Библиотека</Link></li>
-           <li><Link to="/contacts"><FontAwesomeIcon icon={faPhone} style={{color: "red"}} /> Контакты</Link></li>
-           <li><Link to="/authdetails"><FontAwesomeIcon icon={faUserCog} /> Настройки Профиля</Link></li>
-        </ul>
-        </div>
-
-        </div>
-      </header>
+          </div>
+        </header>
 
       <div className="cont-header">
         <div className="cont-container">
@@ -216,10 +176,9 @@ const ContactsPage = () => {
                 <div className="cont-info-container">
                   <h3>Наш Университет</h3>
                   <p>
-                    Улица Кибербезопасности 123<br />
-                    Душанбе, Таджикистан
+                    ш. Душанбе, хиёбони академик Раҷабов 10
                   </p>
-                  <p>Email: info@cyberfaculty.tj<br />Телефон: +992 908 06 04 04</p>
+                  <p>Email: info@ttu.tj, ttu@ttu.tj<br />Телефон: +992 908 06 04 04</p>
                 </div>
               </div>
             </div>
@@ -240,20 +199,6 @@ const ContactsPage = () => {
             </div>
         </section>
         </main>
-      </div>
-
-      <footer>
-        <p>&copy; 2024 Факультет Кибербезопасности. Все права защищены.</p>
-      </footer>
-
-      <div className="footer-nav">
-        <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon" /></Link>
-        <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon" /></Link>
-        <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>
-        <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
-        <Link to="/myprofile">
-          <img src={userAvatarUrl} alt="User Avatar" className="footer-avatar" />
-        </Link>
       </div>
     </div>
   );

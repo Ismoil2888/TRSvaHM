@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getDatabase, ref as dbRef, onValue, set, push, update, remove } from "firebase/database";
 import { auth } from "../firebase";
-import { FaTimes, FaHeart, FaCommentDots } from "react-icons/fa";
+import { FaTimes, FaCommentDots } from "react-icons/fa";
 import bookIcon from '../book-icon.png';
 import "../App.css";
 import "../library.css";
@@ -15,10 +15,12 @@ import { faHome, faInfoCircle, faChalkboardTeacher, faCalendarAlt, faBook, faPho
 import defaultAvatar from '../default-image.png';
 import anonymAvatar from '../anonym2.jpg';
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
-import ttulogo from "../Ttulogo.png";
 import useTranslation from '../hooks/useTranslation';
+import forbiddenNames from "./forbiddenNames";
 
 const Library = ({ userId }) => {
+  const [notification, setNotification] = useState("");
+  const [notificationType, setNotificationType] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("books");
   const [books, setBooks] = useState([]);
@@ -98,6 +100,16 @@ const Library = ({ userId }) => {
     navigate(`/profile/${userId}`);
   };
 
+  // Функция для ошибочных уведомлений
+  const showNotificationError = (message) => {
+    setNotificationType("error");
+    setNotification(message);
+    setTimeout(() => {
+      setNotification("");
+      setNotificationType("");
+    }, 3000);
+  };
+
   // 2. Получение видеоуроков
   useEffect(() => {
     const ref = dbRef(database, "videoLessons");
@@ -105,7 +117,7 @@ const Library = ({ userId }) => {
       const data = snapshot.val();
       if (data) {
         const loaded = Object.keys(data).map(id => ({ id, ...data[id], commentCount: 0 }));
-  
+
         // Загружаем количество комментариев
         loaded.forEach(video => {
           const commentsRef = dbRef(database, `comments/${video.id}`);
@@ -259,7 +271,7 @@ const Library = ({ userId }) => {
 
   const handleSearch = (query) => {
     setSearchQuery(query);
-  
+
     if (activeTab === "books") {
       const filtered = books.filter((book) =>
         book.title.toLowerCase().includes(query.toLowerCase())
@@ -338,7 +350,17 @@ const Library = ({ userId }) => {
   };
 
   const handleCommentSubmit = (isAnonymous = false) => {
-    if (newComment.trim() === "") return;
+    // if (newComment.trim() === "") return;
+    const text = newComment.trim();
+    if (!text) return;
+
+    const foundBad = forbiddenNames.some(
+      bad => text.toLowerCase().includes(bad.toLowerCase())
+    );
+    if (foundBad) {
+      showNotificationError("Нельзя писать такие комментарии");
+      return;
+    }
 
     const commentRef = dbRef(database, `comments/${commentModal.bookId}`);
 
@@ -426,9 +448,9 @@ const Library = ({ userId }) => {
     ? filteredBooks
     : filteredBooks.filter(book => book.cathedra === activeDepartment);
 
-    const displayedVideos = searchQuery
-  ? filteredVideos
-  : videoLessons.filter(v => v.cathedra === activeDepartment);
+  const displayedVideos = searchQuery
+    ? filteredVideos
+    : videoLessons.filter(v => v.cathedra === activeDepartment);
 
   if (identificationStatus === t('notident')) {
     return (
@@ -444,6 +466,11 @@ const Library = ({ userId }) => {
 
   return (
     <div className="glava">
+           {notification && (
+          <div className={`notification ${notificationType}`}>
+            {notification}
+          </div>
+        )}
       <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <img style={{ width: "50px", height: "45px" }} src={basiclogo} alt="" />
@@ -514,44 +541,44 @@ const Library = ({ userId }) => {
       <div className="glav-container" style={mainContentStyle}>
         <p className="back-text">{t("electroniclibrary")}</p>
         <header>
-           <nav className="header-nav" style={HeaderDesktop}>
+          <nav className="header-nav" style={HeaderDesktop}>
+            <ul className="header-ul">
+              <li><Link to="/jarvisintropage" className="txt">{t('voiceassistant')}</Link></li>
+              <li><Link to="/about" className="txt">{t('aboutfaculty')}</Link></li>
+
+              {/* Дополнительные разделы для декана */}
+              {userRole === 'dean' && (
+                <>
+                  <li>
+                    <Link to="/admin">
+                      <span className="txt">Админ-Панель</span>
+                    </Link>
+                  </li>
+                </>
+              )}
+            </ul>
+
+            {(role === "teacher" || role === "dean") && (
+              <>
                 <ul className="header-ul">
-                  <li><Link to="/jarvisintropage" className="txt">{t('voiceassistant')}</Link></li>
-                  <li><Link to="/about" className="txt">{t('aboutefaculty')}</Link></li>
-    
-                  {/* Дополнительные разделы для декана */}
-                  {userRole === 'dean' && (
-                    <>
-                      <li>
-                        <Link to="/admin">
-                          <span className="txt">Админ-Панель</span>
-                        </Link>
-                      </li>
-                    </>
-                  )}
+                  <li><Link to="/post" className="txt">{t('addpost')}</Link></li>
                 </ul>
-    
-                {(role === "teacher" || role === "dean") && (
-                  <>
-                    <ul className="header-ul">
-                      <li><Link to="/post" className="txt">{t('addpost')}</Link></li>
-                    </ul>
-                  </>
-                )}
-    
-                <Link to="/myprofile">
-                  <div className="currentUserHeader" style={currentUserHeader}>
-                    <img
-                      src={userDetails.avatarUrl || "./default-image.png"}
-                      alt="User Avatar"
-                      className="user-avatar"
-                    />
-                    <span style={{ fontSize: "18px", color: "lightgreen" }}>
-                      {userDetails.username}
-                    </span>
-                  </div>
-                </Link>
-              </nav>
+              </>
+            )}
+
+            <Link to="/myprofile">
+              <div className="currentUserHeader" style={currentUserHeader}>
+                <img
+                  src={userDetails.avatarUrl || "./default-image.png"}
+                  alt="User Avatar"
+                  className="user-avatar"
+                />
+                <span style={{ fontSize: "18px", color: "lightgreen" }}>
+                  {userDetails.username}
+                </span>
+              </div>
+            </Link>
+          </nav>
           <div className="header-nav-2">
             <img src={basiclogo} width="50px" alt="logo" style={{ marginLeft: "10px" }} />
             <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "25px" }}>{t('library')}</ul>
@@ -565,7 +592,7 @@ const Library = ({ userId }) => {
                 <li><Link to="/home"><FontAwesomeIcon icon={faHome} /> Главная</Link></li>
                 <li><Link to="/about"><FontAwesomeIcon icon={faInfoCircle} /> О факультете</Link></li>
                 <li><Link to="/teachers"><FontAwesomeIcon icon={faChalkboardTeacher} /> Преподаватели</Link></li>
-                <li><Link to="/schedule"><FontAwesomeIcon icon={faCalendarAlt} /> Расписание</Link></li>
+                {/* <li><Link to="/schedule"><FontAwesomeIcon icon={faCalendarAlt} /> Расписание</Link></li> */}
                 <li><Link to="/library"><FontAwesomeIcon icon={faBook} style={{ color: "red" }} /> Библиотека</Link></li>
                 <li><Link to="/contacts"><FontAwesomeIcon icon={faPhone} /> Контакты</Link></li>
                 <li><Link to="/authdetails"><FontAwesomeIcon icon={faUserCog} /> Настройки Профиля</Link></li>
@@ -616,7 +643,7 @@ const Library = ({ userId }) => {
 
               <div className="department-dropdown txt" style={{ margin: "20px 0", textAlign: "center" }}>
                 <label htmlFor="department-select" style={{ marginRight: "10px", fontWeight: "bold" }}>
-                {t("selectcathedra")}:
+                  {t("selectcathedra")}:
                 </label>
                 <select
                   id="department-select"
@@ -670,20 +697,20 @@ const Library = ({ userId }) => {
               <section className="video-grid">
                 {displayedVideos.map(video => (
                   <div key={video.id} className="video-card">
-                  <video src={video.url} controls width="100%" />
-                  <h4>{video.title}</h4>
-                  <p>{video.description}</p>
-                  <small>Автор: {video.author}</small>
-                  <div className="book-actions">
-                    <div className="comment-icon-and-count">
-                      <FaCommentDots
-                        className="comment-icon"
-                        onClick={() => openCommentModal(video.id)}
-                      />
-                      <span className="comment-count">{video.commentCount}</span>
+                    <video src={video.url} controls width="100%" />
+                    <h4>{video.title}</h4>
+                    <p>{video.description}</p>
+                    <small>Автор: {video.author}</small>
+                    <div className="book-actions">
+                      <div className="comment-icon-and-count">
+                        <FaCommentDots
+                          className="comment-icon"
+                          onClick={() => openCommentModal(video.id)}
+                        />
+                        <span className="comment-count">{video.commentCount}</span>
+                      </div>
                     </div>
                   </div>
-                </div>                
                 ))}
               </section>
             )}
@@ -770,7 +797,7 @@ const Library = ({ userId }) => {
             <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon" /></Link>
             <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon" /></Link>
             <Link to="/about"><FaInfo className="footer-icon" /></Link>
-            {role === "teacher" && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
+            {(role === "teacher" || role === "dean") && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
             <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon active-icon" /></Link>
             <Link to="/myprofile">
               <img src={userDetails.avatarUrl} alt="" className="footer-avatar skeleton-media-avatars" />

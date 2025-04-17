@@ -457,7 +457,7 @@ const TeacherProfile = () => {
       </div>
       <div className="tch-profile-container" style={mainContentStyle}>
         <div className="teacher-profile-header">
-        <Link className="tch-profile-back-button" onClick={() => navigate(-1)}>
+        <Link className="tch-profile-back-button white-icon" onClick={() => navigate(-1)}>
           <FiArrowLeft />
         </Link>
         <h2>Личный кабинет преподавателя</h2>

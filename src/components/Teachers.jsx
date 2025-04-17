@@ -18,8 +18,11 @@ import anonymAvatar from "../anonym2.jpg";
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
 import useTranslation from "../hooks/useTranslation";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import forbiddenNames from "./forbiddenNames";
 
 const Teachers = () => {
+  const [notification, setNotification] = useState("");
+  const [notificationType, setNotificationType] = useState("");
   const [teachers, setTeachers] = useState([]);
   const [filteredTeachers, setFilteredTeachers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -48,6 +51,16 @@ const Teachers = () => {
 
   const goToProfile = (userId) => {
     navigate(`/profile/${userId}`);
+  };
+
+  // Функция для ошибочных уведомлений
+  const showNotificationError = (message) => {
+    setNotificationType("error");
+    setNotification(message);
+    setTimeout(() => {
+      setNotification("");
+      setNotificationType("");
+    }, 3000);
   };
 
   // Массив кафедр для выпадающего списка
@@ -153,11 +166,28 @@ const Teachers = () => {
   const handleSearchChange = (e) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
-    const searchFiltered = teachers.filter((teacher) =>
-      teacher.name.toLowerCase().includes(query) || teacher.surname.toLowerCase().includes(query)
-    );
+  
+    const searchFiltered = teachers.filter((teacher) => {
+      // если name или surname не заданы, будем считать их пустой строкой
+      const name = teacher.name || "";
+      const surname = teacher.surname || "";
+      return (
+        name.toLowerCase().includes(query) ||
+        surname.toLowerCase().includes(query)
+      );
+    });
+  
     setFilteredTeachers(searchFiltered);
-  };
+  };  
+
+  // const handleSearchChange = (e) => {
+  //   const query = e.target.value.toLowerCase();
+  //   setSearchQuery(query);
+  //   const searchFiltered = teachers.filter((teacher) =>
+  //     teacher.name.toLowerCase().includes(query) || teacher.surname.toLowerCase().includes(query)
+  //   );
+  //   setFilteredTeachers(searchFiltered);
+  // };
 
   const openCommentModal = (teacherId) => {
     setCommentModal({ isOpen: true, teacherId });
@@ -196,7 +226,18 @@ const Teachers = () => {
   };
 
   const handleCommentSubmit = (isAnonymous = false) => {
-    if (newComment.trim() === "") return;
+    // if (newComment.trim() === "") return;
+    const text = newComment.trim();
+    if (!text) return;
+
+    const foundBad = forbiddenNames.some(
+      bad => text.toLowerCase().includes(bad.toLowerCase())
+    );
+    if (foundBad) {
+      showNotificationError("Нельзя писать такие комментарии");
+      return;
+    }
+
     const database = getDatabase();
     const commentRef = dbRef(database, `comments/${commentModal.teacherId}`);
     if (editingCommentId) {
@@ -286,6 +327,11 @@ const Teachers = () => {
 
   return (
     <div className="glava">
+           {notification && (
+          <div className={`notification ${notificationType}`}>
+            {notification}
+          </div>
+        )}
       <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <img style={{ width: "50px", height: "45px" }} src={basiclogo} alt="" />
@@ -358,7 +404,7 @@ const Teachers = () => {
           <nav className="header-nav" style={HeaderDesktop}>
             <ul className="header-ul">
               <li><Link to="/jarvisintropage" className="txt">{t('voiceassistant')}</Link></li>
-              <li><Link to="/about" className="txt">{t('aboutefaculty')}</Link></li>
+              <li><Link to="/about" className="txt">{t('aboutfaculty')}</Link></li>
 
               {/* Дополнительные разделы для декана */}
               {userRole === 'dean' && (
@@ -463,7 +509,7 @@ const Teachers = () => {
                   <div className="teacher-card" key={teacher.id}>
                     <LazyLoadImage
                       src={teacher.photo || defaultTeacherImg}
-                      alt={`${teacher.name} ${teacher.surname}`}    
+                      alt={`${teacher.name} ${teacher.surname}`}
                       className="skeleton-media-avatars"
                     />
                     <h4>{`${teacher.name} ${teacher.surname}`}</h4>
@@ -586,7 +632,7 @@ const Teachers = () => {
             <Link to="/about">
               <FaInfo className="footer-icon" />
             </Link>
-            {role === "teacher" && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
+            {(role === "teacher" || role === "dean") && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
             <Link to="/library">
               <FontAwesomeIcon icon={faBook} className="footer-icon" />
             </Link>

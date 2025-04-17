@@ -1700,12 +1700,6 @@ const AdminPanel = () => {
           {showRequests ? 'Скрыть заявки' : 'Показать заявки'}
           {newRequestsCount > 0 && <div className="new-request-count-basic"><span className="new-requests-count">{newRequestsCount}</span> </div>}
         </button>
-        {/* <button
-          className='ap-buttons-add-edit'
-          onClick={() => setShowScheduleModal(true)}
-        >
-          <FaPlus /> Добавить расписание уроков
-        </button> */}
         <button className='ap-buttons-add-edit' onClick={() => setShowScheduleEditor(true)}>
           <FaPlus /> Показать расписание уроков
         </button>

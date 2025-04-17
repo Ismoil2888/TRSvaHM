@@ -744,7 +744,7 @@ const MyProfile = () => {
               <Link to="/home"><FontAwesomeIcon icon={faHome} className="footer-icon" style={{}} /></Link>
               <Link to="/searchpage"><FontAwesomeIcon icon={faSearch} className="footer-icon" /></Link>
               <Link to="/about"><FaInfo className="footer-icon" /></Link>
-              {role === "teacher" && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
+              {(role === "teacher" || role === "dean") && <Link to="/post"><FaPlusCircle className="footer-icon" /></Link>}
               <Link to="/library"><FontAwesomeIcon icon={faBook} className="footer-icon" /></Link>
               <Link to="/myprofile">
                 <img src={userAvatarUrl} alt="" className="footer-avatar skeleton-media-avatars active-icon" />

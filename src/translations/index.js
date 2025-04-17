@@ -2,7 +2,10 @@ export const translations = {
   tajik: {
     facultname: "ТРСваҲИ",
     rights: "Ҳама ҳуқуқ маҳфуз аст",
-    aboutefaculty: "Дар бораи факулта",
+    aboutfaculty: "Дар бораи факулта",
+    departments: "Кафедраҳо",
+    gallery: "Галерея",
+    facultnamefull: "Факултаи технологияҳои рақами, системаҳо ва ҳифзи иттилоот",
     //AuthDetails
     language: "Забон",
     greeting: "Салом",
@@ -28,6 +31,8 @@ export const translations = {
     status: "онлайн",
     wasonline: "онлайн буд",
     mode: "Режим",
+    confirmed: "Тасдиқ карда шуд",
+    notconfirmed: "Тасдиқ нашудааст",
     //NotificationsPage
     notifications: "Огоҳиномаҳо",
     dontnotifications: "Шумо ҳоло ягон огоҳинома надоред",
@@ -80,7 +85,10 @@ export const translations = {
   russian: {
     facultname: "ЦТСиЗИ",
     rights: "Все права защищены",
-    aboutefaculty: "О факультете",
+    aboutfaculty: "О факультете",
+    departments: "Кафедры",
+    gallery: "Галерея",
+    facultnamefull: "Цифровые технологии, системы и защита информации",
     //AuthDetails
     language: "Язык",
     greeting: "Привет",
@@ -106,6 +114,8 @@ export const translations = {
     status: "в сети",
     wasonline: "был(а) в сети",
     mode: "Режим",
+    confirmed: "Подтверждён",
+    notconfirmed: "Не подтверждён",
     //NotificationsPage
     notifications: "Уведомления",
     dontnotifications: "У вас пока нет уведомлений",
@@ -158,7 +168,10 @@ export const translations = {
   english: {
     facultname: "DTSandIS",
     rights: "All rights reserved",
-    aboutefaculty: "",
+    aboutfaculty: "About faculty",
+    departments: "Departments",
+    gallery: "Gallery",
+    facultnamefull: "Digital technologies, systems and information security",
     //AuthDetails
     language: "Language",
     greeting: "Hello",
@@ -184,6 +197,8 @@ export const translations = {
     status: "Online",
     wasonline: "Was online",
     mode: "Mode",
+    confirmed: "Confirmed",
+    notconfirmed: "Not confirmed",
     //NotificationsPage
     notifications: "Notifications",
     dontnotifications: "You don't have any notifications yet",
