@@ -612,3 +612,35 @@ width: 90%; */
   display: flex;
   background-color: var(--bg-container-color);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.identify-prompt-overlay {
+  position: fixed; top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.5);
+  display:flex; align-items:center; justify-content:center;
+  z-index: 99999;
+}
+.identify-prompt-modal {
+  background:#fff; padding:20px; border-radius:8px;
+  max-width:320px; width:90%;
+  text-align:center;
+}
+.identify-prompt-modal p{
+  color: #4d788c;
+}
+.identify-prompt-modal button {
+  margin: 8px;
+}

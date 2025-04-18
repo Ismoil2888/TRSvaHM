@@ -96,19 +96,19 @@ const NotificationsPage = () => {
     const db = getDatabase();
     const currentUserId = auth.currentUser?.uid;
     if (!currentUserId) return;
-  
+
     // const requestKey = `${notification.senderId}_${currentUserId}`;
     // const requestRef = dbRef(db, `requests/${requestKey}`);
     const sortedPair = [notification.senderId, currentUserId].sort();
     const pairId = sortedPair.join("_");
-    
+
     const requestRef = dbRef(db, `requests/${pairId}`);
 
     try {
       // Обновляем статус запроса
       // await update(requestRef, { status: "accepted", pairId: requestKey });
       await update(requestRef, { status: "accepted", pairId });
-  
+
       // Отправляем уведомление отправителю
       const senderNotification = {
         type: "request_accepted",
@@ -117,9 +117,9 @@ const NotificationsPage = () => {
         receiverAvatar: currentUserData.avatarUrl || defaultAvatar,
         timestamp: new Date().toISOString(),
       };
-  
+
       await push(dbRef(db, `notifications/${notification.senderId}`), senderNotification);
-  
+
       // Удаляем уведомление с анимацией
       handleDeleteNotification(notification.id);
     } catch (error) {
@@ -129,86 +129,86 @@ const NotificationsPage = () => {
 
   const handleDeclineRequest = async (notification) => {
     if (!currentUserId) return;
-  
+
     const db = getDatabase();
-  
+
     try {
       setNotifications((prev) => prev.filter((notif) => notif.id !== notification.id));
-  
+
       await remove(dbRef(db, `requests/${notification.senderId}_${currentUserId}`));
-  
+
       await remove(dbRef(db, `notifications/${currentUserId}/${notification.id}`));
     } catch (error) {
       console.error("Ошибка при отклонении запроса:", error);
     }
-  };  
+  };
 
   useEffect(() => {
     if (!currentUserId) return;
-  
+
     const db = getDatabase();
     const notificationsRef = dbRef(db, `notifications/${currentUserId}`);
-  
+
     const unsubscribe = onValue(notificationsRef, (snapshot) => {
       const data = snapshot.val();
-  
+
       if (data) {
         const notificationsArray = Object.entries(data).map(([key, value]) => ({
           id: key,
           ...value,
         }));
-  
+
         // Обновляем состояние так, чтобы новые уведомления появлялись сверху
         setNotifications((prevNotifications) => {
           const newNotifications = notificationsArray.filter(
             (notif) => !prevNotifications.some((prev) => prev.id === notif.id)
           );
-  
+
           return [...newNotifications, ...prevNotifications].sort(
             (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
           );
         });
-  
+
         // Помечаем уведомления как прочитанные сразу после их появления
         const updatedNotifications = {};
         notificationsArray.forEach((notif) => {
           updatedNotifications[notif.id] = { ...notif, isRead: true };
         });
-  
+
         update(notificationsRef, updatedNotifications).catch((error) => {
           console.error("Ошибка при обновлении статуса уведомлений:", error);
         });
       }
     });
-  
+
     return () => unsubscribe();
   }, [currentUserId]);
 
   const handleDeleteNotification = (notificationId) => {
     if (!currentUserId || !notificationId) return;
     const database = getDatabase();
-  
+
     // Найдем элемент в DOM
     const notificationElement = document.getElementById(`notification-${notificationId}`);
     if (notificationElement) {
       notificationElement.classList.add("fade-out"); // 🔥 Добавляем анимацию
     }
-  
+
     // ⏳ Ждем завершения анимации перед удалением из состояния
     setTimeout(() => {
       setNotifications((prev) => prev.filter((notif) => notif.id !== notificationId));
-  
+
       // Удаляем из Firebase
       remove(dbRef(database, `notifications/${currentUserId}/${notificationId}`))
         .catch((error) => {
           console.error("Ошибка при удалении уведомления:", error);
         });
     }, 300); // ⏳ Ждем 300 мс (длительность анимации)
-  };  
+  };
 
   return (
-    <div className="glava" style={{height: "100%"}}>
-    <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
+    <div className="glava" style={{ height: "100%" }}>
+      <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <img style={{ width: "50px", height: "45px" }} src={basiclogo} alt="" />
           {isMenuOpen ? (
@@ -229,7 +229,7 @@ const NotificationsPage = () => {
 
         <nav className="menu-items">
           <Link to="/" className="menu-item" style={{ paddingRight: "15px" }}>
-            <FiHome className="menu-icon"  />
+            <FiHome className="menu-icon" />
             {isMenuOpen && <span className="txt">{t('main')}</span>}
           </Link>
           <div className="menu-find-block">
@@ -267,7 +267,7 @@ const NotificationsPage = () => {
         </nav>
 
         <div className="logo-and-tik">
-        {t('facultname')}
+          {t('facultname')}
           {isMenuOpen &&
             <div>
               <p className="txt">&copy; 2025 {t("rights")}.</p>
@@ -310,42 +310,60 @@ const NotificationsPage = () => {
             notifications.map((notification) => (
               <div key={notification.id} id={`notification-${notification.id}`} className="notification-card ani">
 
-     {/* Уведомление от декана */}
-     {notification.type === 'dean_notification' && (
-              <div className="dean-notification">
-                <div className="dean-notification-header">
-                  <img
-                    src={notification.deanAvatar}
-                    alt="Декан"
-                    className="dean-avatar"
-                  />
-                  <div className="dean-info">
-                    <h4>Уведомление от декана</h4>
-                    <p className="dean-name">{notification.deanName}</p>
-                  </div>
-                  {/* <button
+                {/* Уведомление от декана */}
+                {notification.type === 'dean_notification' && (
+                  <div className="dean-notification">
+                    <div className="dean-notification-header">
+                      <img
+                        src={notification.deanAvatar}
+                        alt="Декан"
+                        className="dean-avatar"
+                      />
+                      <div className="dean-info">
+                        <h4>Уведомление от декана</h4>
+                        <p className="dean-name">{notification.deanName}</p>
+                      </div>
+                      {/* <button
                     className="delete-notification-button"
                     onClick={() => handleDeleteNotification(notification.id)}
                   >
                     &times;
                   </button> */}
-                </div>
-                <div className="notification-body">
-                  <p className="notification-message">
-                    {notification.message}
-                  </p>
-                  <p className="notification-date">
-                    {new Date(notification.timestamp).toLocaleDateString('ru-RU', {
-                      day: 'numeric',
-                      month: 'long',
-                      year: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                  </p>
-                </div>
-              </div>
-            )}
+                    </div>
+                    <div className="notification-body">
+                      <p className="notification-message">
+                        {notification.message}
+                      </p>
+                      <p className="notification-date">
+                        {new Date(notification.timestamp).toLocaleDateString('ru-RU', {
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {notification.type === 'identification_rejected' && (
+                  <div className="notification-rejected">
+                    <div className="notification-body">
+                      <h3 style={{color: "red"}}>Заявка на идентификацию отклонена</h3>
+                      <p>{notification.message || notification.reason}</p>
+                      <span className="notification-date">
+                        {new Date(notification.timestamp).toLocaleString('ru-RU', {
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </span>
+                    </div>
+                  </div>
+                )}
 
                 {/* Уведомление о запросе на переписку */}
                 {notification.type === "conversation_request" && (
@@ -470,18 +488,18 @@ const NotificationsPage = () => {
                     </div>
                     <div className="notification-body">
                       <div className="notification-meta">
-                      <h3 className="notification-title">
-                        {notification.type === 'comment'
-                          ? 'Новый комментарий'
-                          : 'Новый лайк'}
-                      </h3>
-                      <button
+                        <h3 className="notification-title">
+                          {notification.type === 'comment'
+                            ? 'Новый комментарий'
+                            : 'Новый лайк'}
+                        </h3>
+                        <button
                           className="delete-notification-button"
                           onClick={() => handleDeleteNotification(notification.id)}
                         >
                           &times;
                         </button>
-                        </div>
+                      </div>
                       <p className="notification-text">
                         {notification.type === 'comment' ? (
                           <>

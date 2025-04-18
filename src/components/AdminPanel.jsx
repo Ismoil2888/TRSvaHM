@@ -1114,7 +1114,6 @@ const AdminPanel = () => {
   const [selectedGroup, setSelectedGroup] = useState("");
   const [scheduleData, setScheduleData] = useState(initialScheduleData);
   const [isScheduleLoading, setIsScheduleLoading] = useState(false);
-  const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(""); // Новое состояние для курса
   const t = useTranslation();
   const daysOrder = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
@@ -1606,6 +1605,92 @@ const AdminPanel = () => {
     toast.info('Заявка возвращена для редактирования');
   };
 
+  // 1) Добавьте в начало компонента новые состояния и функции:
+
+  const [confirmDeleteReq, setConfirmDeleteReq] = useState({
+    isOpen: false,
+    id: null,
+    username: '',
+  });
+
+  // Открыть модалку удаления
+  const openDeleteReqModal = (id, username) => {
+    setConfirmDeleteReq({ isOpen: true, id, username });
+  };
+
+  // Подтвердить удаление
+  const confirmDeleteReqAction = () => {
+    const { id } = confirmDeleteReq;
+    if (!id) return;
+    // Удаляем заявку из базы
+    remove(dbRef(database, `requests/${id}`))
+      .then(() => {
+        // Убираем из локального состояния
+        setRequests(prev => prev.filter(r => r.id !== id));
+        toast.success('Заявка успешно удалена');
+      })
+      .catch(err => {
+        console.error(err);
+        toast.error('Ошибка при удалении заявки');
+      })
+      .finally(() => {
+        setConfirmDeleteReq({ isOpen: false, id: null, username: '' });
+      });
+  };
+
+  // Отменить удаление
+  const cancelDeleteReq = () => {
+    setConfirmDeleteReq({ isOpen: false, id: null, username: '' });
+  };
+
+  // state для модалки отклонения
+  const [rejectModal, setRejectModal] = useState({
+    isOpen: false,
+    id: null,
+    senderId: null,
+    username: '',
+    reason: ''
+  });
+
+  // открыть модалку
+  const openRejectModal = (id, senderId, username) => {
+    setRejectModal({ isOpen: true, id, senderId, username, reason: '' });
+  };
+
+  // отмена отклонения
+  const cancelReject = () => {
+    setRejectModal({ isOpen: false, id: null, senderId: null, username: '', reason: '' });
+  };
+
+  // отправка причины отклонения
+  const confirmRejectSend = async () => {
+    const { id, senderId, reason } = rejectModal;
+    if (!reason.trim()) return;
+
+    // 1) обновляем статус заявки
+    await update(dbRef(database, `requests/${id}`), { status: 'rejected' });
+
+    // 2) опционально обновим статус в профиле пользователя
+    await update(dbRef(database, `users/${senderId}`), { identificationStatus: 'rejected' });
+
+    // 3) формируем и пушим уведомление
+    const notification = {
+      type: 'identification_rejected',
+      message: reason,
+      timestamp: new Date().toISOString(),
+    };
+    await push(dbRef(database, `notifications/${senderId}`), notification);
+
+    // 4) обновляем локальный стейт списка заявок
+    setRequests(prev => prev.map(r =>
+      r.id === id ? { ...r, status: 'rejected' } : r
+    ));
+
+    // 5) закрываем модалку
+    cancelReject();
+    toast.success('Заявка откланена! Пользователю отправлено уведомление о причины!');
+  };
+
   const compressImage = async (file) => {
     const options = {
       maxSizeMB: 1,
@@ -1935,7 +2020,17 @@ const AdminPanel = () => {
                       />
                     )}
                     <button onClick={() => handleAcceptRequest(request.id)}>Принять</button>
-                    <button onClick={() => handleRejectRequest(request.id)}>Отклонить</button>
+                    <button
+                      onClick={() => openRejectModal(request.id, request.userId, request.username)}
+                    >
+                      Отклонить
+                    </button>
+                    <button
+                      onClick={() => openDeleteReqModal(request.id, request.username)}
+                      style={{ background: '#d32f2f', color: '#fff' }}
+                    >
+                      Удалить
+                    </button>
                   </div>
                 ) : (
                   <div className="compact-content">
@@ -1960,6 +2055,36 @@ const AdminPanel = () => {
                 )}
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {rejectModal.isOpen && (
+        <div className="delete-confirm-overlay">
+          <div className="delete-confirm-modal">
+            <p>
+              Укажите причину отклонения заявки пользователя «
+              <strong>{rejectModal.username}</strong>»:
+            </p>
+            <textarea
+              style={{width: "90%", padding: "10px"}}
+              rows={4}
+              value={rejectModal.reason}
+              onChange={e => setRejectModal(prev => ({
+                ...prev,
+                reason: e.target.value
+              }))}
+              placeholder="Напишите причину..."
+            />
+            <div className="confirm-buttons">
+              <button
+                disabled={!rejectModal.reason.trim()}
+                onClick={confirmRejectSend}
+              >
+                Отправить
+              </button>
+              <button onClick={cancelReject}>Отмена</button>
+            </div>
           </div>
         </div>
       )}
@@ -2060,6 +2185,21 @@ const AdminPanel = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {confirmDeleteReq.isOpen && (
+        <div className="delete-confirm-overlay">
+          <div className="delete-confirm-modal">
+            <p>
+              Вы уверены, что хотите удалить заявку от пользователя «
+              <strong>{confirmDeleteReq.username}</strong>»?
+            </p>
+            <div className="confirm-buttons">
+              <button onClick={confirmDeleteReqAction}>Удалить</button>
+              <button onClick={cancelDeleteReq}>Отмена</button>
+            </div>
           </div>
         </div>
       )}

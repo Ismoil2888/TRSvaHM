@@ -1392,6 +1392,8 @@ const HomePage = () => {
   const [notification, setNotification] = useState("");
   const [notificationType, setNotificationType] = useState("");
   const [isMenuOpenMobile, setIsMenuOpenMobile] = useState(false);
+  const [identificationStatus, setIdentificationStatus] = useState("");
+  const [showIdentifyPrompt, setShowIdentifyPrompt] = useState(false);
   const [userAvatarUrl, setUserAvatarUrl] = useState(null);
   const [posts, setPosts] = useState([]);
   const [menuPostId, setMenuPostId] = useState(null);
@@ -1571,34 +1573,34 @@ const HomePage = () => {
 
   useEffect(() => {
     const db = getDatabase();
-    const currentUser = auth.currentUser;
+    const current = auth.currentUser;
+    if (!current) return;
+    const userRef = dbRef(db, `users/${current.uid}`);
+    onValue(userRef, (snap) => {
+      const data = snap.val() || {};
+      // ваши existing setUserDetails / setRole / setUserRole
+      setUserDetails({ username: data.username, avatarUrl: data.avatarUrl });
+      setRole(data.role || "");
+      setUserRole(data.role || "");
+      // **новая строчка**
+      setIdentificationStatus(data.identificationStatus || "");
 
-    if (!currentUser) return;
-
-    const userRef = dbRef(db, `users/${currentUser.uid}`);
-    onValue(userRef, (snapshot) => {
-      const userData = snapshot.val();
-      if (!userData) return;
-
-      const { username, avatarUrl } = userData;
-
+      // и дальше ваша логика правки комментариев:
       const postCommentsRef = dbRef(db, "postComments");
       onValue(postCommentsRef, (snapshot) => {
         const commentsData = snapshot.val();
         if (!commentsData) return;
-
         Object.entries(commentsData).forEach(([postId, comments]) => {
           Object.entries(comments).forEach(([commentId, comment]) => {
-            if (comment.userId === currentUser.uid && comment.username !== "Анонимно") {
-              const commentRef = dbRef(db, `postComments/${postId}/${commentId}`);
-              update(commentRef, {
-                username: username || "User",
-                avatarUrl: avatarUrl || defaultAvatar,
+            if (comment.userId === current.uid && comment.username !== "Анонимно") {
+              update(dbRef(db, `postComments/${postId}/${commentId}`), {
+                username: data.username || "User",
+                avatarUrl: data.avatarUrl || defaultAvatar,
               });
             }
           });
         });
-      }, { onlyOnce: true }); // Один раз, чтобы не зациклилось
+      }, { onlyOnce: true });
     });
   }, []);
 
@@ -1663,6 +1665,22 @@ const HomePage = () => {
         setUserRole(userData?.role || '');
       });
     }
+  }, []);
+
+  // найдите ваш useEffect для userRef:
+  useEffect(() => {
+    const db = getDatabase();
+    const current = auth.currentUser;
+    if (!current) return;
+    const userRef = dbRef(db, `users/${current.uid}`);
+    onValue(userRef, (snap) => {
+      const data = snap.val();
+      if (!data) return;
+      setUserDetails({ username: data.username, avatarUrl: data.avatarUrl });
+      setRole(data.role || "");
+      setUserRole(data.role || "");
+      setIdentificationStatus(data.identificationStatus || "");
+    });
   }, []);
 
   useEffect(() => {
@@ -1753,6 +1771,10 @@ const HomePage = () => {
 
   const handleCommentSubmit = (isAnonymous = false) => {
     // if (newComment.trim() === "") return;
+    if (identificationStatus !== "accepted") {
+      setShowIdentifyPrompt(true);
+      return;
+    }
     const text = newComment.trim();
     if (!text) return;
 
@@ -1839,6 +1861,10 @@ const HomePage = () => {
 
   // Обработчик нажатия на лайк
   const handleLikeToggle = (postId) => {
+    if (identificationStatus !== "accepted") {
+      setShowIdentifyPrompt(true);
+      return;
+    }
     if (!userId) return; // Убедитесь, что пользователь авторизован
 
     const db = getDatabase();
@@ -2454,9 +2480,23 @@ const HomePage = () => {
           </section>
         </main>
 
-        {/* <footer className="footer-desktop">
-        <p>&copy; 2025 Факультет Кибербезопасности. Все права защищены.</p>
-      </footer> */}
+        {showIdentifyPrompt && (
+          <div className="identify-prompt-overlay">
+            <div className="identify-prompt-modal">
+              <p>Чтобы ставить лайки и комментарии, нужно пройти идентификацию.</p>
+              <button
+                style={{ color: "blue", borderBottom: "1px solid grey", borderRadius: "0" }}
+                onClick={() => {
+                  setShowIdentifyPrompt(false);
+                  navigate("/authdetails", { state: { openForm: true } });
+                }}
+              >
+                Пройти идентификацию
+              </button>
+              <button onClick={() => setShowIdentifyPrompt(false)}>Отмена</button>
+            </div>
+          </div>
+        )}
 
         <div style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <motion.nav

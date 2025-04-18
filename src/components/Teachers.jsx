@@ -23,6 +23,8 @@ import forbiddenNames from "./forbiddenNames";
 const Teachers = () => {
   const [notification, setNotification] = useState("");
   const [notificationType, setNotificationType] = useState("");
+  const [identificationStatus, setIdentificationStatus] = useState("");
+  const [showIdentifyPrompt, setShowIdentifyPrompt] = useState(false);
   const [teachers, setTeachers] = useState([]);
   const [filteredTeachers, setFilteredTeachers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -159,6 +161,7 @@ const Teachers = () => {
         const userData = snapshot.val();
         // Предполагается, что роль хранится в поле role
         setUserRole(userData?.role || '');
+        setIdentificationStatus(userData.identificationStatus || "");
       });
     }
   }, []);
@@ -166,7 +169,7 @@ const Teachers = () => {
   const handleSearchChange = (e) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
-  
+
     const searchFiltered = teachers.filter((teacher) => {
       // если name или surname не заданы, будем считать их пустой строкой
       const name = teacher.name || "";
@@ -176,9 +179,9 @@ const Teachers = () => {
         surname.toLowerCase().includes(query)
       );
     });
-  
+
     setFilteredTeachers(searchFiltered);
-  };  
+  };
 
   // const handleSearchChange = (e) => {
   //   const query = e.target.value.toLowerCase();
@@ -227,6 +230,10 @@ const Teachers = () => {
 
   const handleCommentSubmit = (isAnonymous = false) => {
     // if (newComment.trim() === "") return;
+    if (identificationStatus !== "accepted") {
+      setShowIdentifyPrompt(true);
+      return;
+    }
     const text = newComment.trim();
     if (!text) return;
 
@@ -327,11 +334,11 @@ const Teachers = () => {
 
   return (
     <div className="glava">
-           {notification && (
-          <div className={`notification ${notificationType}`}>
-            {notification}
-          </div>
-        )}
+      {notification && (
+        <div className={`notification ${notificationType}`}>
+          {notification}
+        </div>
+      )}
       <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <img style={{ width: "50px", height: "45px" }} src={basiclogo} alt="" />
@@ -621,6 +628,25 @@ const Teachers = () => {
             </div>
           </div>
         )}
+
+        {showIdentifyPrompt && (
+          <div className="identify-prompt-overlay">
+            <div className="identify-prompt-modal">
+              <p>Чтобы ставить лайки и комментарии, нужно пройти идентификацию.</p>
+              <button
+                style={{ color: "blue", borderBottom: "1px solid grey", borderRadius: "0" }}
+                onClick={() => {
+                  setShowIdentifyPrompt(false);
+                  navigate("/authdetails", { state: { openForm: true } });
+                }}
+              >
+                Пройти идентификацию
+              </button>
+              <button onClick={() => setShowIdentifyPrompt(false)}>Отмена</button>
+            </div>
+          </div>
+        )}
+
         <div style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <motion.nav variants={navbarVariants} initial="hidden" animate="visible" className="footer-nav">
             <Link to="/home">

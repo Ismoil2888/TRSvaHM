@@ -992,7 +992,7 @@ import { getDatabase, ref as databaseRef, onValue, push, update, get, query, ord
 import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { auth, database, storage } from "../firebase";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaEllipsisV, FaTimes, FaPen, FaArrowLeft, FaLock, FaEye, FaEyeSlash, FaRegAddressBook, FaAt } from "react-icons/fa"; // Иконка карандаша
 import imageCompression from 'browser-image-compression';
 import { FiHome, FiUser, FiMessageSquare, FiBell, FiChevronLeft, FiChevronRight, FiSettings, FiBookOpen, FiUserCheck, FiSearch } from "react-icons/fi";
@@ -1086,7 +1086,16 @@ const AuthDetails = () => {
     });
   };
 
+  const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.state?.openForm) {
+      handleOpenForm();
+      // сбросим state, чтобы при следующем рендере не открывалось снова
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, navigate, location.pathname]);
 
   useEffect(() => {
     const handleVoiceAction = (e) => {
