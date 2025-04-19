@@ -1558,19 +1558,22 @@ const AdminPanel = () => {
   const handleAcceptRequest = (id) => {
     update(dbRef(database, `requests/${id}`), { status: "accepted" })
       .then(() => {
-        // Находим заявку по id
         const acceptedRequest = requests.find(req => req.id === id);
+        
+        // Обновляем статус идентификации пользователя
+        const userRef = dbRef(database, `users/${acceptedRequest.userId}`);
+        update(userRef, { identificationStatus: 'accepted' });
+  
         if (acceptedRequest && acceptedRequest.group && acceptedRequest.course) {
           const groupKey = acceptedRequest.group;
           const courseKey = acceptedRequest.course;
-          // Записываем данные заявки в узел для группы с учетом курса
           const groupRef = push(dbRef(database, `groups/${courseKey}/${groupKey}`));
-          // Здесь можно добавить проверку: если нет userAvatar, то использовать photoUrl
           set(groupRef, {
             ...acceptedRequest,
             userAvatar: acceptedRequest.userAvatar || acceptedRequest.photoUrl || defaultAvatar
           });
         }
+        
         setRequests(prevRequests =>
           prevRequests.map(request =>
             request.id === id ? { ...request, status: "accepted" } : request
@@ -1666,6 +1669,11 @@ const AdminPanel = () => {
   const confirmRejectSend = async () => {
     const { id, senderId, reason } = rejectModal;
     if (!reason.trim()) return;
+
+    // 0) Обновляем статус пользователя
+    await update(dbRef(database, `users/${senderId}`), { 
+      identificationStatus: 'rejected' 
+    });
 
     // 1) обновляем статус заявки
     await update(dbRef(database, `requests/${id}`), { status: 'rejected' });

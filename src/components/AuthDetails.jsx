@@ -1042,7 +1042,7 @@ const AuthDetails = () => {
   const cathedra = ["Системахои Автоматикунонидашудаи Идоракуни", "Шабакахои Алока Ва Системахои Комутатсиони", "Технологияхои Иттилооти Ва Хифзи Маълумот", "Автоматонии Равандхои Технологи Ва Истехсолот", "Информатика Ва Техникаи Хисоббарор"];
   const courses = ["1", "2", "3", "4"];
   const groups = ["1-530102 - АСКИ", "1-400101 - ТБТИ", "1-450103-02 - ШАваТИ", "1-400102-04 - ТИваХМ", "1-98010101-03 - ТИваХМ", "1-98010101-05 - ТИваХМ", "1-530101 - АРТваИ", "1-530107 - АРТваИ", "1-400301-02 - АРТваИ", "1-400301-05 - АРТваИ", "1-080101-07 - ИваТХ"];
-
+  const [hasPendingRequest, setHasPendingRequest] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const t = useTranslation();
   const { language, handleLanguageChange, showModal, setShowModal } = useContext(LanguageContext);
@@ -1221,13 +1221,47 @@ const AuthDetails = () => {
   const courseDropdownRef = useRef(null);
   const groupDropdownRef = useRef(null);
 
-  const handleOpenForm = () => {
-    if (identificationStatus === t('notident')) {
-      setIsRequestFormOpen(true);
-    } else {
-      showNotification("Вы уже идентифицированы.");
-    }
-  };
+// В функции handleOpenForm
+const handleOpenForm = () => {
+  // Проверяем текущий статус и наличие активной заявки
+  if (identificationStatus === t('notident') && !hasPendingRequest) {
+    setIsRequestFormOpen(true);
+  } else if (hasPendingRequest) {
+    showNotification("У вас уже есть активная заявка на рассмотрении.");
+  } else {
+    showNotification("Вы уже идентифицированы.");
+  }
+};
+
+// Обновляем useEffect для отслеживания статуса заявок
+useEffect(() => {
+  const db = getDatabase();
+  const user = auth.currentUser;
+  
+  if (user) {
+    const requestRef = query(
+      databaseRef(db, "requests"),
+      orderByChild("userId"),
+      equalTo(user.uid)
+    );
+
+    onValue(requestRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const requests = Object.values(snapshot.val());
+        const pending = requests.some(req => req.status === "pending");
+        setHasPendingRequest(pending);
+        
+        // Обновляем статус идентификации
+        const accepted = requests.some(req => req.status === "accepted");
+        setIdentificationStatus(accepted ? t('ident') : t('notident'));
+      } else {
+        setHasPendingRequest(false);
+        setIdentificationStatus(t('notident'));
+      }
+    });
+  }
+}, [t]);
+
   const handleCloseForm = () => setIsRequestFormOpen(false);
 
   const handleInputChange = (e) => {
@@ -1240,24 +1274,42 @@ const AuthDetails = () => {
   };
 
   const handleSubmitRequest = async () => {
-    const { fio, faculty, course, group, photo } = studentInfo;
+    const db = getDatabase();
+    const requestsRef = query(
+      databaseRef(db, "requests"),
+      orderByChild("userId"),
+      equalTo(authUser.uid)
+    );
+  
+    // Проверка на существующие заявки
+    const snapshot = await get(requestsRef);
+    if (snapshot.exists()) {
+      const existingRequest = Object.values(snapshot.val())[0];
+      if (existingRequest.status === 'pending') {
+        showNotificationError("У вас уже есть активная заявка");
+        return;
+      }
+    }
 
+    const { fio, faculty, course, group, photo } = studentInfo;
+  
     if (!fio || !faculty || !course || !group || !photo) {
       showNotificationError("Все поля обязательны к заполнению.");
       return;
     }
-
-    setIsLoading(true); // Включаем спиннер
-
+  
+    setIsLoading(true);
+  
     try {
       let photoUrl = "";
+      const userDatabaseRef = databaseRef(database, `users/${authUser.uid}`); // Переносим объявление сюда
+      
       if (photo) {
         const storageReference = ref(storage, `request_photos/${Date.now()}_${photo.name}`);
         const snapshot = await uploadBytes(storageReference, photo);
         photoUrl = await getDownloadURL(snapshot.ref);
       }
-
-      // Сохранение заявки с дополнительными данными пользователя
+  
       const requestRef = push(databaseRef(database, "requests"));
       await update(requestRef, {
         fio,
@@ -1271,14 +1323,23 @@ const AuthDetails = () => {
         userAvatar: avatarUrl,
         userId: authUser.uid
       });
-
+  
+      // Обновляем статус после создания заявки
+      await update(userDatabaseRef, {
+        identificationStatus: 'pending'
+      });
+  
       setRequestId(requestRef.key);
       handleCloseForm();
       showNotification("Заявка отправлена успешно.");
-      setIsLoading(false);
+          // После успешной отправки
+    setHasPendingRequest(true);
+    setIdentificationStatus('pending');
     } catch (error) {
       console.error("Ошибка отправки заявки:", error);
       showNotificationError("Ошибка отправки заявки.");
+    } finally {
+      setIsLoading(false); // Выключаем спиннер в любом случае
     }
   };
 
@@ -1326,7 +1387,11 @@ const AuthDetails = () => {
             setLastActive(data.lastActive || "");
             setAvatarUrl(data.avatarUrl || "./default-image.png");
             setAboutMe(data.aboutMe || t('infonot'));
-            setIdentificationStatus(t('notident'));
+            // setIdentificationStatus(t('notident'));
+            const identStatus = data.identificationStatus === 'accepted' 
+            ? t('ident') 
+            : t('notident');
+          setIdentificationStatus(identStatus);
           }
         });
 
@@ -1337,16 +1402,17 @@ const AuthDetails = () => {
           orderByChild("email"),
           equalTo(user.email)
         );
+
         onValue(requestRef, (snapshot) => {
           if (snapshot.exists()) {
             const requestData = Object.values(snapshot.val())[0];
-            setRequestId(requestData.id); // Get request ID
-            setIdentificationStatus(
-              requestData.status === "accepted" ? t('ident') : t('notident')
-            );
-          } else {
-            setRequestId(null); // No request found
-            setIdentificationStatus(t('notident'));
+            const userDatabaseRef = databaseRef(database, `users/${user.uid}`); // Объявляем здесь
+    
+            if (requestData.status === "accepted") {
+              update(userDatabaseRef, {
+                identificationStatus: 'accepted'
+              });
+            }
           }
         });
 
