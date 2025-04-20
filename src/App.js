@@ -47,6 +47,26 @@ function App() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
 
   useEffect(() => {
+    const db = getDatabase();
+    let myIp;
+    // 1. получаем свой IP
+    fetch('https://api.ipify.org?format=json')
+      .then(r => r.json())
+      .then(({ ip }) => {
+        myIp = ip;
+        // 2. подписываемся на blockedIPs
+        return onValue(dbRef(db, 'blockedIPs'), snap => {
+          const blocked = snap.val() || {};
+          if (blocked[myIp]) {
+            alert('Доступ с вашего IP запрещён');
+            auth.signOut();
+          }
+        });
+      })
+      .catch(console.error);
+  }, []);  
+
+  useEffect(() => {
     const user = auth.currentUser;
     if (!user) return;
     const db = getDatabase();

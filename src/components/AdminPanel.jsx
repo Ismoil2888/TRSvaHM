@@ -3167,7 +3167,7 @@ const handleUnblockUser = async (ip) => {
               }
             }}
           >
-            Заблокировать по IP
+            Заблокировать по IP {selectedUser.ipAddress}
           </button>
       }
       <button onClick={() => setIsUserActionsOpen(false)}>
