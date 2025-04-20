@@ -229,7 +229,6 @@ const Teachers = () => {
   };
 
   const handleCommentSubmit = (isAnonymous = false) => {
-    // if (newComment.trim() === "") return;
     if (identificationStatus !== "accepted") {
       setShowIdentifyPrompt(true);
       return;

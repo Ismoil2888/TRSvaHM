@@ -7,12 +7,31 @@ import { useNavigate } from 'react-router-dom';
 import { IoEyeOutline, IoEyeOffOutline, IoMailOutline } from "react-icons/io5";
 import "../SignUp-SignIn.css";
 import { FaArrowLeft } from "react-icons/fa";
+import axios from 'axios'
+import { getDatabase, ref as dbRef, get } from "firebase/database"
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false); // Состояние для показа/скрытия пароля
+
+  useEffect(() => {
+    axios.get('https://api.ipify.org?format=json')
+      .then(({ data }) => data.ip)
+      .then(ip => {
+        const db = getDatabase()
+        return get(dbRef(db, `blockedIPs/${ip}`)).then(snap => ({ ip, blocked: snap.exists() }))
+      })
+      .then(({ ip, blocked }) => {
+        if (blocked) {
+          alert(`Ваш IP ${ip} заблокирован.`)
+          auth.signOut()
+          navigate('/blocked')
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {

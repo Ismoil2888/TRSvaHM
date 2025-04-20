@@ -3658,7 +3658,7 @@ onValue(userRef, (snapshot) => {
         {showIdentifyPrompt && (
           <div className="identify-prompt-overlay">
             <div className="identify-prompt-modal">
-              <p>Чтобы ставить лайки и комментарии, нужно пройти идентификацию.</p>
+              <p>Для того чтобы взаимодействовать с контентом пройдите идентификацию.</p>
               <button
                 style={{ color: "blue", borderBottom: "1px solid grey", borderRadius: "0" }}
                 onClick={() => {

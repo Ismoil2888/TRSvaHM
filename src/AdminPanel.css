@@ -670,3 +670,93 @@
   background-color: #dc3545;
   color: #fff;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Полупрозрачный фон во весь экран */
+.admin-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Окно модалки */
+.admin-modal-window {
+  background: #ffffff;
+  padding: 24px;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+/* Заголовок */
+.admin-modal-window h3 {
+  margin: 0 0 16px;
+  font-size: 1.25rem;
+  color: #333;
+}
+
+/* Кнопки внутри модалки */
+.admin-modal-window button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* Удалить аккаунт */
+.admin-modal-window button:nth-of-type(1) {
+  background-color: #d32f2f;
+  color: #fff;
+}
+.admin-modal-window button:nth-of-type(1):hover {
+  background-color: #b71c1c;
+}
+
+/* Блокировка / разблокировка по IP */
+.admin-modal-window button:nth-of-type(2) {
+  background-color: #1976d2;
+  color: #fff;
+}
+.admin-modal-window button:nth-of-type(2):hover {
+  background-color: #0d47a1;
+}
+
+/* Кнопка «Отмена» */
+.admin-modal-window button:nth-of-type(3) {
+  background-color: #9e9e9e;
+  color: #fff;
+}
+.admin-modal-window button:nth-of-type(3):hover {
+  background-color: #616161;
+}

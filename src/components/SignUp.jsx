@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { ref, set } from "firebase/database";
+import { getDatabase, ref as dbRef, get } from "firebase/database"
 import { auth, database } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
 import "../SignUp-SignIn.css";
 import { FaArrowLeft } from "react-icons/fa";
 import { IoPersonOutline, IoMailOutline, IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import forbiddenNames from "./forbiddenNames"; // Импорт списка запрещённых имён
+import axios from 'axios'
 
 const SignUp = () => {
   const [username, setUsername] = useState("");
@@ -19,6 +21,27 @@ const SignUp = () => {
   const [showCopyPassword, setShowCopyPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // Состояние для спиннера
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // 1) Получаем свой IP
+    axios.get('https://api.ipify.org?format=json')
+      .then(({ data }) => data.ip)
+      .then(ip => {
+        const db = getDatabase()
+        // 2) Проверяем его в blockedIPs/{ip}
+        return get(dbRef(db, `blockedIPs/${ip}`)).then(snap => ({ ip, blocked: snap.exists() }))
+      })
+      .then(({ ip, blocked }) => {
+        if (blocked) {
+          alert(`Ваш IP ${ip} заблокирован. Обратитесь в поддержку.`)
+          auth.signOut()      // сбрасываем любую аутентификацию
+          navigate('/blocked') // или просто навигируем на '/'
+        }
+      })
+      .catch(() => {
+        // молча продолжаем, если не удалось получить IP или проверить в БД
+      })
+  }, [])
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
