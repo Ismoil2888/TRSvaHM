@@ -3,106 +3,129 @@ import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/aut
 import { getDatabase, ref as dbRef, set, update, get } from "firebase/database";
 import { auth, database } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
-import axios from 'axios';
 import "../SignUp-SignIn.css";
 import { FaArrowLeft } from "react-icons/fa";
-import { IoPersonOutline, IoMailOutline, IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+import {
+  IoPersonOutline,
+  IoMailOutline,
+  IoEyeOutline,
+  IoEyeOffOutline,
+} from "react-icons/io5";
 import forbiddenNames from "./forbiddenNames";
 
-
-// —————— helper-функция для получения и сохранения IP ——————
-async function fetchAndSaveIp(uid) {
-  try {
-    const res = await axios.get('https://api.ipify.org?format=json');
-    const ip = res.data.ip;
-    await update(dbRef(database, `users/${uid}`), { ipAddress: ip });
-  } catch (e) {
-    console.error("Не удалось получить или сохранить IP:", e);
-  }
-}
-
-
 const SignUp = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail]     = useState("");
+  const [password, setPassword]         = useState("");
   const [copyPassword, setCopyPassword] = useState("");
-  const [error, setError] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError]               = useState("");
+  const [showPassword, setShowPassword]       = useState(false);
   const [showCopyPassword, setShowCopyPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
 
-  // на монтировании проверяем: не заблокирован ли мой IP?
+  function ipToKey(ip) {
+    return ip.replace(/\./g, "_");
+  }
+
+  // 1) Проверяем сразу при заходе, не заблокирован ли IP
   useEffect(() => {
-    let isMounted = true;
-    axios.get('https://api.ipify.org?format=json')
-      .then(({ data }) => data.ip)
-      .then(ip => {
-        if (!isMounted) return;
-        return get(dbRef(database, `blockedIPs/${ip}`))
-          .then(snap => ({ ip, blocked: snap.exists() }));
-      })
-      .then(({ ip, blocked }) => {
-        if (blocked) {
-          alert(`Ваш IP ${ip} заблокирован. Обратитесь в поддержку.`);
-          auth.signOut();
-          navigate('/blocked', { replace: true });
-        }
-      })
-      .catch(() => {
-        // если не удалось получить IP или проверить — молча продолжаем
-      });
-    return () => { isMounted = false; };
+    window.__block_check = ({ ip }) => {
+      const key = ipToKey(ip);
+      const db = getDatabase();
+      get(dbRef(db, `blockedIPs/${key}`))
+        .then(snap => {
+          if (snap.exists()) {
+            alert(`Ваш IP ${ip} заблокирован.`);
+            auth.signOut();
+            navigate("/blocked", { replace: true });
+          }
+        })
+        .finally(() => {
+          delete window.__block_check;
+        });
+    };
+    const script = document.createElement("script");
+    script.src = "https://api.ipify.org?format=jsonp&callback=__block_check";
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+      delete window.__block_check;
+    };
   }, [navigate]);
 
-  // если уже залогинен — сразу на home
+  // 2) Перенаправляем уже залогиненных на /home
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, user => {
+    const un = onAuthStateChanged(auth, user => {
       if (user) navigate("/home", { replace: true });
     });
-    return () => unsub();
+    return () => un();
   }, [navigate]);
 
-  const togglePasswordVisibility = () => setShowPassword(p => !p);
+  const togglePasswordVisibility     = () => setShowPassword(p => !p);
   const toggleCopyPasswordVisibility = () => setShowCopyPassword(p => !p);
 
-  const register = async e => {
+  const register = e => {
     e.preventDefault();
+
     if (forbiddenNames.includes(username.toLowerCase())) {
-      setError("Это имя запрещено, используйте другое"); return;
+      setError("Это имя запрещено, используйте другое");
+      return;
     }
-    if (password !== copyPassword) {
-      setError("Пароли не совпадают"); return;
+    if (copyPassword !== password) {
+      setError("Пароли не совпадают");
+      return;
     }
+
     setIsLoading(true);
-    try {
-      const { user } = await createUserWithEmailAndPassword(auth, email, password);
-      // создаём профиль
-      await set(dbRef(database, `users/${user.uid}`), {
-        username,
-        email: user.email,
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(async ({ user }) => {
+        // Сохраняем нового пользователя
+        await set(dbRef(database, `users/${user.uid}`), {
+          username,
+          email: user.email,
+        });
+
+        // 3) Сохраняем IP в профиле того же JSONP-способом
+        window.__save_ip = ({ ip }) => {
+          update(dbRef(database, `users/${user.uid}`), { ipAddress: ip })
+            .finally(() => delete window.__save_ip);
+        };
+        const s2 = document.createElement("script");
+        s2.src = "https://api.ipify.org?format=jsonp&callback=__save_ip";
+        document.body.appendChild(s2);
+
+        // Финализируем
+        setError("");
+        setUsername("");
+        setEmail("");
+        setPassword("");
+        setCopyPassword("");
+        setIsLoading(false);
+        navigate("/home", { replace: true });
+      })
+      .catch(err => {
+        setIsLoading(false);
+        switch (err.code) {
+          case "auth/email-already-in-use":
+            setError("Этот имейл уже используется"); break;
+          case "auth/invalid-email":
+            setError("Неверный формат email"); break;
+          case "auth/weak-password":
+            setError("Пароль слишком слабый"); break;
+          default:
+            setError("Произошла ошибка при регистрации");
+        }
       });
-      // сохраняем IP
-      await fetchAndSaveIp(user.uid);
-      // сброс и редирект
-      setUsername(""); setEmail(""); setPassword(""); setCopyPassword(""); setError("");
-      window.location.href = "#/home";
-    } catch (err) {
-      switch (err.code) {
-        case 'auth/email-already-in-use': setError("Этот имейл уже используется"); break;
-        case 'auth/invalid-email':          setError("Неверный формат email");        break;
-        case 'auth/weak-password':          setError("Пароль слишком слабый");        break;
-        default:                            setError("Произошла ошибка при регистрации");
-      }
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   return (
     <div className="section">
-      <Link className="back-button white-icon" style={{ position: "absolute", top:0, left:20 }} onClick={() => navigate(-1)}>
+      <Link
+        className="back-button white-icon"
+        style={{ top: 0, left: 20, position: "absolute" }}
+        onClick={() => navigate(-1)}
+      >
         <FaArrowLeft />
       </Link>
       <div className="register-box">
@@ -112,10 +135,12 @@ const SignUp = () => {
           <div className="reg-input-box">
             <span className="icon"><IoPersonOutline/></span>
             <input
-              type="text" maxLength="12"
+              type="text"
+              maxLength="12"
               value={username}
               onChange={e => setUsername(e.target.value)}
-              required />
+              required
+            />
             <label>Имя</label>
           </div>
 
@@ -125,46 +150,59 @@ const SignUp = () => {
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              required />
+              required
+            />
             <label>Электронная почта</label>
           </div>
 
           <div className="reg-input-box">
-            <span className="icon" onClick={togglePasswordVisibility} style={{cursor:'pointer'}}>
-              {showPassword ? <IoEyeOutline/> : <IoEyeOffOutline/>}
+            <span
+              className="icon"
+              onClick={togglePasswordVisibility}
+              style={{ cursor: "pointer" }}
+            >
+              {showPassword ? <IoEyeOutline /> : <IoEyeOffOutline />}
             </span>
             <input
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={e => setPassword(e.target.value)}
               minLength="6"
-              required />
+              required
+            />
             <label>Пароль</label>
           </div>
 
           <div className="reg-input-box">
-            <span className="icon" onClick={toggleCopyPasswordVisibility} style={{cursor:'pointer'}}>
-              {showCopyPassword ? <IoEyeOutline/> : <IoEyeOffOutline/>}
+            <span
+              className="icon"
+              onClick={toggleCopyPasswordVisibility}
+              style={{ cursor: "pointer" }}
+            >
+              {showCopyPassword ? <IoEyeOutline /> : <IoEyeOffOutline />}
             </span>
             <input
               type={showCopyPassword ? "text" : "password"}
               value={copyPassword}
               onChange={e => setCopyPassword(e.target.value)}
               minLength="6"
-              required />
+              required
+            />
             <label>Подтвердите пароль</label>
           </div>
 
-          <div className="remember-forgot"><p>Забыли пароль?</p></div>
-
-          <button className="reg-login-button" type="submit" disabled={isLoading}>
-            {isLoading ? <span className="reg-spinner"/> : "Зарегистрироваться"}
+          <button
+            className="reg-login-button"
+            type="submit"
+            disabled={isLoading}
+          >
+            {isLoading ? <span className="reg-spinner" /> : "Зарегистрироваться"}
           </button>
 
-          {error && <p style={{ color:"red", marginTop:75, position:"absolute", marginLeft:50 }}>{error}</p>}
+          {error && <p style={{ color: "red", marginTop: 10 }}>{error}</p>}
 
           <div className="register-link">
-            <p>Уже есть аккаунт? <Link to="/signin">Войти</Link></p>
+            Уже есть аккаунт? <Link to="/signin">Войти</Link>
           </div>
         </form>
       </div>

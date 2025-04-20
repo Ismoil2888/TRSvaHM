@@ -2404,6 +2404,10 @@ const [selectedUser, setSelectedUser] = useState(null);
 const [isUserActionsOpen, setIsUserActionsOpen] = useState(false);
 const [blockedIPs, setBlockedIPs] = useState({});
 
+function ipToKey(ip) {
+  return ip.replace(/\./g, '_');
+}
+
 // Загрузим список заблокированных IP один раз
 useEffect(() => {
   const blockRef = dbRef(database, 'blockedIPs');
@@ -2420,13 +2424,15 @@ const handleDeleteUser = async (uid) => {
 };
 
 const handleBlockUser = async (ip) => {
-  await set(dbRef(database, `blockedIPs/${ip}`), true);
+  const key = ipToKey(ip);
+  await set(dbRef(database, `blockedIPs/${key}`), true);
   toast.success(`IP ${ip} заблокирован`);
   setIsUserActionsOpen(false);
 };
 
 const handleUnblockUser = async (ip) => {
-  await remove(dbRef(database, `blockedIPs/${ip}`));
+  const key = ipToKey(ip);
+  await remove(dbRef(database, `blockedIPs/${key}`));
   toast.success(`IP ${ip} разблокирован`);
   setIsUserActionsOpen(false);
 };

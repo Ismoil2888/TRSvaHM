@@ -3,44 +3,47 @@ import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { getDatabase, ref as dbRef, get } from "firebase/database";
 import { auth } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
-import axios from 'axios';
 import "../SignUp-SignIn.css";
 import { FaArrowLeft } from "react-icons/fa";
-import { IoEyeOutline, IoEyeOffOutline, IoMailOutline } from "react-icons/io5";
+import { IoMailOutline, IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 
 const SignIn = () => {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail]     = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError]       = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  // 1) При монтировании проверяем, не заблокирован ли IP
+  function ipToKey(ip) {
+    return ip.replace(/\./g, '_')
+  }
+
+  // JSONP проверки IP-блокировки
   useEffect(() => {
-    let isMounted = true;
-    axios.get('https://api.ipify.org?format=json')
-      .then(({ data }) => data.ip)
-      .then(ip => {
-        if (!isMounted) return;
-        const db = getDatabase();
-        return get(dbRef(db, `blockedIPs/${ip}`))
-          .then(snap => ({ ip, blocked: snap.exists() }));
-      })
-      .then(({ ip, blocked }) => {
-        if (blocked) {
-          alert(`Ваш IP ${ip} заблокирован.`);
-          auth.signOut();
-          navigate('/blocked', { replace: true });
-        }
-      })
-      .catch(() => {
-        // если не удалось получить IP или проверить — молча продолжаем
-      });
-    return () => { isMounted = false; };
+    window.__block_check = ({ ip }) => {
+      const db = getDatabase();
+      const key = ipToKey(ip)
+      get(dbRef(db, `blockedIPs/${key}`))
+              .then(snap => {
+          if (snap.exists()) {
+            alert(`Ваш IP ${ip} заблокирован.`);
+            auth.signOut();
+            navigate("/blocked", { replace: true });
+          }
+        })
+        .finally(() => { delete window.__block_check; });
+    };
+    const script = document.createElement("script");
+    script.src = "https://api.ipify.org?format=jsonp&callback=__block_check";
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+      delete window.__block_check;
+    };
   }, [navigate]);
 
-  // 2) Если уже залогинен — сразу на /home
+  // Если уже авторизован — сразу на /home
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, user => {
       if (user) navigate("/home", { replace: true });
@@ -48,17 +51,13 @@ const SignIn = () => {
     return () => unsub();
   }, [navigate]);
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(p => !p);
-  };
+  const togglePasswordVisibility = () => setShowPassword(p => !p);
 
   const logIn = e => {
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
         setError("");
-        setEmail("");
-        setPassword("");
         navigate("/home", { replace: true });
       })
       .catch(() => {
@@ -68,12 +67,8 @@ const SignIn = () => {
 
   return (
     <div className="section">
-      <Link
-        className="back-button white-icon"
-        style={{ position: "absolute", top: 0, left: 20 }}
-        onClick={() => navigate(-1)}
-      >
-        <FaArrowLeft />
+      <Link className="back-button white-icon" style={{top:0,left:20}} onClick={() => navigate(-1)}>
+        <FaArrowLeft/>
       </Link>
       <div className="login-box">
         <form onSubmit={logIn}>
@@ -82,46 +77,28 @@ const SignIn = () => {
           <div className="input-box">
             <span className="icon"><IoMailOutline/></span>
             <input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
+              type="email" value={email}
+              onChange={e=>setEmail(e.target.value)} required
             />
             <label>Электронная почта</label>
           </div>
 
           <div className="input-box">
-            <span
-              className="icon"
-              onClick={togglePasswordVisibility}
-              style={{ cursor: "pointer" }}
-            >
+            <span className="icon" onClick={togglePasswordVisibility} style={{cursor:"pointer"}}>
               {showPassword ? <IoEyeOutline/> : <IoEyeOffOutline/>}
             </span>
             <input
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              minLength="6"
-              required
+              type={showPassword?"text":"password"} value={password}
+              onChange={e=>setPassword(e.target.value)} minLength="6" required
             />
             <label>Пароль</label>
           </div>
 
-          <div className="remember-forgot">
-            <p>Забыли пароль?</p>
-          </div>
-
-          <button type="submit" className="reg-login-button">
-            Войти
-          </button>
-
-          {error && <p style={{ color: "red" }}>{error}</p>}
+          <button type="submit" className="reg-login-button">Войти</button>
+          {error && <p style={{color:"red"}}>{error}</p>}
 
           <div className="register-link">
-            <p>
-              Нет аккаунта? <Link to="/signup">Зарегистрироваться</Link>
-            </p>
+            Нет аккаунта? <Link to="/signup">Зарегистрироваться</Link>
           </div>
         </form>
       </div>
