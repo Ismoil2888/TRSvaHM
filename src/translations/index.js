@@ -7,6 +7,9 @@ export const translations = {
     gallery: "Галерея",
     facultnamefull: "Факултаи технологияҳои рақами, системаҳо ва ҳифзи иттилоот",
     //AuthDetails
+    identifyprompt: "Барои ҳамкорӣ бо мундариҷа, лутфан шахсияти худро тасдиқ кунед.",
+    identifypromptbutton: "Шахсияти худро тасдиқ кардан",
+    identifypromptcancel: "Ақиб",
     language: "Забон",
     greeting: "Салом",
     password: "Рамз",
@@ -55,6 +58,9 @@ export const translations = {
     //HomePage
     main: "Асосӣ",
     addpost: "Нашрияро ба намоиш гузоштан",
+    like: "Маъқул аст",
+    lookallcomments: "Ҳамаи шарҳҳоро бинед",
+    more: "бештар",
     //MyProfile, UserProfile
     cathedra: "Кафедра",
     course: "Курс",
@@ -90,6 +96,9 @@ export const translations = {
     gallery: "Галерея",
     facultnamefull: "Цифровые технологии, системы и защита информации",
     //AuthDetails
+    identifyprompt: "Для того чтобы взаимодействовать с контентом пройдите идентификацию.",
+    identifypromptbutton: "Пройти идентификацию",
+    identifypromptcancel: "Отмена",
     language: "Язык",
     greeting: "Привет",
     password: "Пароль",
@@ -138,6 +147,9 @@ export const translations = {
     //HomePage
     main: "Главная",
     addpost: "Выложить пост",
+    like: "Нравится",
+    lookallcomments: "Посмотреть все комментарии",
+    more: "ещё",
     //MyProfile, UserProfile
     cathedra: "Кафедра",
     course: "Курс",
@@ -173,6 +185,9 @@ export const translations = {
     gallery: "Gallery",
     facultnamefull: "Digital technologies, systems and information security",
     //AuthDetails
+    identifyprompt: "To interact with the content, please verify your identity.",
+    identifypromptbutton: "Verify Identity",
+    identifypromptcancel: "Cancel",
     language: "Language",
     greeting: "Hello",
     password: "Password",
@@ -221,6 +236,9 @@ export const translations = {
     //HomePage
     main: "Main",
     addpost: "Add post",
+    like: "Like",
+    lookallcomments: "Look all comments",
+    more: "more",
     //MyProfile, UserProfile
     cathedra: "Cathedra",
     course: "Course",

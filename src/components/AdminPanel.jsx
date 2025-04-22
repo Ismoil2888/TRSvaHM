@@ -3126,7 +3126,7 @@ const handleUnblockUser = async (ip) => {
     <h2>Все зарегистрированные пользователи:</h2>
     <ul className="txt">
       {users.map(user => (
-        <li key={user.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
+        <li key={user.id} style={{ display: 'flex', alignItems: 'center', padding: "5px", borderBottom: "1px solid grey" }}>
           <div style={{ flex: 1 }}>
             <strong>{user.username}</strong> — {user.email || 'email не указан'}
           </div>

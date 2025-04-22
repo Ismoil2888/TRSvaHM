@@ -563,7 +563,7 @@ const TeacherLogin = () => {
         {isRegistering ? (
           <>
             <input placeholder="ФИО" value={regData.name} onChange={e => setRegData({ ...regData, name: e.target.value })} />
-            <input placeholder="Предмет" value={regData.subject} onChange={e => setRegData({ ...regData, subject: e.target.value })} />
+            <input placeholder="Предметы" value={regData.subject} onChange={e => setRegData({ ...regData, subject: e.target.value })} />
             <select value={regData.cathedra} onChange={e => setRegData({ ...regData, cathedra: e.target.value })}>
               <option value="">Выберите кафедру</option>
               <option value="Системахои Автоматикунонидашудаи Идоракуни">Системахои Автоматикунонидашудаи Идоракуни</option>

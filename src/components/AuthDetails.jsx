@@ -1001,7 +1001,6 @@ import { LanguageContext } from '../contexts/LanguageContext';
 import { translations } from '../translations';
 import useTranslation from '../hooks/useTranslation';
 import { applyTheme, themes } from "../theme";
-import VoiceAssistant from "./VoiceAssistant";
 
 const AuthDetails = () => {
   const [authUser, setAuthUser] = useState(null);
@@ -1088,6 +1087,29 @@ const AuthDetails = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const groupsByFaculty = {
+    "Системахои Автоматикунонидашудаи Идоракуни": [
+      "1-530102 - АСКИ",
+      "1-400101 - ТБТИ",
+    ],
+    "Шабакахои Алока Ва Системахои Комутатсиони": [
+      "1-450103-02 - ШАваТИ",
+    ],
+    "Технологияхои Иттилооти Ва Хифзи Маълумот": [
+      "1-400102-04 - ТИваХМ",
+      "1-98010101-03 - ТИваХМ",
+      "1-98010101-05 - ТИваХМ",
+    ],
+    "Автоматонии Равандхои Технологи Ва Истехсолот": [
+      "1-530101 - АРТваИ",
+      "1-530107 - АРТваИ",
+      "1-400301-02 - АРТваИ",
+      "1-400301-05 - АРТваИ",
+    ],
+    "Информатика Ва Техникаи Хисоббарор": [
+      "1-080101-07 - ИваТХ",
+    ],
+  };
 
   useEffect(() => {
     if (location.state?.openForm) {
@@ -1221,46 +1243,46 @@ const AuthDetails = () => {
   const courseDropdownRef = useRef(null);
   const groupDropdownRef = useRef(null);
 
-// В функции handleOpenForm
-const handleOpenForm = () => {
-  // Проверяем текущий статус и наличие активной заявки
-  if (identificationStatus === t('notident') && !hasPendingRequest) {
-    setIsRequestFormOpen(true);
-  } else if (hasPendingRequest) {
-    showNotification("У вас уже есть активная заявка на рассмотрении.");
-  } else {
-    showNotification("Вы уже идентифицированы.");
-  }
-};
+  // В функции handleOpenForm
+  const handleOpenForm = () => {
+    // Проверяем текущий статус и наличие активной заявки
+    if (identificationStatus === t('notident') && !hasPendingRequest) {
+      setIsRequestFormOpen(true);
+    } else if (hasPendingRequest) {
+      showNotification("У вас уже есть активная заявка на рассмотрении.");
+    } else {
+      showNotification("Вы уже идентифицированы.");
+    }
+  };
 
-// Обновляем useEffect для отслеживания статуса заявок
-useEffect(() => {
-  const db = getDatabase();
-  const user = auth.currentUser;
-  
-  if (user) {
-    const requestRef = query(
-      databaseRef(db, "requests"),
-      orderByChild("userId"),
-      equalTo(user.uid)
-    );
+  // Обновляем useEffect для отслеживания статуса заявок
+  useEffect(() => {
+    const db = getDatabase();
+    const user = auth.currentUser;
 
-    onValue(requestRef, (snapshot) => {
-      if (snapshot.exists()) {
-        const requests = Object.values(snapshot.val());
-        const pending = requests.some(req => req.status === "pending");
-        setHasPendingRequest(pending);
-        
-        // Обновляем статус идентификации
-        const accepted = requests.some(req => req.status === "accepted");
-        setIdentificationStatus(accepted ? t('ident') : t('notident'));
-      } else {
-        setHasPendingRequest(false);
-        setIdentificationStatus(t('notident'));
-      }
-    });
-  }
-}, [t]);
+    if (user) {
+      const requestRef = query(
+        databaseRef(db, "requests"),
+        orderByChild("userId"),
+        equalTo(user.uid)
+      );
+
+      onValue(requestRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const requests = Object.values(snapshot.val());
+          const pending = requests.some(req => req.status === "pending");
+          setHasPendingRequest(pending);
+
+          // Обновляем статус идентификации
+          const accepted = requests.some(req => req.status === "accepted");
+          setIdentificationStatus(accepted ? t('ident') : t('notident'));
+        } else {
+          setHasPendingRequest(false);
+          setIdentificationStatus(t('notident'));
+        }
+      });
+    }
+  }, [t]);
 
   const handleCloseForm = () => setIsRequestFormOpen(false);
 
@@ -1280,7 +1302,7 @@ useEffect(() => {
       orderByChild("userId"),
       equalTo(authUser.uid)
     );
-  
+
     // Проверка на существующие заявки
     const snapshot = await get(requestsRef);
     if (snapshot.exists()) {
@@ -1292,24 +1314,24 @@ useEffect(() => {
     }
 
     const { fio, faculty, course, group, photo } = studentInfo;
-  
+
     if (!fio || !faculty || !course || !group || !photo) {
       showNotificationError("Все поля обязательны к заполнению.");
       return;
     }
-  
+
     setIsLoading(true);
-  
+
     try {
       let photoUrl = "";
       const userDatabaseRef = databaseRef(database, `users/${authUser.uid}`); // Переносим объявление сюда
-      
+
       if (photo) {
         const storageReference = ref(storage, `request_photos/${Date.now()}_${photo.name}`);
         const snapshot = await uploadBytes(storageReference, photo);
         photoUrl = await getDownloadURL(snapshot.ref);
       }
-  
+
       const requestRef = push(databaseRef(database, "requests"));
       await update(requestRef, {
         fio,
@@ -1323,18 +1345,18 @@ useEffect(() => {
         userAvatar: avatarUrl,
         userId: authUser.uid
       });
-  
+
       // Обновляем статус после создания заявки
       await update(userDatabaseRef, {
         identificationStatus: 'pending'
       });
-  
+
       setRequestId(requestRef.key);
       handleCloseForm();
       showNotification("Заявка отправлена успешно.");
-          // После успешной отправки
-    setHasPendingRequest(true);
-    setIdentificationStatus('pending');
+      // После успешной отправки
+      setHasPendingRequest(true);
+      setIdentificationStatus('pending');
     } catch (error) {
       console.error("Ошибка отправки заявки:", error);
       showNotificationError("Ошибка отправки заявки.");
@@ -1387,11 +1409,6 @@ useEffect(() => {
             setLastActive(data.lastActive || "");
             setAvatarUrl(data.avatarUrl || "./default-image.png");
             setAboutMe(data.aboutMe || t('infonot'));
-            // setIdentificationStatus(t('notident'));
-            const identStatus = data.identificationStatus === 'accepted' 
-            ? t('ident') 
-            : t('notident');
-          setIdentificationStatus(identStatus);
           }
         });
 
@@ -1402,19 +1419,6 @@ useEffect(() => {
           orderByChild("email"),
           equalTo(user.email)
         );
-
-        onValue(requestRef, (snapshot) => {
-          if (snapshot.exists()) {
-            const requestData = Object.values(snapshot.val())[0];
-            const userDatabaseRef = databaseRef(database, `users/${user.uid}`); // Объявляем здесь
-    
-            if (requestData.status === "accepted") {
-              update(userDatabaseRef, {
-                identificationStatus: 'accepted'
-              });
-            }
-          }
-        });
 
         // Устанавливаем статус "online" при входе
         update(userRef, { status: "online" });
@@ -1955,30 +1959,41 @@ useEffect(() => {
                   </div>
 
                   {/* Группа */}
-                  <div className="custom-dropdown-auth" ref={groupDropdownRef}>
+                  {/* Группа */}
+                  <div
+                    className={`custom-dropdown-auth ${!studentInfo.faculty ? 'disabled' : ''}`}
+                    ref={groupDropdownRef}
+                  >
                     <div
                       className="dropdown-header-auth"
                       onClick={() => {
-                        setShowGroupList(!showGroupList);
+                        // если кафедра ещё не выбрана — не открывать
+                        if (!studentInfo.faculty) return;
+                        setShowGroupList(prev => !prev);
                         setShowFacultyList(false);
                         setShowCourseList(false);
                       }}
                     >
-                      {studentInfo.group || "Выберите группу"}
+                      {studentInfo.group
+                        ? studentInfo.group
+                        : studentInfo.faculty
+                          ? "Выберите специальность"
+                          : "Сначала выберите кафедру"}
                       <span className={`arrow-auth ${showGroupList ? "up-auth" : "down-auth"}`}></span>
                     </div>
-                    {showGroupList && (
+
+                    {showGroupList && studentInfo.faculty && (
                       <div className="dropdown-list-auth">
-                        {groups.map((group) => (
+                        {groupsByFaculty[studentInfo.faculty].map(groupName => (
                           <div
-                            key={group}
+                            key={groupName}
                             className="dropdown-item-auth"
                             onClick={() => {
-                              setStudentInfo(prev => ({ ...prev, group }));
+                              setStudentInfo(prev => ({ ...prev, group: groupName }));
                               setShowGroupList(false);
                             }}
                           >
-                            {group}
+                            {groupName}
                           </div>
                         ))}
                       </div>
@@ -2002,16 +2017,16 @@ useEffect(() => {
 
             <div className="info-section" onClick={() => setIsEmailModalOpen(true)}>
               <div className="basic-email-block">
-              <div className="email-block1">
-              <h3>{t('email')}</h3>
-              <p>{email}</p>
-              <p style={{ color: isVerified ? "lightgreen" : "red", fontSize: "14px" }}>
-                {isVerified ? t('confirmed') : t('notconfirmed')}
-              </p>
-              </div>
-              <div className="email-block2">
+                <div className="email-block1">
+                  <h3>{t('email')}</h3>
+                  <p>{email}</p>
+                  <p style={{ color: isVerified ? "lightgreen" : "red", fontSize: "14px" }}>
+                    {isVerified ? t('confirmed') : t('notconfirmed')}
+                  </p>
+                </div>
+                <div className="email-block2">
                   <FaAt style={{ color: isVerified ? "#0AFFFF" : "red" }} />
-              </div>
+                </div>
               </div>
             </div>
 

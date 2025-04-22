@@ -760,3 +760,9 @@
 .admin-modal-window button:nth-of-type(3):hover {
   background-color: #616161;
 }
+
+
+
+.users-list li:hover{
+  background-color: #0d47a1;
+}

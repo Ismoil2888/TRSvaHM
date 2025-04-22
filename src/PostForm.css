@@ -273,6 +273,7 @@
     color: rgb(143, 143, 144);
     cursor: pointer;
     font-weight: bold;
+    font-size: 14.5px;
   }  
 
   .notification-badge {

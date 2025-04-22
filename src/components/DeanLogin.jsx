@@ -140,7 +140,7 @@ const DeanLogin = () => {
               onChange={e => setRegData({ ...regData, fio: e.target.value })}
             />
             <input
-              placeholder="Предмет"
+              placeholder="Предметы"
               value={regData.subject}
               onChange={e => setRegData({ ...regData, subject: e.target.value })}
             />

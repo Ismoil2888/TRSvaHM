@@ -3476,7 +3476,7 @@ onValue(userRef, (snapshot) => {
                         onClick={() => openLikesModal(post.id)}
                         style={{ cursor: "pointer" }}
                       >
-                        Нравится: {likesCount}
+                        {t('like')}: {likesCount}
                       </p>
 
                       {editingPostId === post.id ? (
@@ -3512,17 +3512,17 @@ onValue(userRef, (snapshot) => {
                           <span className="post-username">{usersMap[post.userId]?.username || "User"}</span>{" "}
                           {post.description.length > MAX_TEXT_LENGTH && !expandedPosts[post.id] ? (
                             <>
-                              {post.description.slice(0, MAX_TEXT_LENGTH)} ...
+                            <span style={{fontSize: "14.5px"}}>{post.description.slice(0, MAX_TEXT_LENGTH)}</span> ...
                               <span
                                 className="toggle-text"
                                 onClick={() => toggleTextExpansion(post.id)}
                               >
-                                ещё
+                                {t('more')}
                               </span>
                             </>
                           ) : (
                             <>
-                              {post.description}
+                              <span style={{fontSize: "14.5px"}}>{post.description}</span>
                               {post.description.length > MAX_TEXT_LENGTH && (
                                 <span
                                   className="toggle-text"
@@ -3541,7 +3541,7 @@ onValue(userRef, (snapshot) => {
                         style={{ color: "grey", marginLeft: "10px", marginTop: "5px" }}
                         onClick={() => openCommentModal(post.id)}
                       >
-                        Посмотреть все комментарии ({post.commentCount || 0})
+                        {t('lookallcomments')} ({post.commentCount || 0})
                       </p>
 
                       {commentModal.isOpen && commentModal.postId === post.id && (
@@ -3658,7 +3658,7 @@ onValue(userRef, (snapshot) => {
         {showIdentifyPrompt && (
           <div className="identify-prompt-overlay">
             <div className="identify-prompt-modal">
-              <p>Для того чтобы взаимодействовать с контентом пройдите идентификацию.</p>
+              <p>{t('identifyprompt')}</p>
               <button
                 style={{ color: "blue", borderBottom: "1px solid grey", borderRadius: "0" }}
                 onClick={() => {
@@ -3666,9 +3666,9 @@ onValue(userRef, (snapshot) => {
                   navigate("/authdetails", { state: { openForm: true } });
                 }}
               >
-                Пройти идентификацию
+                {t('identifypromptbutton')}
               </button>
-              <button onClick={() => setShowIdentifyPrompt(false)}>Отмена</button>
+              <button onClick={() => setShowIdentifyPrompt(false)}>{t('identifypromptcancel')}</button>
             </div>
           </div>
         )}
