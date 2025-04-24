@@ -240,11 +240,11 @@ useEffect(() => {
       <Route path="/searchpage" element={<PrivateRoute> <SearchPage /> </PrivateRoute>} />
       <Route path="/searchstudents" element={<PrivateRoute> <SearchStudents /> </PrivateRoute>} />
       <Route path="/welcomepage" element={<WelcomePage />} />
-      <Route path="/teacher-login" element={<TeacherLogin />} />
-      <Route path="/dean-login" element={<DeanLogin />} />
+      <Route path="/987654321teacher-login987654321" element={<TeacherLogin />} />
+      <Route path="/987654321dean-login987654321" element={<DeanLogin />} />
       <Route path="/teacher-profile/:id" element={<TeacherProfile />} />
-      <Route path="/987654321admin" element={<AdminPrivateRoute> <AdminPanel /> </AdminPrivateRoute>} />
-      <Route path="/987654321admin-login" element={ <AdminLogin /> } />
+      <Route path="/987654321admin987654321" element={<AdminPrivateRoute> <AdminPanel /> </AdminPrivateRoute>} />
+      <Route path="/987654321admin-login987654321" element={ <AdminLogin /> } />
         {/* Только dean */}
        {/* {userRole === 'dean' && (
                 <Route
