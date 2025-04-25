@@ -245,21 +245,6 @@ useEffect(() => {
       <Route path="/teacher-profile/:id" element={<TeacherProfile />} />
       <Route path="/987654321admin987654321" element={<AdminPrivateRoute> <AdminPanel /> </AdminPrivateRoute>} />
       <Route path="/987654321admin-login987654321" element={ <AdminLogin /> } />
-        {/* Только dean */}
-       {/* {userRole === 'dean' && (
-                <Route
-                path="/admin"
-                element={<AdminPrivateRoute> <AdminPanel /> </AdminPrivateRoute>  } />
-                )} */}
-                  {/* <Route
-    path="/admin"
-    element={
-      <RoleRoute allowedRoles={['dean']}>
-        <AdminPanel/>
-      </RoleRoute>
-    }
-  /> */}
-
       <Route path="/blank" element={<BlankForm />} />
       <Route path="*" element={<NotfoundPage />} />
       <Route path="/chat/:chatRoomId" element={<PrivateRoute> <Chat /> </PrivateRoute>} />
