@@ -336,7 +336,7 @@ const PostForm = () => {
               {isMenuOpen && <span className="txt">{t('messages')}</span>}
             </Link>
             <Link to="/notifications" className="menu-item">
-              <FiBell className="menu-icon" style={{ color: "orange" }} />
+              <FiBell className="menu-icon" />
               {isMenuOpen && <span className="txt">{t('notifications')}</span>}
             </Link>
           </div>

@@ -1559,11 +1559,11 @@
 //     update(dbRef(database, `requests/${id}`), { status: "accepted" })
 //       .then(() => {
 //         const acceptedRequest = requests.find(req => req.id === id);
-        
+
 //         // Обновляем статус идентификации пользователя
 //         const userRef = dbRef(database, `users/${acceptedRequest.userId}`);
 //         update(userRef, { identificationStatus: 'accepted' });
-  
+
 //         if (acceptedRequest && acceptedRequest.group && acceptedRequest.course) {
 //           const groupKey = acceptedRequest.group;
 //           const courseKey = acceptedRequest.course;
@@ -1573,7 +1573,7 @@
 //             userAvatar: acceptedRequest.userAvatar || acceptedRequest.photoUrl || defaultAvatar
 //           });
 //         }
-        
+
 //         setRequests(prevRequests =>
 //           prevRequests.map(request =>
 //             request.id === id ? { ...request, status: "accepted" } : request
@@ -2400,42 +2400,42 @@ const AdminPanel = () => {
   const [pwaInstallCount, setPwaInstallCount] = useState(0);
   const [showUsersList, setShowUsersList] = useState(false);
   const [users, setUsers] = useState([]);
-const [selectedUser, setSelectedUser] = useState(null);
-const [isUserActionsOpen, setIsUserActionsOpen] = useState(false);
-const [blockedIPs, setBlockedIPs] = useState({});
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [isUserActionsOpen, setIsUserActionsOpen] = useState(false);
+  const [blockedIPs, setBlockedIPs] = useState({});
 
-function ipToKey(ip) {
-  return ip.replace(/\./g, '_');
-}
+  function ipToKey(ip) {
+    return ip.replace(/\./g, '_');
+  }
 
-// Загрузим список заблокированных IP один раз
-useEffect(() => {
-  const blockRef = dbRef(database, 'blockedIPs');
-  onValue(blockRef, snap => {
-    setBlockedIPs(snap.val() || {});
-  });
-}, []);
+  // Загрузим список заблокированных IP один раз
+  useEffect(() => {
+    const blockRef = dbRef(database, 'blockedIPs');
+    onValue(blockRef, snap => {
+      setBlockedIPs(snap.val() || {});
+    });
+  }, []);
 
-const handleDeleteUser = async (uid) => {
-  // полностью удаляем профиль
-  await remove(dbRef(database, `users/${uid}`));
-  toast.success('Пользователь удалён');
-  setIsUserActionsOpen(false);
-};
+  const handleDeleteUser = async (uid) => {
+    // полностью удаляем профиль
+    await remove(dbRef(database, `users/${uid}`));
+    toast.success('Пользователь удалён');
+    setIsUserActionsOpen(false);
+  };
 
-const handleBlockUser = async (ip) => {
-  const key = ipToKey(ip);
-  await set(dbRef(database, `blockedIPs/${key}`), true);
-  toast.success(`IP ${ip} заблокирован`);
-  setIsUserActionsOpen(false);
-};
+  const handleBlockUser = async (ip) => {
+    const key = ipToKey(ip);
+    await set(dbRef(database, `blockedIPs/${key}`), true);
+    toast.success(`IP ${ip} заблокирован`);
+    setIsUserActionsOpen(false);
+  };
 
-const handleUnblockUser = async (ip) => {
-  const key = ipToKey(ip);
-  await remove(dbRef(database, `blockedIPs/${key}`));
-  toast.success(`IP ${ip} разблокирован`);
-  setIsUserActionsOpen(false);
-};
+  const handleUnblockUser = async (ip) => {
+    const key = ipToKey(ip);
+    await remove(dbRef(database, `blockedIPs/${key}`));
+    toast.success(`IP ${ip} разблокирован`);
+    setIsUserActionsOpen(false);
+  };
 
 
   useEffect(() => {
@@ -2834,31 +2834,118 @@ const handleUnblockUser = async (ip) => {
     });
   }, [database]);
 
+  // const formattedData = await Promise.all(
+  //   Object.keys(data).map(async (key) => {
+  //     // Берем данные заявки
+  //     const request = { id: key, ...data[key], status: data[key].status || 'pending' };
+  //     // Если заявка в статусе "pending", проверяем роль отправителя
+  //     if (request.status === 'pending') {
+  //       const userSnapshot = await get(dbRef(database, `users/${request.senderId}`));
+  //       const userData = userSnapshot.val();
+  //       if (userData && userData.role === 'dean') {
+  //         // Если отправитель — декан, обновляем статус заявки автоматически
+  //         await update(dbRef(database, `requests/${key}`), { status: "accepted" });
+  //         request.status = "accepted";
+  //       }
+  //     }
+  //     return request;
+  //   })
+  // );
+
+  // useEffect(() => {
+  //   const requestsRef = dbRef(database, "requests");
+  //   onValue(requestsRef, async (snapshot) => {
+  //     const data = snapshot.val();
+  //     if (data) {
+  //       const formattedData = await Promise.all(
+  //                 Object.keys(data).map(async key => {
+  //                   const raw = data[key];
+  //                   // базовый объект заявки
+  //                   const request = {
+  //                     id: key,
+  //                     ...raw,
+  //                     status: raw.status || 'pending'
+  //                   };
+
+  //                   // 1) подтягиваем имя/аватар из users/<senderId>
+  //                   try {
+  //                     const userSnap = await get(dbRef(database, `users/${request.senderId}`));
+  //                     const userData = userSnap.val();
+  //                     if (userData) {
+  //                       request.username    = userData.username;
+  //                       request.userAvatar  = userData.avatarUrl;
+  //                     }
+  //                   } catch (err) {
+  //                     console.warn("Не удалось загрузить профиль отправителя:", err);
+  //                   }
+
+  //                   // 2) оставляем вашу логику авто-принятия для декана
+  //                   if (request.status === 'pending') {
+  //                     const senderSnap = await get(dbRef(database, `users/${request.senderId}`));
+  //                     const senderData = senderSnap.val();
+  //                     if (senderData?.role === 'dean') {
+  //                       await update(dbRef(database, `requests/${key}`), { status: "accepted" });
+  //                       request.status = "accepted";
+  //                     }
+  //                   }
+
+  //                   return request;
+  //                 })
+  //               );
+  //       setRequests(formattedData);
+  //       setNewRequestsCount(formattedData.filter(req => req.status === 'pending').length);
+  //     }
+  //   });
+  // }, [database]);
+
   useEffect(() => {
     const requestsRef = dbRef(database, "requests");
     onValue(requestsRef, async (snapshot) => {
       const data = snapshot.val();
+      let formattedData = [];
+
       if (data) {
-        const formattedData = await Promise.all(
-          Object.keys(data).map(async (key) => {
-            // Берем данные заявки
-            const request = { id: key, ...data[key], status: data[key].status || 'pending' };
-            // Если заявка в статусе "pending", проверяем роль отправителя
-            if (request.status === 'pending') {
-              const userSnapshot = await get(dbRef(database, `users/${request.senderId}`));
-              const userData = userSnapshot.val();
-              if (userData && userData.role === 'dean') {
-                // Если отправитель — декан, обновляем статус заявки автоматически
-                await update(dbRef(database, `requests/${key}`), { status: "accepted" });
-                request.status = "accepted";
+        formattedData = await Promise.all(
+          Object.keys(data).map(async key => {
+            const raw = data[key];
+            const request = {
+              id: key,
+              ...raw,
+              status: raw.status || 'pending'
+            };
+
+            // подгружаем профиль отправителя
+            try {
+              const userSnap = await get(dbRef(database, `users/${request.senderId}`));
+              const userData = userSnap.val();
+              if (userData) {
+                request.username = userData.username;
+                request.userAvatar = userData.avatarUrl;
+                request.role = userData.role;      // <-- сохраняем роль
               }
+            } catch (err) {
+              console.warn("Не удалось загрузить профиль отправителя:", err);
             }
+
+            // авто-принятие для декана
+            if (request.status === 'pending' && request.role === 'dean') {
+              await update(dbRef(database, `requests/${key}`), { status: "accepted" });
+              request.status = "accepted";
+            }
+
             return request;
           })
         );
-        setRequests(formattedData);
-        setNewRequestsCount(formattedData.filter(req => req.status === 'pending').length);
+
+        // фильтруем: оставляем только либо заявки преподавателей, либо у которых есть fio
+        formattedData = formattedData.filter(req =>
+          req.role === 'teacher' ||
+          (typeof req.fio === 'string' && req.fio.trim() !== '')
+        );
       }
+
+      setRequests(formattedData);
+      setNewRequestsCount(formattedData.filter(r => r.status === 'pending').length);
     });
   }, [database]);
 
@@ -2876,11 +2963,11 @@ const handleUnblockUser = async (ip) => {
     update(dbRef(database, `requests/${id}`), { status: "accepted" })
       .then(() => {
         const acceptedRequest = requests.find(req => req.id === id);
-        
+
         // Обновляем статус идентификации пользователя
         const userRef = dbRef(database, `users/${acceptedRequest.userId}`);
         update(userRef, { identificationStatus: 'accepted' });
-  
+
         if (acceptedRequest && acceptedRequest.group && acceptedRequest.course) {
           const groupKey = acceptedRequest.group;
           const courseKey = acceptedRequest.course;
@@ -2890,7 +2977,7 @@ const handleUnblockUser = async (ip) => {
             userAvatar: acceptedRequest.userAvatar || acceptedRequest.photoUrl || defaultAvatar
           });
         }
-        
+
         setRequests(prevRequests =>
           prevRequests.map(request =>
             request.id === id ? { ...request, status: "accepted" } : request
@@ -2988,8 +3075,8 @@ const handleUnblockUser = async (ip) => {
     if (!reason.trim()) return;
 
     // 0) Обновляем статус пользователя
-    await update(dbRef(database, `users/${senderId}`), { 
-      identificationStatus: 'rejected' 
+    await update(dbRef(database, `users/${senderId}`), {
+      identificationStatus: 'rejected'
     });
 
     // 1) обновляем статус заявки
@@ -3085,10 +3172,14 @@ const handleUnblockUser = async (ip) => {
   const handleSearchChange = (e) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
-    const filtered = teachers.filter(teacher =>
-      teacher.name.toLowerCase().includes(query)
-    );
-    setFilteredTeachers(filtered);
+
+    const searchFiltered = teachers.filter((teacher) => {
+      const name = teacher.name || "";
+      return (
+        name.toLowerCase().includes(query)
+      );
+    });
+    setFilteredTeachers(searchFiltered);
   };
 
   const handleSelectTeacher = (teacher) => {
@@ -3122,66 +3213,66 @@ const handleUnblockUser = async (ip) => {
       </div>
 
       {showUsersList && (
-  <div className="users-list">
-    <h2>Все зарегистрированные пользователи:</h2>
-    <ul className="txt">
-      {users.map(user => (
-        <li key={user.id} style={{ display: 'flex', alignItems: 'center', padding: "5px", borderBottom: "1px solid grey" }}>
-          <div style={{ flex: 1 }}>
-            <strong>{user.username}</strong> — {user.email || 'email не указан'}
-          </div>
-          <FaEdit
-            style={{ cursor: 'pointer', marginLeft: 8 }}
-            onClick={() => {
-              setSelectedUser(user);
-              setIsUserActionsOpen(true);
-            }}
-          />
-        </li>
-      ))}
-    </ul>
-  </div>
-)}
+        <div className="users-list">
+          <h2>Все зарегистрированные пользователи:</h2>
+          <ul className="txt">
+            {users.map(user => (
+              <li key={user.id} style={{ display: 'flex', alignItems: 'center', padding: "5px", borderBottom: "1px solid grey" }}>
+                <div style={{ flex: 1 }}>
+                  <strong>{user.username}</strong> — {user.email || 'email не указан'}
+                </div>
+                <FaEdit
+                  style={{ cursor: 'pointer', marginLeft: 8 }}
+                  onClick={() => {
+                    setSelectedUser(user);
+                    setIsUserActionsOpen(true);
+                  }}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
-{isUserActionsOpen && selectedUser && (
-  <div className="admin-modal-backdrop">
-    <div className="admin-modal-window">
-      <h3>Действие для «{selectedUser.username}»</h3>
-      <button
-        onClick={() => {
-          if (window.confirm('Вы точно хотите удалить этого пользователя?')) {
-            handleDeleteUser(selectedUser.id);
-          }
-        }}
-      >
-        Удалить аккаунт
-      </button>
-      {blockedIPs[selectedUser.ipAddress]
-        ? <button
-            onClick={() => {
-              if (window.confirm(`Разблокировать IP ${selectedUser.ipAddress}?`)) {
-                handleUnblockUser(selectedUser.ipAddress);
-              }
-            }}
-          >
-            Разблокировать по IP
-          </button>
-        : <button
-            onClick={() => {
-              if (window.confirm(`Заблокировать IP ${selectedUser.ipAddress}?`)) {
-                handleBlockUser(selectedUser.ipAddress);
-              }
-            }}
-          >
-            Заблокировать по IP {selectedUser.ipAddress}
-          </button>
-      }
-      <button onClick={() => setIsUserActionsOpen(false)}>
-        Отмена
-      </button>
-    </div>
-  </div>
-)}
+      {isUserActionsOpen && selectedUser && (
+        <div className="admin-modal-backdrop">
+          <div className="admin-modal-window">
+            <h3>Действие для «{selectedUser.username}»</h3>
+            <button
+              onClick={() => {
+                if (window.confirm('Вы точно хотите удалить этого пользователя?')) {
+                  handleDeleteUser(selectedUser.id);
+                }
+              }}
+            >
+              Удалить аккаунт
+            </button>
+            {blockedIPs[selectedUser.ipAddress]
+              ? <button
+                onClick={() => {
+                  if (window.confirm(`Разблокировать IP ${selectedUser.ipAddress}?`)) {
+                    handleUnblockUser(selectedUser.ipAddress);
+                  }
+                }}
+              >
+                Разблокировать по IP
+              </button>
+              : <button
+                onClick={() => {
+                  if (window.confirm(`Заблокировать IP ${selectedUser.ipAddress}?`)) {
+                    handleBlockUser(selectedUser.ipAddress);
+                  }
+                }}
+              >
+                Заблокировать по IP {selectedUser.ipAddress}
+              </button>
+            }
+            <button onClick={() => setIsUserActionsOpen(false)}>
+              Отмена
+            </button>
+          </div>
+        </div>
+      )}
 
       {isLoading && <div className="loading-bar">Подождите немного...</div>}
 
@@ -3437,7 +3528,7 @@ const handleUnblockUser = async (ip) => {
               <strong>{rejectModal.username}</strong>»:
             </p>
             <textarea
-              style={{width: "90%", padding: "10px"}}
+              style={{ width: "90%", padding: "10px" }}
               rows={4}
               value={rejectModal.reason}
               onChange={e => setRejectModal(prev => ({
@@ -3531,7 +3622,7 @@ const handleUnblockUser = async (ip) => {
                   className="suggestion-item"
                   onClick={() => handleSelectTeacher(teacher)}
                 >
-                  {teacher.name} {teacher.surname}
+                  {teacher.name}
                 </div>
               ))}
             </div>
@@ -3541,11 +3632,11 @@ const handleUnblockUser = async (ip) => {
             {filteredTeachers.map(teacher => (
               <div key={teacher.id} className="admin-teacher-card">
                 <div className="card-header">
-                  <img src={teacher.photo || defaultTeacherImg} alt={`${teacher.name} ${teacher.surname}`} />
+                  <img src={teacher.photo || defaultTeacherImg} alt={`${teacher.name}`} />
                   <FaEdit className="edit-icon" onClick={() => handleEditTeacher(teacher)} />
                 </div>
                 <div className="card-body">
-                  <h3>{`${teacher.name} ${teacher.surname}`}</h3>
+                  <h3>{`${teacher.name}`}</h3>
                   <p><strong>Предмет:</strong> {teacher.subject}</p>
                   <p><strong>Статус:</strong> {teacher.status}</p>
                   <p><strong>Логин:</strong> {teacher.login}</p>

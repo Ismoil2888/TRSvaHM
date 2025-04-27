@@ -3,7 +3,7 @@ html,
 body {
   overscroll-behavior-y: contain;
   -webkit-tap-highlight-color: transparent;
-  touch-action: none;
+  touch-action: manipulation;
   background: var(--bg-container-color);
 }
 
@@ -1456,6 +1456,7 @@ input[type="file"] {
   list-style: none;
   padding: 0;
   text-align: center;
+  font-size: 12px;
 }
 
 .burger-menu li {

@@ -2575,6 +2575,7 @@ const HomePage = () => {
   const t = useTranslation();
   const [role, setRole] = useState("");
   const [userRole, setUserRole] = useState('');
+  const isPrivileged = userRole === 'teacher' || userRole === 'dean';
   const [unreadChatsCount, setUnreadChatsCount] = useState(0);
   const [imageLoadedStatus, setImageLoadedStatus] = useState({});
   const [showAnonymousModal, setShowAnonymousModal] = useState(false);
@@ -2825,14 +2826,14 @@ const HomePage = () => {
       });
 
       // В useEffect, где получаете данные пользователя:
-onValue(userRef, (snapshot) => {
-  const data = snapshot.val();
-  if (data) {
-    // Используем прямое значение из БД без преобразования
-    setIdentificationStatus(data.identificationStatus || 'notident');
-    // Остальные обновления...
-  }
-});
+      onValue(userRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          // Используем прямое значение из БД без преобразования
+          setIdentificationStatus(data.identificationStatus || 'notident');
+          // Остальные обновления...
+        }
+      });
     }
   }, []);
 
@@ -2943,7 +2944,7 @@ onValue(userRef, (snapshot) => {
 
   const handleCommentSubmit = (isAnonymous = false) => {
     // Исправлено условие проверки
-    if (identificationStatus !== 'accepted') { // Используйте актуальные значения
+    if (!isPrivileged && identificationStatus !== 'accepted') {
       setShowIdentifyPrompt(true);
       return;
     }
@@ -3033,9 +3034,8 @@ onValue(userRef, (snapshot) => {
   };
 
   // Обработчик нажатия на лайк
-  const handleLikeToggle = (postId) => {  
-    // Исправлено условие проверки
-    if (identificationStatus !== 'accepted') { // Используйте актуальные значения
+  const handleLikeToggle = (postId) => {
+    if (!isPrivileged && identificationStatus !== 'accepted') {
       setShowIdentifyPrompt(true);
       return;
     }
@@ -3512,7 +3512,7 @@ onValue(userRef, (snapshot) => {
                           <span className="post-username">{usersMap[post.userId]?.username || "User"}</span>{" "}
                           {post.description.length > MAX_TEXT_LENGTH && !expandedPosts[post.id] ? (
                             <>
-                            <span style={{fontSize: "14.5px"}}>{post.description.slice(0, MAX_TEXT_LENGTH)}</span> ...
+                              <span style={{ fontSize: "14.5px" }}>{post.description.slice(0, MAX_TEXT_LENGTH)}</span> ...
                               <span
                                 className="toggle-text"
                                 onClick={() => toggleTextExpansion(post.id)}
@@ -3522,7 +3522,7 @@ onValue(userRef, (snapshot) => {
                             </>
                           ) : (
                             <>
-                              <span style={{fontSize: "14.5px"}}>{post.description}</span>
+                              <span style={{ fontSize: "14.5px" }}>{post.description}</span>
                               {post.description.length > MAX_TEXT_LENGTH && (
                                 <span
                                   className="toggle-text"

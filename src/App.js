@@ -66,6 +66,12 @@ function App() {
       .catch(console.error);
   }, []);
 
+  //отключение вибрация
+  document.addEventListener('touchstart',
+    function(event) {
+      event.preventDefault();
+    });
+
   useEffect(() => {
     const user = auth.currentUser;
     if (!user) return;
