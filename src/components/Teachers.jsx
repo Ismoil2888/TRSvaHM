@@ -173,24 +173,13 @@ const Teachers = () => {
     const searchFiltered = teachers.filter((teacher) => {
       // если name или surname не заданы, будем считать их пустой строкой
       const name = teacher.name || "";
-      const surname = teacher.surname || "";
       return (
-        name.toLowerCase().includes(query) ||
-        surname.toLowerCase().includes(query)
+        name.toLowerCase().includes(query)
       );
     });
 
     setFilteredTeachers(searchFiltered);
   };
-
-  // const handleSearchChange = (e) => {
-  //   const query = e.target.value.toLowerCase();
-  //   setSearchQuery(query);
-  //   const searchFiltered = teachers.filter((teacher) =>
-  //     teacher.name.toLowerCase().includes(query) || teacher.surname.toLowerCase().includes(query)
-  //   );
-  //   setFilteredTeachers(searchFiltered);
-  // };
 
   const openCommentModal = (teacherId) => {
     setCommentModal({ isOpen: true, teacherId });
@@ -518,7 +507,7 @@ const Teachers = () => {
                       alt={`${teacher.name} ${teacher.surname}`}
                       className="skeleton-media-avatars"
                     />
-                    <h4>{`${teacher.name} ${teacher.surname}`}</h4>
+                    <h4>{`${teacher.name}`}</h4>
                     <p>
                       <strong>{t('subject')}:</strong> {teacher.subject}
                     </p>

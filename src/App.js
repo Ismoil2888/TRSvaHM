@@ -23,7 +23,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import AdminPrivateRoute from "./components/AdminPrivateRoute";
 import TeacherLogin from './components/TeacherLogin';
 import TeacherProfile from './components/TeacherProfile';
-import SearchPage  from './components/SearchPage';
+import SearchPage from './components/SearchPage';
 import UserProfile from './components/UserProfile';
 import MyProfile from './components/MyProfile';
 import SearchStudents from './components/SearchStudents';
@@ -31,7 +31,7 @@ import PostForm from "./components/PostForm";
 import NotificationsPage from "./components/NotificationsPage";
 import Chat from "./components/Chat";
 import ChatList from "./components/ChatList";
-import GroupPage  from "./components/GroupPage";
+import GroupPage from "./components/GroupPage";
 import DepartmentTeachers from "./components/DepartmentTeachers";
 import DeanLogin from './components/DeanLogin';
 import { LanguageProvider } from './contexts/LanguageContext';
@@ -40,7 +40,7 @@ import JarvisIntroPage from "./components/JarvisIntroPage";
 import { RoleRoute } from './components/ProtectedRoute';
 
 function App() {
-    const [userRole, setUserRole] = useState('');
+  const [userRole, setUserRole] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // состояние для загрузки
   const [showPWAInstallPrompt, setShowPWAInstallPrompt] = useState(false);
@@ -64,7 +64,7 @@ function App() {
         });
       })
       .catch(console.error);
-  }, []);  
+  }, []);
 
   useEffect(() => {
     const user = auth.currentUser;
@@ -74,13 +74,13 @@ function App() {
     onValue(userRef, snapshot => {
       setUserRole(snapshot.val()?.role || '')
     });
-  }, []);    
+  }, []);
 
-useEffect(() => {
-  // Считываем сохранённую тему или задаём стандартную
-  const savedTheme = localStorage.getItem('theme') || 'light';
-  applyTheme(savedTheme);
-}, []);
+  useEffect(() => {
+    // Считываем сохранённую тему или задаём стандартную
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    applyTheme(savedTheme);
+  }, []);
 
   // Проверка PWA
   useEffect(() => {
@@ -117,7 +117,7 @@ useEffect(() => {
       const { outcome } = await deferredPrompt.userChoice;
       if (outcome === 'accepted') {
         setShowPWAInstallPrompt(false);
-  
+
         // 🔥 Увеличиваем счётчик установок
         const db = getDatabase();
         const installsRef = dbRef(db, 'pwaInstalls');
@@ -150,110 +150,110 @@ useEffect(() => {
   if (isLoading) {
     // Показываем загрузочный экран, пока идет проверка
     return <div className="loading-container">
-    <div className="loading-circuit">
+      <div className="loading-circuit">
         <div className="circle"></div>
         <div className="line"></div>
         <div className="circle"></div>
         <div className="line"></div>
         <div className="circle"></div>
-    </div>
-    <p className="loading-text">Securing Connection...</p>
-</div>;
+      </div>
+      <p className="loading-text">Securing Connection...</p>
+    </div>;
   }
 
-    // Блокировка контекстного меню
-    const disableContextMenu = () => {
-      const onContextMenu = (event) => event.preventDefault();
-      document.addEventListener("contextmenu", onContextMenu);
+  // Блокировка контекстного меню
+  const disableContextMenu = () => {
+    const onContextMenu = (event) => event.preventDefault();
+    document.addEventListener("contextmenu", onContextMenu);
 
-      return () => {
-        document.removeEventListener("contextmenu", onContextMenu);
-      };
+    return () => {
+      document.removeEventListener("contextmenu", onContextMenu);
     };
+  };
 
-    // Блокировка выделения текста
-    const disableTextSelection = () => {
-      const onSelectStart = (event) => event.preventDefault();
-      document.addEventListener("selectstart", onSelectStart);
+  // Блокировка выделения текста
+  const disableTextSelection = () => {
+    const onSelectStart = (event) => event.preventDefault();
+    document.addEventListener("selectstart", onSelectStart);
 
-      return () => {
-        document.removeEventListener("selectstart", onSelectStart);
-      };
+    return () => {
+      document.removeEventListener("selectstart", onSelectStart);
     };
+  };
 
-    disableContextMenu();
-    disableTextSelection();
+  disableContextMenu();
+  disableTextSelection();
 
   return (
     <LanguageProvider>
-    <>
-    {showPWAInstallPrompt && (
-      <div className="pwa-install-overlay">
-        <div className="pwa-install-modal">
-          <div className='close-button-and-icon'>
-          {/* <button 
+      <>
+        {showPWAInstallPrompt && (
+          <div className="pwa-install-overlay">
+            <div className="pwa-install-modal">
+              <div className='close-button-and-icon'>
+                {/* <button 
             className="pwa-close-btn"
             onClick={() => setShowPWAInstallPrompt(false)}
           >
             ×
           </button> */}
-          <img className='pwa-icon' src="/logoapp512.png"/>
-          </div>
-          <div style={{ marginTop: "20px" }}>
-          <h2>Установите наше приложение</h2>
-          <p>Для удобного доступа установите приложение</p>
-          <div className="pwa-buttons">
-            <button 
-              className="install-btn"
-              onClick={handleInstall}
-            >
-              Установить
-            </button>
-            {/* <button 
+                <img className='pwa-icon' src="/logoapp512.png" />
+              </div>
+              <div style={{ marginTop: "20px" }}>
+                <h2>Установите наше приложение</h2>
+                <p>Для удобного доступа установите приложение</p>
+                <div className="pwa-buttons">
+                  <button
+                    className="install-btn"
+                    onClick={handleInstall}
+                  >
+                    Установить
+                  </button>
+                  {/* <button 
               className="skip-btn"
               onClick={() => setShowPWAInstallPrompt(false)}
             >
               Пропустить
             </button> */}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-    )}
+        )}
 
-    <Routes>
-      <Route path="/" element={isAuthenticated ? <HomePage /> : <WelcomePage />} />
-      <Route path="/signup" element={<SignUp />} />
-      <Route path="/signin" element={<SignIn />} />
-      <Route path="/authdetails" element={<PrivateRoute> <AuthDetails /> </PrivateRoute>} />
-      <Route path="/myprofile" element={<PrivateRoute> <MyProfile /> </PrivateRoute>} />
-      <Route path="/profile/:userId" element={<UserProfile />} />      
-      <Route path="/about" element={<PrivateRoute> <About /> </PrivateRoute>} />
-      <Route path="/home" element={<PrivateRoute>  <HomePage /> </PrivateRoute>} />
-      <Route path="/notifications" element={<PrivateRoute> <NotificationsPage /> </PrivateRoute>} />
-      <Route path="/post" element={<PrivateRoute>  <PostForm /> </PrivateRoute>} />
-      <Route path="/schedule" element={<PrivateRoute> <Schedule /> </PrivateRoute>} />
-      <Route path="/teachers" element={<PrivateRoute> <Teachers /> </PrivateRoute>} />
-      <Route path="/library" element={<PrivateRoute> <Library /> </PrivateRoute>} />
-      <Route path="/libraryp" element={<PrivateRoute> <LibraryPage /> </PrivateRoute>} />
-      <Route path="/contacts" element={<PrivateRoute> <Contacts /> </PrivateRoute>} />
-      <Route path="/searchpage" element={<PrivateRoute> <SearchPage /> </PrivateRoute>} />
-      <Route path="/searchstudents" element={<PrivateRoute> <SearchStudents /> </PrivateRoute>} />
-      <Route path="/welcomepage" element={<WelcomePage />} />
-      <Route path="/987654321teacher-login987654321" element={<TeacherLogin />} />
-      <Route path="/987654321dean-login987654321" element={<DeanLogin />} />
-      <Route path="/teacher-profile/:id" element={<TeacherProfile />} />
-      <Route path="/987654321admin987654321" element={<AdminPrivateRoute> <AdminPanel /> </AdminPrivateRoute>} />
-      <Route path="/987654321admin-login987654321" element={ <AdminLogin /> } />
-      <Route path="/blank" element={<BlankForm />} />
-      <Route path="*" element={<NotfoundPage />} />
-      <Route path="/chat/:chatRoomId" element={<PrivateRoute> <Chat /> </PrivateRoute>} />
-      <Route path="/chats" element={<PrivateRoute> <ChatList /> </PrivateRoute>} />
-      <Route path="/group/:course/:groupName" element={<GroupPage />} />
-      <Route path="/department-teachers/:cathedra" element={<DepartmentTeachers />} />
-      <Route path="/jarvisintropage" element={<JarvisIntroPage />} />
-      </Routes>
-    </>
+        <Routes>
+          <Route path="/" element={isAuthenticated ? <HomePage /> : <WelcomePage />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/authdetails" element={<PrivateRoute> <AuthDetails /> </PrivateRoute>} />
+          <Route path="/myprofile" element={<PrivateRoute> <MyProfile /> </PrivateRoute>} />
+          <Route path="/profile/:userId" element={<UserProfile />} />
+          <Route path="/about" element={<PrivateRoute> <About /> </PrivateRoute>} />
+          <Route path="/home" element={<PrivateRoute>  <HomePage /> </PrivateRoute>} />
+          <Route path="/notifications" element={<PrivateRoute> <NotificationsPage /> </PrivateRoute>} />
+          <Route path="/post" element={<PrivateRoute>  <PostForm /> </PrivateRoute>} />
+          <Route path="/schedule" element={<PrivateRoute> <Schedule /> </PrivateRoute>} />
+          <Route path="/teachers" element={<PrivateRoute> <Teachers /> </PrivateRoute>} />
+          <Route path="/library" element={<PrivateRoute> <Library /> </PrivateRoute>} />
+          <Route path="/libraryp" element={<PrivateRoute> <LibraryPage /> </PrivateRoute>} />
+          <Route path="/contacts" element={<PrivateRoute> <Contacts /> </PrivateRoute>} />
+          <Route path="/searchpage" element={<PrivateRoute> <SearchPage /> </PrivateRoute>} />
+          <Route path="/searchstudents" element={<PrivateRoute> <SearchStudents /> </PrivateRoute>} />
+          <Route path="/welcomepage" element={<WelcomePage />} />
+          <Route path="/987654321teacher-login987654321" element={<TeacherLogin />} />
+          <Route path="/987654321dean-login987654321" element={<DeanLogin />} />
+          <Route path="/teacher-profile/:id" element={<TeacherProfile />} />
+          <Route path="/987654321admin987654321" element={<AdminPrivateRoute> <AdminPanel /> </AdminPrivateRoute>} />
+          <Route path="/987654321admin-login987654321" element={<AdminLogin />} />
+          <Route path="/blank" element={<BlankForm />} />
+          <Route path="*" element={<NotfoundPage />} />
+          <Route path="/chat/:chatRoomId" element={<PrivateRoute> <Chat /> </PrivateRoute>} />
+          <Route path="/chats" element={<PrivateRoute> <ChatList /> </PrivateRoute>} />
+          <Route path="/group/:course/:groupName" element={<GroupPage />} />
+          <Route path="/department-teachers/:cathedra" element={<DepartmentTeachers />} />
+          <Route path="/jarvisintropage" element={<JarvisIntroPage />} />
+        </Routes>
+      </>
     </LanguageProvider>
   );
 }

@@ -3,7 +3,7 @@ html,
 body {
   overscroll-behavior-y: contain;
   -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
+  touch-action: none;
   background: var(--bg-container-color);
 }
 
@@ -1548,7 +1548,8 @@ color: transparent;
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: #2c3e50;
+  /* background-color: #2c3e50; */
+  background-color: var(--bg-container-color);
   color: #4af626;
   font-family: 'Roboto', sans-serif;
   overflow: hidden;

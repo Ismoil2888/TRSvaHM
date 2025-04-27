@@ -151,7 +151,8 @@
   }
 
   .search-page-search-icon{
-    color: #64696e;
+    /* color: #64696e; */
+    color: var(--bg-searchpage-blocks-color);
     font-size: 180px;
     z-index: -1;
     margin-top: 220px;

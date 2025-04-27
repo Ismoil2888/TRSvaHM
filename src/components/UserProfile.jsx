@@ -815,10 +815,10 @@ const UserProfile = () => {
     // Сохраняем запрос
     // await set(databaseRef(db, `requests/${currentUserId}_${userId}`), requestData);
     const pairId = [currentUserId, userId].sort().join("_");
-await set(databaseRef(db, `requests/${pairId}`), {
-  ...requestData,
-  pairId
-});
+    await set(databaseRef(db, `requests/${pairId}`), {
+      ...requestData,
+      pairId
+    });
 
     // Создаем уведомление
     const notificationData = {
@@ -1081,33 +1081,33 @@ await set(databaseRef(db, `requests/${pairId}`), {
         </div>
       )}
 
-{userRole === "dean" ? (
-  <button className="up-chat-button" onClick={handleCreateChat}>
-    Написать
-  </button>
-) : requestStatus === "accepted" ? (
-  <button className="up-chat-button" onClick={handleCreateChat}>
-    Написать
-  </button>
-) : requestStatus === "pending" ? (
-  <button className="up-chat-button" disabled>
-    Запрос отправлен
-  </button>
-) : (
-  <button className="up-chat-button" onClick={handleSendRequest}>
-    Отправить запрос на переписку
-  </button>
-)}
+      {userRole === "dean" ? (
+        <button className="up-chat-button" onClick={handleCreateChat}>
+          Написать
+        </button>
+      ) : requestStatus === "accepted" ? (
+        <button className="up-chat-button" onClick={handleCreateChat}>
+          Написать
+        </button>
+      ) : requestStatus === "pending" ? (
+        <button className="up-chat-button" disabled>
+          Запрос отправлен
+        </button>
+      ) : (
+        <button className="up-chat-button" onClick={handleSendRequest}>
+          Отправить запрос на переписку
+        </button>
+      )}
 
-{(role === "teacher" || role === "dean") ? (
-  <div style={{ marginBottom: "10px", color: "#bdcfe0" }}>
-    <h3>Преподаватель</h3>
-  </div>
-) : (
-  <div style={{ marginBottom: "10px", color: "#bdcfe0" }}>
-    <h3>Студент</h3>
-  </div>
-)}
+      {(role === "teacher" || role === "dean") ? (
+        <div style={{ marginBottom: "10px", color: "#bdcfe0" }}>
+          <h3>Преподаватель</h3>
+        </div>
+      ) : (
+        <div style={{ marginBottom: "10px", color: "#bdcfe0" }}>
+          <h3>Студент</h3>
+        </div>
+      )}
 
       <div className="up-info-card">
         <div className="up-info-title">
@@ -1142,57 +1142,57 @@ await set(databaseRef(db, `requests/${pairId}`), {
       </div>
 
       {(role === "teacher" || role === "dean") ? (
-  <>
-    <div className="up-info-card">
-      <div className="up-info-title">
-        <FaScroll className="up-info-icon white-icon" />
-        <p className="txt">{t('cathedra')}:</p>
-      </div>
-      <div className="up-info-content"><p>{teacherCathedra}</p></div>
-    </div>
+        <>
+          <div className="up-info-card">
+            <div className="up-info-title">
+              <FaScroll className="up-info-icon white-icon" />
+              <p className="txt">{t('cathedra')}:</p>
+            </div>
+            <div className="up-info-content"><p>{teacherCathedra}</p></div>
+          </div>
 
-    <div className="up-info-card" style={{ display: "flex", flexDirection: "row" }}>
-      <div className="up-info-title">
-        <FaUserGraduate className="up-info-icon white-icon" />
-        <p className="txt">
-          {role === 'dean' ? 'Должность:' : 'Звание:'}
-        </p>
-      </div>
-      <div className="up-info-content">
-        <p style={{ marginLeft: "15px" }}>
-          {role === 'dean' ? 'Декан' : teacherTitle}
-        </p>
-      </div>
-    </div>
+          <div className="up-info-card" style={{ display: "flex", flexDirection: "row" }}>
+            <div className="up-info-title">
+              <FaUserGraduate className="up-info-icon white-icon" />
+              <p className="txt">
+                {role === 'dean' ? 'Должность:' : t('rank') + ':'}
+              </p>
+            </div>
+            <div className="up-info-content">
+              <p style={{ marginLeft: "15px" }}>
+                {role === 'dean' ? 'Декан' : teacherTitle}
+              </p>
+            </div>
+          </div>
 
-    <div className="up-info-card" style={{ display: "flex", flexDirection: "row" }}>
-      <div className="up-info-title">
-        <FaBook className="up-info-icon white-icon" />
-        <p className="txt">Предмет:</p>
-      </div>
-      <div className="up-info-content">
-        <p style={{ marginLeft: "15px" }}>{TeacherSubject}</p>
-      </div>
-    </div>
-  </>
-) : (
-  <>
-  <div className="up-info-card">
-    <div className="up-info-title"><FaScroll className="up-info-icon white-icon" /><p className="txt">{t('cathedra')}:</p></div>
-    <div className="up-info-content"><p>{userFaculty}</p></div>
-  </div>
+          <div className="up-info-card" style={{ display: "flex", flexDirection: "row" }}>
+            <div className="up-info-title">
+              <FaBook className="up-info-icon white-icon" />
+              <p className="txt"> {t('subject')}:</p>
+            </div>
+            <div className="up-info-content">
+              <p style={{ marginLeft: "15px" }}>{TeacherSubject}</p>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="up-info-card">
+            <div className="up-info-title"><FaScroll className="up-info-icon white-icon" /><p className="txt">{t('cathedra')}:</p></div>
+            <div className="up-info-content"><p>{userFaculty}</p></div>
+          </div>
 
-  <div className="up-info-card" style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-    <div className="up-info-title"><FaUserGraduate className="up-info-icon white-icon" /><p className="txt">{t('course')}:</p></div>
-    <div className="up-info-content" style={{ marginLeft: "15px" }}>{userCourse}</div>
-  </div>
+          <div className="up-info-card" style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+            <div className="up-info-title"><FaUserGraduate className="up-info-icon white-icon" /><p className="txt">{t('course')}:</p></div>
+            <div className="up-info-content" style={{ marginLeft: "15px" }}>{userCourse}</div>
+          </div>
 
-  <div className="up-info-card" style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-    <div className="up-info-title"><FaUsers className="up-info-icon white-icon" style={{ fontSize: "20px" }} /><p className="txt">{t('group')}:</p></div>
-    <div className="up-info-content" style={{ marginLeft: "15px" }}><p>{userGroup}</p></div>
-  </div>
-</>
-)}
+          <div className="up-info-card" style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+            <div className="up-info-title"><FaUsers className="up-info-icon white-icon" style={{ fontSize: "20px" }} /><p className="txt">{t('group')}:</p></div>
+            <div className="up-info-content" style={{ marginLeft: "15px" }}><p>{userGroup}</p></div>
+          </div>
+        </>
+      )}
 
     </div>
   );
