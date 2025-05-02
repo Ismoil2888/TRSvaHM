@@ -39,7 +39,8 @@ const SignIn = () => {
         setError("");
         setEmail("");
         setPassword("");
-        window.location.href = "#/home"; // Перенаправление после успешного входа
+        // window.location.href = "#/home";
+        navigate("/home")
       })
       .catch((error) => {
         console.log(error);

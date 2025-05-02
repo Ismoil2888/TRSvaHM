@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { onAuthStateChanged } from "firebase/auth";
-import { ref, set } from "firebase/database";
-import { auth, database } from "../firebase";
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword
+} from "firebase/auth";
+import { auth } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
 import "../SignUp-SignIn.css";
 import { FaArrowLeft } from "react-icons/fa";
-import { IoPersonOutline, IoMailOutline, IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
-import forbiddenNames from "./forbiddenNames"; // Импорт списка запрещённых имён
+import {
+  IoPersonOutline,
+  IoMailOutline,
+  IoEyeOutline,
+  IoEyeOffOutline
+} from "react-icons/io5";
+import forbiddenNames from "./forbiddenNames";
 
 const SignUp = () => {
   const [username, setUsername] = useState("");
@@ -17,7 +23,7 @@ const SignUp = () => {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showCopyPassword, setShowCopyPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // Состояние для спиннера
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,22 +32,16 @@ const SignUp = () => {
         navigate("/home", { replace: true });
       }
     });
-  
     return () => unsubscribe();
-  }, []);  
+  }, [navigate]);
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const toggleCopyPasswordVisibility = () => {
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
+  const toggleCopyPasswordVisibility = () =>
     setShowCopyPassword(!showCopyPassword);
-  };
 
-  const register = (e) => {
+  const register = async (e) => {
     e.preventDefault();
 
-    // Проверяем, если имя пользователя входит в список запрещённых
     if (forbiddenNames.includes(username.toLowerCase())) {
       setError("Это имя запрещено, используйте другое");
       return;
@@ -52,52 +52,51 @@ const SignUp = () => {
       return;
     }
 
-    setIsLoading(true); // Включаем спиннер
+    setIsLoading(true);
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
+    try {
+      const res = await fetch("http://localhost:5000/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password })
+      });
 
-        set(ref(database, "users/" + user.uid), {
-          username: username,
-          email: user.email,
-        });
+      const data = await res.json();
 
-        // Сбрасываем состояния
+      if (!res.ok) {
+        setError(data.error || "Ошибка при регистрации");
+      } else {
+        // Успешно зарегистрирован на сервере — теперь логинимся локально
+        await signInWithEmailAndPassword(auth, email, password);
+
         setError("");
         setEmail("");
         setPassword("");
         setCopyPassword("");
         setUsername("");
-        setIsLoading(false);
-        window.location.href = "#/home";
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        switch (error.code) {
-          case 'auth/email-already-in-use':
-            setError("Этот имейл уже используется");
-            break;
-          case 'auth/invalid-email':
-            setError("Неверный формат email");
-            break;
-          case 'auth/weak-password':
-            setError("Пароль слишком слабый");
-            break;
-          default:
-            setError("Произошла ошибка при регистрации");
-        }
-      });
+        // navigate("/home") будет вызван из onAuthStateChanged
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Ошибка сети. Попробуйте позже.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="section">
-      <Link className="back-button white-icon" style={{ position: "absolute", top: "0", left: "20px" }} onClick={() => navigate(-1)}>
+      <Link
+        className="back-button white-icon"
+        style={{ position: "absolute", top: "0", left: "20px" }}
+        onClick={() => navigate(-1)}
+      >
         <FaArrowLeft />
       </Link>
       <div className="register-box">
         <form onSubmit={register}>
           <h2>Регистрация</h2>
+
           <div className="reg-input-box">
             <span className="icon">
               <IoPersonOutline />
@@ -112,6 +111,7 @@ const SignUp = () => {
             />
             <label htmlFor="username">Имя</label>
           </div>
+
           <div className="reg-input-box">
             <span className="icon">
               <IoMailOutline />
@@ -125,8 +125,13 @@ const SignUp = () => {
             />
             <label htmlFor="email">Электронная почта</label>
           </div>
+
           <div className="reg-input-box">
-            <span className="icon" onClick={togglePasswordVisibility} style={{ cursor: "pointer" }}>
+            <span
+              className="icon"
+              onClick={togglePasswordVisibility}
+              style={{ cursor: "pointer" }}
+            >
               {showPassword ? <IoEyeOutline /> : <IoEyeOffOutline />}
             </span>
             <input
@@ -139,8 +144,13 @@ const SignUp = () => {
             />
             <label htmlFor="password">Пароль</label>
           </div>
+
           <div className="reg-input-box">
-            <span className="icon" onClick={toggleCopyPasswordVisibility} style={{ cursor: "pointer" }}>
+            <span
+              className="icon"
+              onClick={toggleCopyPasswordVisibility}
+              style={{ cursor: "pointer" }}
+            >
               {showCopyPassword ? <IoEyeOutline /> : <IoEyeOffOutline />}
             </span>
             <input
@@ -153,18 +163,25 @@ const SignUp = () => {
             />
             <label htmlFor="confirmPassword">Подтвердите пароль</label>
           </div>
+
           <div className="remember-forgot">
             <p>Забыли пароль?</p>
           </div>
+
           <button className="reg-login-button" type="submit" disabled={isLoading}>
             {isLoading ? (
-              // Пример простого спиннера через CSS
               <span className="reg-spinner"></span>
             ) : (
               "Зарегистрироваться"
             )}
           </button>
-          {error && <p style={{ color: "red", marginTop: "75px", position: "absolute", marginLeft: "50px" }}>{error}</p>}
+
+          {error && (
+            <p style={{ color: "red", marginTop: "75px", position: "absolute", marginLeft: "50px" }}>
+              {error}
+            </p>
+          )}
+
           <div className="register-link">
             <p>
               Уже есть аккаунт? <Link className="a" to="/signin">Войти</Link>
@@ -177,6 +194,199 @@ const SignUp = () => {
 };
 
 export default SignUp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useState, useEffect } from "react";
+// import { createUserWithEmailAndPassword } from "firebase/auth";
+// import { onAuthStateChanged } from "firebase/auth";
+// import { ref, set } from "firebase/database";
+// import { auth, database } from "../firebase";
+// import { Link, useNavigate } from "react-router-dom";
+// import "../SignUp-SignIn.css";
+// import { FaArrowLeft } from "react-icons/fa";
+// import { IoPersonOutline, IoMailOutline, IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+// import forbiddenNames from "./forbiddenNames"; // Импорт списка запрещённых имён
+
+// const SignUp = () => {
+//   const [username, setUsername] = useState("");
+//   const [email, setEmail] = useState("");
+//   const [password, setPassword] = useState("");
+//   const [copyPassword, setCopyPassword] = useState("");
+//   const [error, setError] = useState("");
+//   const [showPassword, setShowPassword] = useState(false);
+//   const [showCopyPassword, setShowCopyPassword] = useState(false);
+//   const [isLoading, setIsLoading] = useState(false); // Состояние для спиннера
+//   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     const unsubscribe = onAuthStateChanged(auth, (user) => {
+//       if (user) {
+//         navigate("/home", { replace: true });
+//       }
+//     });
+  
+//     return () => unsubscribe();
+//   }, []);  
+
+//   const togglePasswordVisibility = () => {
+//     setShowPassword(!showPassword);
+//   };
+
+//   const toggleCopyPasswordVisibility = () => {
+//     setShowCopyPassword(!showCopyPassword);
+//   };
+
+//   const register = (e) => {
+//     e.preventDefault();
+
+//     // Проверяем, если имя пользователя входит в список запрещённых
+//     if (forbiddenNames.includes(username.toLowerCase())) {
+//       setError("Это имя запрещено, используйте другое");
+//       return;
+//     }
+
+//     if (copyPassword !== password) {
+//       setError("Пароли не совпадают");
+//       return;
+//     }
+
+//     setIsLoading(true); // Включаем спиннер
+
+//     createUserWithEmailAndPassword(auth, email, password)
+//       .then((userCredential) => {
+//         const user = userCredential.user;
+
+//         set(ref(database, "users/" + user.uid), {
+//           username: username,
+//           email: user.email,
+//         });
+
+//         // Сбрасываем состояния
+//         setError("");
+//         setEmail("");
+//         setPassword("");
+//         setCopyPassword("");
+//         setUsername("");
+//         setIsLoading(false);
+//         window.location.href = "#/home";
+//       })
+//       .catch((error) => {
+//         setIsLoading(false);
+//         switch (error.code) {
+//           case 'auth/email-already-in-use':
+//             setError("Этот имейл уже используется");
+//             break;
+//           case 'auth/invalid-email':
+//             setError("Неверный формат email");
+//             break;
+//           case 'auth/weak-password':
+//             setError("Пароль слишком слабый");
+//             break;
+//           default:
+//             setError("Произошла ошибка при регистрации");
+//         }
+//       });
+//   };
+
+//   return (
+//     <div className="section">
+//       <Link className="back-button white-icon" style={{ position: "absolute", top: "0", left: "20px" }} onClick={() => navigate(-1)}>
+//         <FaArrowLeft />
+//       </Link>
+//       <div className="register-box">
+//         <form onSubmit={register}>
+//           <h2>Регистрация</h2>
+//           <div className="reg-input-box">
+//             <span className="icon">
+//               <IoPersonOutline />
+//             </span>
+//             <input
+//               type="text"
+//               maxLength="12"
+//               id="username"
+//               value={username}
+//               onChange={(e) => setUsername(e.target.value)}
+//               required
+//             />
+//             <label htmlFor="username">Имя</label>
+//           </div>
+//           <div className="reg-input-box">
+//             <span className="icon">
+//               <IoMailOutline />
+//             </span>
+//             <input
+//               type="email"
+//               id="email"
+//               value={email}
+//               onChange={(e) => setEmail(e.target.value)}
+//               required
+//             />
+//             <label htmlFor="email">Электронная почта</label>
+//           </div>
+//           <div className="reg-input-box">
+//             <span className="icon" onClick={togglePasswordVisibility} style={{ cursor: "pointer" }}>
+//               {showPassword ? <IoEyeOutline /> : <IoEyeOffOutline />}
+//             </span>
+//             <input
+//               type={showPassword ? "text" : "password"}
+//               id="password"
+//               value={password}
+//               onChange={(e) => setPassword(e.target.value)}
+//               minLength="6"
+//               required
+//             />
+//             <label htmlFor="password">Пароль</label>
+//           </div>
+//           <div className="reg-input-box">
+//             <span className="icon" onClick={toggleCopyPasswordVisibility} style={{ cursor: "pointer" }}>
+//               {showCopyPassword ? <IoEyeOutline /> : <IoEyeOffOutline />}
+//             </span>
+//             <input
+//               type={showCopyPassword ? "text" : "password"}
+//               id="confirmPassword"
+//               value={copyPassword}
+//               onChange={(e) => setCopyPassword(e.target.value)}
+//               minLength="6"
+//               required
+//             />
+//             <label htmlFor="confirmPassword">Подтвердите пароль</label>
+//           </div>
+//           <div className="remember-forgot">
+//             <p>Забыли пароль?</p>
+//           </div>
+//           <button className="reg-login-button" type="submit" disabled={isLoading}>
+//             {isLoading ? (
+//               // Пример простого спиннера через CSS
+//               <span className="reg-spinner"></span>
+//             ) : (
+//               "Зарегистрироваться"
+//             )}
+//           </button>
+//           {error && <p style={{ color: "red", marginTop: "75px", position: "absolute", marginLeft: "50px" }}>{error}</p>}
+//           <div className="register-link">
+//             <p>
+//               Уже есть аккаунт? <Link className="a" to="/signin">Войти</Link>
+//             </p>
+//           </div>
+//         </form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default SignUp;
 
 
 

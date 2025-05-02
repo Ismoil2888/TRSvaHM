@@ -66,12 +66,6 @@ function App() {
       .catch(console.error);
   }, []);
 
-  //отключение вибрация
-  document.addEventListener('touchstart',
-    function(event) {
-      event.preventDefault();
-    });
-
   useEffect(() => {
     const user = auth.currentUser;
     if (!user) return;
@@ -237,7 +231,7 @@ function App() {
           <Route path="/about" element={<PrivateRoute> <About /> </PrivateRoute>} />
           <Route path="/home" element={<PrivateRoute>  <HomePage /> </PrivateRoute>} />
           <Route path="/notifications" element={<PrivateRoute> <NotificationsPage /> </PrivateRoute>} />
-          <Route path="/post" element={<PrivateRoute>  <PostForm /> </PrivateRoute>} />
+          {/* <Route path="/post" element={<PrivateRoute>  <PostForm /> </PrivateRoute>} /> */}
           <Route path="/schedule" element={<PrivateRoute> <Schedule /> </PrivateRoute>} />
           <Route path="/teachers" element={<PrivateRoute> <Teachers /> </PrivateRoute>} />
           <Route path="/library" element={<PrivateRoute> <Library /> </PrivateRoute>} />
@@ -246,11 +240,11 @@ function App() {
           <Route path="/searchpage" element={<PrivateRoute> <SearchPage /> </PrivateRoute>} />
           <Route path="/searchstudents" element={<PrivateRoute> <SearchStudents /> </PrivateRoute>} />
           <Route path="/welcomepage" element={<WelcomePage />} />
-          <Route path="/987654321teacher-login987654321" element={<TeacherLogin />} />
-          <Route path="/987654321dean-login987654321" element={<DeanLogin />} />
+          {/* <Route path="/987654321teacher-login987654321" element={<TeacherLogin />} /> */}
+          {/* <Route path="/987654321dean-login987654321" element={<DeanLogin />} /> */}
           <Route path="/teacher-profile/:id" element={<TeacherProfile />} />
-          <Route path="/987654321admin987654321" element={<AdminPrivateRoute> <AdminPanel /> </AdminPrivateRoute>} />
-          <Route path="/987654321admin-login987654321" element={<AdminLogin />} />
+          <Route path="/987654321kulob987654321" element={<AdminPrivateRoute> <AdminPanel /> </AdminPrivateRoute>} />
+          <Route path="/987654321kulobjon987654321" element={<AdminLogin />} />
           <Route path="/blank" element={<BlankForm />} />
           <Route path="*" element={<NotfoundPage />} />
           <Route path="/chat/:chatRoomId" element={<PrivateRoute> <Chat /> </PrivateRoute>} />

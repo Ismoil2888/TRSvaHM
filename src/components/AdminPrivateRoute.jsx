@@ -16,10 +16,10 @@ const AdminPrivateRoute = ({ children }) => {
       // Если прошло более 1 часа, удаляем авторизацию
       localStorage.removeItem('isAdminAuthenticated');
       localStorage.removeItem('adminLoginTime');
-      return <Navigate to="/987654321admin-login" />;
+      return <Navigate to="/987654321admin-login987654321" />;
     }
   } else {
-    return <Navigate to="/987654321admin-login" />;
+    return <Navigate to="/987654321admin-login987654321" />;
   }
 
   return children;

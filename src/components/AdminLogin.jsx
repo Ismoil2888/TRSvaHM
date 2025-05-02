@@ -9,21 +9,28 @@ const AdminLogin = () => {
   const [showWelcome, setShowWelcome] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    const adminPassword = process.env.REACT_APP_ADMIN_PASSWORD;
-
-    if (password === adminPassword) {
-      localStorage.setItem('isAdminAuthenticated', 'true');
-      localStorage.setItem('adminLoginTime', Date.now());
-
-      setShowWelcome(true);
-      setTimeout(() => {
-        navigate('/987654321admin');
-      }, 2000);
-    } else {
-      setError('Неверный пароль');
+  const handleLogin = async () => {
+    try {
+      const res = await fetch(`${process.env.REACT_APP_API_BASE}/auth/admin-login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password })
+      });
+  
+      const data = await res.json();
+  
+      if (res.ok) {
+        localStorage.setItem("isAdminAuthenticated", "true");
+        localStorage.setItem("adminLoginTime", Date.now()); // ✅ добавь это
+        setShowWelcome(true);
+        setTimeout(() => navigate('/987654321admin987654321'), 2000);      
+      } else {
+        setError(data.error || "Ошибка входа");
+      }
+    } catch (err) {
+      setError("Ошибка сервера");
     }
-  };
+  };  
 
   const containerVariants = {
     hidden: { opacity: 0, y: 50 },
