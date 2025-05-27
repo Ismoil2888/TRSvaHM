@@ -5,11 +5,12 @@ import { LanguageContext } from '../contexts/LanguageContext';
 import { translations } from '../translations';
 import useTranslation from '../hooks/useTranslation';
 
-const VoiceAssistant = () => {
+ const VoiceAssistant = ({ hideUI = false }) => {
   const [isActive, setIsActive] = useState(false);
   const recognitionRef = useRef(null);
-  const navigate = useNavigate();
+  const isRecognizingRef = useRef(false);
   const lastCommandRef = useRef("");
+  const navigate = useNavigate();
   const t = useTranslation();
 
   const speak = (message) => {
@@ -71,6 +72,52 @@ const VoiceAssistant = () => {
     const lower = transcript.toLowerCase();
     let matched = false;
 
+       //  Команда «преподаватель <имя>»
+   if (lower.startsWith("преподаватель ")) {
+     const name = lower.replace("преподаватель ", "").trim();
+     // 1) переходим на страницу преподавателей
+     navigate("/teachers", { state: { teacherName: name } });
+     // 2) говорим пользователю
+     speak(`Ищу преподавателя ${name}`);
+     return true;
+   }
+
+      if (lower.startsWith("закрой")) {
+    if (lower.includes("имя")) {
+      triggerAuthAction("closeEditUsername");
+      speak("Закрываю окно смены имени");
+      return true;
+    }
+    if (lower.includes("фото")) {
+      triggerAuthAction("closePhotoModal");
+      speak("Закрываю окно фото");
+      return true;
+    }
+    if (lower.includes("пароль")) {
+      triggerAuthAction("closePasswordModal");
+      speak("Закрываю окно смены пароля");
+      return true;
+    }
+    if (lower.includes("тему") || lower.includes("тема")) {
+      triggerAuthAction("closeThemeModal");
+      speak("Закрываю настройки темы");
+      return true;
+    }
+    if (lower.includes("почту") || lower.includes("email")) {
+      triggerAuthAction("closeEmailModal");
+      speak("Закрываю окно почты");
+      return true;
+    }
+    if (lower.includes("номер")) {
+      triggerAuthAction("closePhoneModal");
+      speak("Закрываю окно номера телефона");
+      return true;
+    }
+    // если «закрой» было, но ни одного слова из списка — сообщаем
+    speak("Какое окно закрыть?");
+    return true;
+  }
+
     if (lower.includes("переведи")) {
       const match = lower.match(/переведи (.+?) на (английский|русский|таджикский)/);
       if (match) {
@@ -112,12 +159,12 @@ const VoiceAssistant = () => {
       { keyword: "номер", action: () => triggerAuthAction("phoneModal"), response: "Открываю окно добавления номера" },
     
       // 📍 Закрытие окон
-      { keyword: "закрой имя", action: () => triggerAuthAction("closeEditUsername"), response: "Закрываю окно смены имени" },
-      { keyword: "закрой фото", action: () => triggerAuthAction("closePhotoModal"), response: "Закрываю окно фото" },
-      { keyword: "закрой пароль", action: () => triggerAuthAction("closePasswordModal"), response: "Закрываю окно смены пароля" },
-      { keyword: "закрой тему", action: () => triggerAuthAction("closeThemeModal"), response: "Закрываю настройки темы" },
-      { keyword: "закрой почту", action: () => triggerAuthAction("closeEmailModal"), response: "Закрываю окно почты" },
-      { keyword: "закрой номер", action: () => triggerAuthAction("closePhoneModal"), response: "Закрываю окно номера телефона" },
+      // { keyword: "закрой имя", action: () => triggerAuthAction("closeEditUsername"), response: "Закрываю окно смены имени" },
+      // { keyword: "закрой фото", action: () => triggerAuthAction("closePhotoModal"), response: "Закрываю окно фото" },
+      // { keyword: "закрыть пароль", action: () => triggerAuthAction("closePasswordModal"), response: "Закрываю окно смены пароля" },
+      // { keyword: "закрой тему", action: () => triggerAuthAction("closeThemeModal"), response: "Закрываю настройки темы" },
+      // { keyword: "закрой почту", action: () => triggerAuthAction("closeEmailModal"), response: "Закрываю окно почты" },
+      // { keyword: "закрой номер", action: () => triggerAuthAction("closePhoneModal"), response: "Закрываю окно номера телефона" },
     
       // 📍 Просто ответы
       { keyword: "привет", response: "Привет босс, как ваши дела?" },
@@ -209,7 +256,27 @@ const VoiceAssistant = () => {
     };
 
     recognitionRef.current = recognition;
+
+window.startJarvis = () => {
+  try {
+    lastCommandRef.current = "";
+    recognitionRef.current.start();
+    setIsActive(true);
+  } catch (e) {
+    console.warn("⛔ startJarvis:", e.message);
+  }
+};
+window.stopJarvis = () => {
+  try {
+    recognitionRef.current.stop();
+    setIsActive(false);
+  } catch (e) {
+    console.warn("⛔ stopJarvis:", e.message);
+  }
+};
   }, [navigate, isActive]);
+
+  if (hideUI) return null;
 
   const toggleVoice = () => {
     const recognition = recognitionRef.current;
@@ -225,37 +292,39 @@ const VoiceAssistant = () => {
     setIsActive((prev) => !prev);
   };
 
-  return (
-    <button
-      onClick={toggleVoice}
-      style={{
-        marginTop: "20px",
-        padding: "10px 20px",
-        fontSize: "16px",
-        borderRadius: "10px",
-        backgroundColor: isActive ? "#ff4d4d" : "#4CAF50",
-        color: "white",
-        border: "none",
-        display: "flex",
-        alignItems: "center",
-        gap: "10px",
-        cursor: "pointer"
-      }}
-    >
-      {isActive ? <FaMicrophone /> : <FaMicrophoneSlash />} {isActive ? "Выключить голосового помощника" : t('jarvisbutton')}
-    </button>
-  );
-};
+   return null;
 
-export default VoiceAssistant;
-
-
-
-
-
-
-
-
+  };
+  
+  export default VoiceAssistant;
+  
+  
+  
+  
+  
+  
+  
+  
+  // return (
+  //   <button
+  //     onClick={toggleVoice}
+  //     style={{
+  //       marginTop: "20px",
+  //       padding: "10px 20px",
+  //       fontSize: "16px",
+  //       borderRadius: "10px",
+  //       backgroundColor: isActive ? "#ff4d4d" : "#4CAF50",
+  //       color: "white",
+  //       border: "none",
+  //       display: "flex",
+  //       alignItems: "center",
+  //       gap: "10px",
+  //       cursor: "pointer"
+  //     }}
+  //   >
+  //     {isActive ? <FaMicrophone /> : <FaMicrophoneSlash />} {isActive ? "Выключить голосового помощника" : t('jarvisbutton')}
+  //   </button>
+  // );
 
 
 

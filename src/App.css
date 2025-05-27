@@ -1888,7 +1888,7 @@ color: transparent;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgb(0, 27, 35);
   z-index: 99999;
   display: flex;
   justify-content: center;
@@ -1914,8 +1914,7 @@ color: transparent;
 }
 
 .pwa-icon{
-  width: 100px;
-  border-radius: 17px;
+  width: 130px;
 }
 
 .pwa-close-btn {

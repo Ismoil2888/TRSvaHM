@@ -3,6 +3,7 @@ export const uploadTeacherPhoto = async (file) => {
     formData.append("photo", file);
   
     const res = await fetch(`${process.env.REACT_APP_API_BASE}/api/teachers/upload-photo`, {
+      // const res = await fetch(`http://localhost:5000/api/teachers/upload`, {
       method: "POST",
       body: formData
     });
@@ -17,7 +18,8 @@ export const uploadTeacherPhoto = async (file) => {
   };
   
   export const createTeacher = async (teacherData) => {
-    const res = await fetch("${process.env.REACT_APP_API_BASE}/api/teachers", {
+    const res = await fetch(`${process.env.REACT_APP_API_BASE}/api/teachers`, {
+      // const res = await fetch("http://localhost:5000/api/teachers", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -36,6 +38,7 @@ export const uploadTeacherPhoto = async (file) => {
   
   export const updateTeacher = async (id, teacherData) => {
     const res = await fetch(`${process.env.REACT_APP_API_BASE}/api/teachers/${id}`, {
+        // const res = await fetch(`http://localhost:5000/api/teachers/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json"
@@ -52,6 +55,7 @@ export const uploadTeacherPhoto = async (file) => {
   
   export const deleteTeacher = async (id) => {
     const res = await fetch(`${process.env.REACT_APP_API_BASE}/api/teachers/${id}`, {
+        // const res = await fetch(`http://localhost:5000/api/teachers/${id}`, {
       method: "DELETE"
     });
   
@@ -64,6 +68,7 @@ export const uploadTeacherPhoto = async (file) => {
   
   export const getTeacherById = async (id) => {
     const res = await fetch(`${process.env.REACT_APP_API_BASE}/api/teachers/${id}`);
+        // const res = await fetch(`http://localhost:5000/api/teachers/${id}`);
     const data = await res.json();
   
     if (!res.ok) {

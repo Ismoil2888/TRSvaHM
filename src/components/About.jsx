@@ -12,7 +12,6 @@ import ttustudents from "../ttustudents.jpg";
 import ttustudents1 from "../ttustudents1.jpg";
 import ttustudents2 from "../ttustudents2.jpg";
 import ttustudents3 from "../ttustudents3.jpg";
-import ttulogo from "../Ttulogo.png";
 import { auth } from "../firebase";
 import { getDatabase, ref as dbRef, onValue } from "firebase/database";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

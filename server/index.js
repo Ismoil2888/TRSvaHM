@@ -22,7 +22,13 @@ const allowedOrigins = [
     },
     credentials: true,
   }));
+
+  app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
+    next();
+  });
   
+  // app.options("*", cors()); // ✅ обязательно добавить
 
 app.use(bodyParser.json());
 
@@ -30,8 +36,8 @@ app.get("/", (req, res) => {
   res.send("🔥 API работает");
 });
 
-const postsRoutes = require("./routes/posts");
-app.use("/posts", postsRoutes);
+// const postsRoutes = require("./routes/posts");
+// app.use("/posts", postsRoutes);
 
 const authRoutes = require("./routes/auth");
 app.use("/auth", authRoutes);
@@ -41,6 +47,18 @@ app.use("/api/teachers", teacherRoutes);
 
 const requestsRoutes = require("./routes/requestsRoutes");
 app.use("/api/requests", requestsRoutes);
+
+const scheduleRoutes = require("./routes/scheduleRoutes");
+app.use("/api/schedules", scheduleRoutes);
+
+const commentsRoutes = require("./routes/commentsRoutes");
+app.use("/api/comments", commentsRoutes);
+
+const postsModRoutes = require("./routes/postsModerationRoutes");
+app.use("/api/posts/moderation", postsModRoutes);
+
+const usersRoutes = require("./routes/usersRoutes");
+app.use("/api/users", usersRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

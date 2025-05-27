@@ -350,7 +350,7 @@ const NotificationsPage = () => {
                 {notification.type === 'identification_rejected' && (
                   <div className="notification-rejected">
                     <div className="notification-body">
-                      <h3 style={{color: "red"}}>Заявка на идентификацию отклонена</h3>
+                      <h3 style={{ color: "red" }}>Заявка на идентификацию отклонена</h3>
                       <p>{notification.message || notification.reason}</p>
                       <span className="notification-date">
                         {new Date(notification.timestamp).toLocaleString('ru-RU', {
@@ -468,6 +468,61 @@ const NotificationsPage = () => {
                       </button>
                     </div>
                   </div>
+                )}
+
+
+                {/* уведомление для преподавателей */}
+                {['book_comment', 'video_comment'].includes(notification.type) && (
+                  <>
+                    <div className="notification-header">
+                      <div>
+                        <img
+                          src={notification.avatarUrl || defaultAvatar}
+                          alt="Avatar"
+                          className="notification-avatar clickable"
+                          onClick={() => goToProfile(notification.userId)}
+                        />
+                        <p className="notification-timestamp">
+                          {new Date(notification.timestamp).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="notification-body">
+                      <div className="notification-meta">
+                        <h3 className="notification-title">
+                          {notification.type === 'book_comment'
+                            ? 'Новый комментарий к книге'
+                            : 'Новый комментарий к видеоуроку'}
+                        </h3>
+                        <button
+                          className="delete-notification-button"
+                          onClick={() => handleDeleteNotification(notification.id)}
+                        >
+                          &times;
+                        </button>
+                      </div>
+                      <p className="notification-text">
+                        <span
+                          className="user-link"
+                          onClick={() => goToProfile(notification.userId)}
+                        >
+                          {notification.username}
+                        </span>{' '}
+                        оставил комментарий: "{notification.comment}"
+                      </p>
+                      <button
+                        className="goto-content-button"
+                        onClick={() => {
+                          const path = notification.type === 'book_comment'
+                            ? `/library/book/${notification.contentId}`
+                            : `/library/video/${notification.contentId}`;
+                          navigate(path);
+                        }}
+                      >
+                        Перейти к {notification.type === 'book_comment' ? 'книге' : 'видео'}
+                      </button>
+                    </div>
+                  </>
                 )}
 
                 {/* Уведомления других типов */}

@@ -8,7 +8,6 @@ const AdminLogin = () => {
   const [error, setError] = useState('');
   const [showWelcome, setShowWelcome] = useState(false);
   const navigate = useNavigate();
-
   const handleLogin = async () => {
     try {
       const res = await fetch(`${process.env.REACT_APP_API_BASE}/auth/admin-login`, {
@@ -23,7 +22,7 @@ const AdminLogin = () => {
         localStorage.setItem("isAdminAuthenticated", "true");
         localStorage.setItem("adminLoginTime", Date.now()); // ✅ добавь это
         setShowWelcome(true);
-        setTimeout(() => navigate('/987654321admin987654321'), 2000);      
+        setTimeout(() => navigate('/987654321kulob987654321'), 2000);      
       } else {
         setError(data.error || "Ошибка входа");
       }

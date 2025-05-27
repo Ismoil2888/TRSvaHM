@@ -19,14 +19,29 @@ const useRequests = () => {
   });
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_BASE}/api/requests`)
-      .then(res => res.json())
-      .then(data => {
+    const fetchRequests = async () => {
+      try {
+        const res = await fetch(`${process.env.REACT_APP_API_BASE}/api/requests`);
+        const data = await res.json();
         setRequests(data);
         setNewRequestsCount(data.filter(r => r.status === 'pending').length);
-      })
-      .catch(() => toast.error("Ошибка при загрузке заявок"));
+      } catch (err) {
+        toast.error("Ошибка при загрузке заявок");
+      }
+    };
+
+    fetchRequests();
   }, []);
+
+  // useEffect(() => {
+  //   fetch(`${process.env.REACT_APP_API_BASE}/api/requests`)
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       setRequests(data);
+  //       setNewRequestsCount(data.filter(r => r.status === 'pending').length);
+  //     })
+  //     .catch(() => toast.error("Ошибка при загрузке заявок"));
+  // }, []);
 
   const handleAcceptRequest = async (requestId) => {
     try {
@@ -54,16 +69,7 @@ const useRequests = () => {
       console.error(err);
       toast.error("Ошибка при возврате заявки");
     }
-  };  
-
-//   const handleEditRequest = async (requestId) => {
-//     try {
-//       await fetch(`http://localhost:5000/api/requests/${requestId}/edit`, { method: "POST" });
-//       toast.info("Заявка возвращена для редактирования");
-//     } catch {
-//       toast.error("Ошибка при возврате заявки на доработку");
-//     }
-//   };
+  };
 
   const confirmRejectSend = async () => {
     const { id, senderId, reason } = rejectModal;

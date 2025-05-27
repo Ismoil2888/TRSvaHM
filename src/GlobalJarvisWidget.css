@@ -1,0 +1,46 @@
+.jarvis-floating {
+  position: fixed;
+  bottom: 90px;
+  right: 24px;
+  z-index: 9999;
+}
+
+.jarvis-fab {
+  background-color: #0fc4ff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+.jarvis-menu {
+  margin-top: 12px;
+  background-color: #1e1e1e;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: fadeIn 0.3s ease;
+}
+
+.jarvis-menu button {
+  background: none;
+  border: none;
+  color: white;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

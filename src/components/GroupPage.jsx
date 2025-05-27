@@ -161,14 +161,14 @@ const GroupPage = () => {
         <Link style={{ marginRight: "50px" }} className="back-button gp white-icon" onClick={() => navigate(-1)}>
           <FaArrowLeft />
         </Link>
-        <ul className="logo-app" style={{ color: "#58a6ff", fontSize: "20px" }}>Группа: {groupName}, Курс: {course}</ul>
+        <ul className="logo-app txt" style={{ fontSize: "20px" }}>Группа: {groupName}, Курс: {course}</ul>
       </div>
       <div className="group-page" style={mainContentStyle}>
         <div className='gp-desltop-header'>
           <Link className="back-button-gp white-icon" onClick={() => navigate(-1)}>
             <FaArrowLeft />
           </Link>
-          <h3 style={{ color: "grey", fontSize: "21px" }}>Группа: {groupName} (Курс: {course})</h3>
+          <h3 className='txt' style={{ fontSize: "21px" }}>Группа: {groupName} (Курс: {course})</h3>
         </div>
 
         {schedule && (
@@ -187,6 +187,7 @@ const GroupPage = () => {
                           <th>{t("startTime")}</th>
                           <th>{t("endTime")}</th>
                           <th>{t("teacher")}</th>
+                          <th>{t("audience")}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -197,6 +198,7 @@ const GroupPage = () => {
                             <td>{lesson.startTime}</td>
                             <td>{lesson.endTime}</td>
                             <td>{lesson.teacher}</td>
+                            <td>{lesson.audience}</td>
                           </tr>
                         ))}
                       </tbody>

@@ -32,7 +32,8 @@ const Library = ({ userId }) => {
   const [searchHistory, setSearchHistory] = useState([]);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [userAvatarUrl, setUserAvatarUrl] = useState(null);
-  const [commentModal, setCommentModal] = useState({ isOpen: false, bookId: null });
+  // const [commentModal, setCommentModal] = useState({ isOpen: false, bookId: null });
+  const [commentModal, setCommentModal] = useState({ isOpen: false, contentId: null, type: null, authorId: null });
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([]);
   const [userDetails, setUserDetails] = useState({ username: "", avatarUrl: "" });
@@ -111,25 +112,60 @@ const Library = ({ userId }) => {
   };
 
   // 2. Получение видеоуроков
-  useEffect(() => {
-    const ref = dbRef(database, "videoLessons");
-    onValue(ref, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        const loaded = Object.keys(data).map(id => ({ id, ...data[id], commentCount: 0 }));
+useEffect(() => {
+  const ref = dbRef(database, "videoLessons");
+  onValue(ref, (snapshot) => {
+    const data = snapshot.val() || {};
+    const loaded = Object.entries(data).map(([id, video]) => ({
+      id,
+      // Если в вашей БД имя автора лежит в video.author или video.uploaderName:
+      author: video.author || video.uploaderName || "Неизвестный",
+      authorId: video.authorId || video.uploaderId || null,
+      cathedra: video.cathedra || "",
+      title: video.title,
+      description: video.description,
+      url: video.url,
+      timestamp: video.timestamp,
+      commentCount: 0,
+      publishedDate: video.timestamp
+        ? new Date(video.timestamp).toLocaleDateString()
+        : "—",
+      // при необходимости — cathedra: video.cathedra || ""
+    }));
 
-        // Загружаем количество комментариев
-        loaded.forEach(video => {
-          const commentsRef = dbRef(database, `comments/${video.id}`);
-          onValue(commentsRef, (snapshot) => {
-            const commentsData = snapshot.val();
-            video.commentCount = commentsData ? Object.keys(commentsData).length : 0;
-            setVideoLessons([...loaded]);
-          });
-        });
-      }
+    // считаем комментарии
+    loaded.forEach(v => {
+      onValue(dbRef(database, `comments/${v.id}`), snap => {
+        const com = snap.val();
+        v.commentCount = com ? Object.keys(com).length : 0;
+        setVideoLessons([...loaded]);
+      });
     });
-  }, []);
+
+    setVideoLessons(loaded);
+    setFilteredVideos(loaded);
+  }, { onlyOnce: true });
+}, [database]);
+
+  // useEffect(() => {
+  //   const ref = dbRef(database, "videoLessons");
+  //   onValue(ref, (snapshot) => {
+  //     const data = snapshot.val();
+  //     if (data) {
+  //       const loaded = Object.keys(data).map(id => ({ id, ...data[id], commentCount: 0 }));
+
+  //       // Загружаем количество комментариев
+  //       loaded.forEach(video => {
+  //         const commentsRef = dbRef(database, `comments/${video.id}`);
+  //         onValue(commentsRef, (snapshot) => {
+  //           const commentsData = snapshot.val();
+  //           video.commentCount = commentsData ? Object.keys(commentsData).length : 0;
+  //           setVideoLessons([...loaded]);
+  //         });
+  //       });
+  //     }
+  //   });
+  // }, []);
 
   // 3. Фильтрация по кафедре
 
@@ -183,55 +219,67 @@ const Library = ({ userId }) => {
       const booksRef = dbRef(database, "books");
       const loadedBooks = [];
 
-      // Загрузка книг от преподавателей (сохраняем кафедру из данных учителя)
+      // Загрузка книг от преподавателей
       onValue(teachersRef, (snapshot) => {
         const data = snapshot.val();
         if (data) {
-          Object.keys(data).forEach((teacherId) => {
-            const teacherBooks = data[teacherId].books;
+          Object.entries(data).forEach(([teacherId, teacherInfo]) => {
+            const teacherBooks = teacherInfo.books;
+            const teacherName = `${teacherInfo.name} ${teacherInfo.surname}`;
             if (teacherBooks) {
-              Object.keys(teacherBooks).forEach((bookId) => {
+              Object.entries(teacherBooks).forEach(([bookId, book]) => {
                 loadedBooks.push({
                   id: bookId,
-                  ...teacherBooks[bookId],
+                  title: book.title,
+                  description: book.description,
+                  fileURL: book.fileURL,
                   teacherId,
-                  cathedra: data[teacherId].cathedra || "",
-                  publishedDate: new Date().toLocaleDateString(),
+                  cathedra: teacherInfo.cathedra || "",
+                  author: book.author || teacherName,
+                  publishedDate: book.timestamp
+                    ? new Date(book.timestamp).toLocaleDateString()
+                    : "—",
                   commentCount: 0,
                 });
               });
             }
           });
         }
-      });
+      }, { onlyOnce: true });
 
-      // Загрузка книг из общего списка (если есть, и если они содержат поле "cathedra")
+      // Загрузка книг из общего списка
       onValue(booksRef, (snapshot) => {
         const data = snapshot.val();
         if (data) {
-          Object.keys(data).forEach((bookId) => {
+          Object.entries(data).forEach(([bookId, book]) => {
             loadedBooks.push({
               id: bookId,
-              ...data[bookId],
-              cathedra: data[bookId].cathedra || "",
-              publishedDate: new Date().toLocaleDateString(),
+              title: book.title,
+              description: book.description,
+              fileURL: book.fileURL,
+              cathedra: book.cathedra || "",
+              author: book.author || "Неизвестный",
+              publishedDate: book.timestamp
+                ? new Date(book.timestamp).toLocaleDateString()
+                : "—",
               commentCount: 0,
             });
           });
         }
 
-        // Подсчет количества комментариев для каждой книги
+        // Подсчёт комментариев
         loadedBooks.forEach((book) => {
           const commentsRef = dbRef(database, `comments/${book.id}`);
-          onValue(commentsRef, (commentSnapshot) => {
-            const commentsData = commentSnapshot.val();
+          onValue(commentsRef, (commentSnap) => {
+            const commentsData = commentSnap.val();
             book.commentCount = commentsData ? Object.keys(commentsData).length : 0;
+            // обновляем состояние после каждого изменения числа комментариев
             setBooks([...loadedBooks]);
           });
         });
 
         setFilteredBooks(loadedBooks);
-      });
+      }, { onlyOnce: true });
     };
 
     const user = auth.currentUser;
@@ -245,18 +293,95 @@ const Library = ({ userId }) => {
             avatarUrl: data.avatarUrl || defaultAvatar,
           });
           setRole(data.role || "");
+          setUserRole(data.role || "");
         }
-      });
-
-      onValue(userRef, (snapshot) => {
-        const userData = snapshot.val();
-        // Предполагается, что роль хранится в поле role
-        setUserRole(userData?.role || '');
-      });
+      }, { onlyOnce: true });
     }
 
     fetchBooks();
   }, [database]);
+
+  // Функция загрузки книг
+  // useEffect(() => {
+  //   const fetchBooks = () => {
+  //     const teachersRef = dbRef(database, "teachers");
+  //     const booksRef = dbRef(database, "books");
+  //     const loadedBooks = [];
+
+  //     // Загрузка книг от преподавателей (сохраняем кафедру из данных учителя)
+  //     onValue(teachersRef, (snapshot) => {
+  //       const data = snapshot.val();
+  //       if (data) {
+  //         Object.keys(data).forEach((teacherId) => {
+  //           const teacherBooks = data[teacherId].books;
+  //           if (teacherBooks) {
+  //             Object.keys(teacherBooks).forEach((bookId) => {
+  //               loadedBooks.push({
+  //                 id: bookId,
+  //                 ...teacherBooks[bookId],
+  //                 teacherId,
+  //                 cathedra: data[teacherId].cathedra || "",
+  //                 publishedDate: new Date().toLocaleDateString(),
+  //                 commentCount: 0,
+  //               });
+  //             });
+  //           }
+  //         });
+  //       }
+  //     });
+
+  //     // Загрузка книг из общего списка (если есть, и если они содержат поле "cathedra")
+  //     onValue(booksRef, (snapshot) => {
+  //       const data = snapshot.val();
+  //       if (data) {
+  //         Object.keys(data).forEach((bookId) => {
+  //           loadedBooks.push({
+  //             id: bookId,
+  //             ...data[bookId],
+  //             cathedra: data[bookId].cathedra || "",
+  //             publishedDate: new Date().toLocaleDateString(),
+  //             commentCount: 0,
+  //           });
+  //         });
+  //       }
+
+  //       // Подсчет количества комментариев для каждой книги
+  //       loadedBooks.forEach((book) => {
+  //         const commentsRef = dbRef(database, `comments/${book.id}`);
+  //         onValue(commentsRef, (commentSnapshot) => {
+  //           const commentsData = commentSnapshot.val();
+  //           book.commentCount = commentsData ? Object.keys(commentsData).length : 0;
+  //           setBooks([...loadedBooks]);
+  //         });
+  //       });
+
+  //       setFilteredBooks(loadedBooks);
+  //     });
+  //   };
+
+  //   const user = auth.currentUser;
+  //   if (user) {
+  //     const userRef = dbRef(database, `users/${user.uid}`);
+  //     onValue(userRef, (snapshot) => {
+  //       const data = snapshot.val();
+  //       if (data) {
+  //         setUserDetails({
+  //           username: data.username || "User",
+  //           avatarUrl: data.avatarUrl || defaultAvatar,
+  //         });
+  //         setRole(data.role || "");
+  //       }
+  //     });
+
+  //     onValue(userRef, (snapshot) => {
+  //       const userData = snapshot.val();
+  //       // Предполагается, что роль хранится в поле role
+  //       setUserRole(userData?.role || '');
+  //     });
+  //   }
+
+  //   fetchBooks();
+  // }, [database]);
 
   const localStorageKey = `searchHistory_${userId}`;
 
@@ -326,63 +451,120 @@ const Library = ({ userId }) => {
     setIsSearchFocused(false);
   };
 
-  const openCommentModal = (bookId) => {
-    setCommentModal({ isOpen: true, bookId });
+const openCommentModal = (item, contentType) => {
+  // item — это объект книги или видео
+  const authorId = contentType === "book"
+    ? item.teacherId
+    : item.authorId;
 
-    const commentsRef = dbRef(database, `comments/${bookId}`);
-    onValue(commentsRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        const loadedComments = Object.keys(data).map((id) => ({ id, ...data[id] }));
-        setComments(loadedComments);
-      } else {
-        setComments([]);
+    console.log("Opening comment modal for type:", contentType);
+
+  setCommentModal({
+    isOpen: true,
+    contentId: item.id,
+    type: contentType,    // "book" или "video"
+    authorId
+  });
+
+  // Читаем комментарии по новому contentId
+  const commentsRef = dbRef(database, `comments/${item.id}`);
+  onValue(commentsRef, snapshot => {
+    const data = snapshot.val() || {};
+    const loaded = Object.keys(data).map(id => ({ id, ...data[id] }));
+    setComments(loaded);
+  });
+};
+
+  // const openCommentModal = (bookId) => {
+  //   setCommentModal({ isOpen: true, bookId });
+
+  //   const commentsRef = dbRef(database, `comments/${bookId}`);
+  //   onValue(commentsRef, (snapshot) => {
+  //     const data = snapshot.val();
+  //     if (data) {
+  //       const loadedComments = Object.keys(data).map((id) => ({ id, ...data[id] }));
+  //       setComments(loadedComments);
+  //     } else {
+  //       setComments([]);
+  //     }
+  //   });
+  // };
+
+const closeCommentModal = () => {
+  setCommentModal({
+    isOpen: false,
+    contentId: null,
+    type: null,
+    authorId: null
+  });
+  setComments([]);
+  setActionMenuId(null);
+  setEditingCommentId(null);
+  setNewComment("");
+};
+
+const handleCommentSubmit = async (isAnonymous = false) => {
+  const text = newComment.trim();
+  if (!text) return;
+
+  // Фильтр запрещённых слов
+  const foundBad = forbiddenNames.some(bad =>
+    text.toLowerCase().includes(bad.toLowerCase())
+  );
+  if (foundBad) {
+    showNotificationError("Нельзя писать такие комментарии");
+    return;
+  }
+
+  // Достаем всё из состояния
+  const { contentId, authorId, type } = commentModal;
+  const commentRef = dbRef(database, `comments/${contentId}`);
+
+  if (editingCommentId) {
+    // Редактирование
+    await update(
+      dbRef(database, `comments/${contentId}/${editingCommentId}`),
+      {
+        comment: text,
+        timestamp: new Date().toLocaleString(),
       }
-    });
-  };
-
-  const closeCommentModal = () => {
-    setCommentModal({ isOpen: false, bookId: null });
-    setComments([]);
-    setActionMenuId(null);
-    setEditingCommentId(null);
-    setNewComment("");
-  };
-
-  const handleCommentSubmit = (isAnonymous = false) => {
-    // if (newComment.trim() === "") return;
-    const text = newComment.trim();
-    if (!text) return;
-
-    const foundBad = forbiddenNames.some(
-      bad => text.toLowerCase().includes(bad.toLowerCase())
     );
-    if (foundBad) {
-      showNotificationError("Нельзя писать такие комментарии");
-      return;
-    }
+    setEditingCommentId(null);
+  } else {
+    // Новый комментарий
+    const newCommentRef = push(commentRef);
+    await update(newCommentRef, {
+      avatarUrl: isAnonymous ? anonymAvatar : userDetails.avatarUrl,
+      username: isAnonymous ? "Анонимно" : userDetails.username,
+      userId: isAnonymous ? null : auth.currentUser.uid,
+      anonymousOwnerId: isAnonymous ? auth.currentUser.uid : null,
+      comment: text,
+      timestamp: new Date().toLocaleString(),
+    });
 
-    const commentRef = dbRef(database, `comments/${commentModal.bookId}`);
-
-    if (editingCommentId) {
-      update(dbRef(database, `comments/${commentModal.bookId}/${editingCommentId}`), {
-        comment: newComment,
-        timestamp: new Date().toLocaleString(),
-      });
-      setEditingCommentId(null);
-    } else {
-      const newCommentRef = push(commentRef);
-      update(newCommentRef, {
-        avatarUrl: isAnonymous ? anonymAvatar : userDetails.avatarUrl,
-        username: isAnonymous ? "Анонимно" : userDetails.username,
-        userId: isAnonymous ? null : auth.currentUser?.uid,
-        anonymousOwnerId: isAnonymous ? auth.currentUser?.uid : null,
-        comment: newComment,
-        timestamp: new Date().toLocaleString(),
-      });
+    // Уведомление автору
+    if (authorId && authorId !== auth.currentUser.uid) {
+const notif = {
+  type: commentModal.type === "book" ? "book_comment" : "video_comment", // Добавляем тип
+  contentId,
+  userId: auth.currentUser.uid,
+  username: userDetails.username,
+  comment: text,
+  timestamp: new Date().toISOString(),
+};
+console.log("Sending notification:", JSON.stringify(notif, null, 2));
+    const notificationRef = dbRef(database, `notifications/${authorId}/${Date.now()}`);
+await set(notificationRef, notif)
+  .then(() => console.log("Уведомление успешно отправлено"))
+  .catch((error) => {
+    console.error("Ошибка отправки уведомления:", error);
+    showNotificationError("Не удалось отправить уведомление");
+  });
     }
-    setNewComment("");
-  };
+  }
+
+  setNewComment("");
+};
 
   const handleEditComment = (commentId, commentText) => {
     setEditingCommentId(commentId);
@@ -390,10 +572,19 @@ const Library = ({ userId }) => {
     setActionMenuId(null);
   };
 
-  const handleDeleteComment = (commentId) => {
-    remove(dbRef(database, `comments/${commentModal.bookId}/${commentId}`));
-    setActionMenuId(null);
-  };
+const handleDeleteComment = (commentId) => {
+  const { contentId } = commentModal;             // ← используем contentId
+  remove(dbRef(database, `comments/${contentId}/${commentId}`))
+    .then(() => {
+      // Убираем из локального стейта
+      setComments(prev => prev.filter(c => c.id !== commentId));
+      setActionMenuId(null);
+    })
+    .catch(err => {
+      console.error("Ошибка при удалении комментария:", err);
+      showNotificationError("Не удалось удалить комментарий");
+    });
+};
 
   const toggleActionMenu = (commentId) => {
     setActionMenuId((prev) => (prev === commentId ? null : commentId));
@@ -466,11 +657,11 @@ const Library = ({ userId }) => {
 
   return (
     <div className="glava">
-           {notification && (
-          <div className={`notification ${notificationType}`}>
-            {notification}
-          </div>
-        )}
+      {notification && (
+        <div className={`notification ${notificationType}`}>
+          {notification}
+        </div>
+      )}
       <div className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
         <div className="sidebar-header">
           <img style={{ width: "50px", height: "45px" }} src={basiclogo} alt="" />
@@ -673,16 +864,14 @@ const Library = ({ userId }) => {
                       <img src={bookIcon} alt="Book Icon" className="book-icon" />
                       <div className="book-info">
                         <h4>{book.title}</h4>
-                        <p style={{ color: "gray" }}>{book.description}</p>
+                        <p style={{ color: "gray" }}>{book.description}</p><hr />
+                        <p className="published-date">Автор: {book.author}</p>
                         <p className="published-date">Опубликовано: {book.publishedDate}</p>
                       </div>
                       <div className="book-actions">
                         <div className="comment-icon-and-count">
                           <FaCommentDots className="comment-icon"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              openCommentModal(book.id);
-                            }}
+                           onClick={e => { e.stopPropagation(); openCommentModal(book, "book"); }}
                           />
                           <span className="comment-count">{book.commentCount}</span>
                         </div>
@@ -700,12 +889,13 @@ const Library = ({ userId }) => {
                     <video src={video.url} controls width="100%" />
                     <h4>{video.title}</h4>
                     <p>{video.description}</p>
-                    <small>Автор: {video.author}</small>
+                    <small>Автор: {video.author}</small><br />
+                    <small>Опубликовано: {video.publishedDate}</small>  {/* ← сюда */}
                     <div className="book-actions">
                       <div className="comment-icon-and-count">
                         <FaCommentDots
                           className="comment-icon"
-                          onClick={() => openCommentModal(video.id)}
+                          onClick={() => openCommentModal(video, "video")}
                         />
                         <span className="comment-count">{video.commentCount}</span>
                       </div>

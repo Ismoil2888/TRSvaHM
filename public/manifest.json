@@ -1,23 +1,24 @@
 {
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#1e2c39",
-  "background_color": "#1e2c39",
-  "short_name": "TiK",
+  "theme_color": "#000F26",
+  "background_color": "#000F26",
+  "navigation_bar_color": "#FFFFFF",
+  "short_name": "ICT",
   "name": "Platforma",
   "icons": [
     {
-      "src": "/logosite1024.png",
+      "src": "/app-logotype1024.png",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
     {
-      "src": "/logosite1024.png",
+      "src": "/app-logotype1024.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "/logoapp512.png",
+      "src": "/app-logotype512.png",
       "type": "image/png",
       "sizes": "512x512"
     }

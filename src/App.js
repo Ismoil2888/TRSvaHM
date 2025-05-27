@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import './App.css';
 import { auth } from './firebase';
 import { getDatabase, ref as dbRef, onValue, get, set } from 'firebase/database';
+import { FaDownload } from 'react-icons/fa';
 import SignUp from './components/SignUp';
 import SignIn from './components/SignIn';
 import AuthDetails from './components/AuthDetails';
@@ -38,6 +39,8 @@ import { LanguageProvider } from './contexts/LanguageContext';
 import { applyTheme } from "./theme";
 import JarvisIntroPage from "./components/JarvisIntroPage";
 import { RoleRoute } from './components/ProtectedRoute';
+import GlobalJarvisWidget from "./components/GlobalJarvisWidget";
+import VoiceAssistant from "./components/VoiceAssistant";
 
 function App() {
   const [userRole, setUserRole] = useState('');
@@ -197,16 +200,17 @@ function App() {
           >
             ×
           </button> */}
-                <img className='pwa-icon' src="/logoapp512.png" />
+                <img className='pwa-icon' src="/app-logotype.png" />
               </div>
-              <div style={{ marginTop: "20px" }}>
-                <h2>Установите наше приложение</h2>
+              <div style={{ marginTop: "10px" }}>
+                <h2 style={{color: "black"}}>Установите наше приложение</h2>
                 <p>Для удобного доступа установите приложение</p>
                 <div className="pwa-buttons">
                   <button
                     className="install-btn"
                     onClick={handleInstall}
                   >
+                    <FaDownload style={{marginRight: "8px"}}/>
                     Установить
                   </button>
                   {/* <button 
@@ -231,7 +235,7 @@ function App() {
           <Route path="/about" element={<PrivateRoute> <About /> </PrivateRoute>} />
           <Route path="/home" element={<PrivateRoute>  <HomePage /> </PrivateRoute>} />
           <Route path="/notifications" element={<PrivateRoute> <NotificationsPage /> </PrivateRoute>} />
-          {/* <Route path="/post" element={<PrivateRoute>  <PostForm /> </PrivateRoute>} /> */}
+          <Route path="/post" element={<PrivateRoute>  <PostForm /> </PrivateRoute>} />
           <Route path="/schedule" element={<PrivateRoute> <Schedule /> </PrivateRoute>} />
           <Route path="/teachers" element={<PrivateRoute> <Teachers /> </PrivateRoute>} />
           <Route path="/library" element={<PrivateRoute> <Library /> </PrivateRoute>} />
@@ -240,7 +244,7 @@ function App() {
           <Route path="/searchpage" element={<PrivateRoute> <SearchPage /> </PrivateRoute>} />
           <Route path="/searchstudents" element={<PrivateRoute> <SearchStudents /> </PrivateRoute>} />
           <Route path="/welcomepage" element={<WelcomePage />} />
-          {/* <Route path="/987654321teacher-login987654321" element={<TeacherLogin />} /> */}
+          <Route path="/987654321teacher-login987654321" element={<TeacherLogin />} />
           {/* <Route path="/987654321dean-login987654321" element={<DeanLogin />} /> */}
           <Route path="/teacher-profile/:id" element={<TeacherProfile />} />
           <Route path="/987654321kulob987654321" element={<AdminPrivateRoute> <AdminPanel /> </AdminPrivateRoute>} />
@@ -253,6 +257,8 @@ function App() {
           <Route path="/department-teachers/:cathedra" element={<DepartmentTeachers />} />
           <Route path="/jarvisintropage" element={<JarvisIntroPage />} />
         </Routes>
+        <VoiceAssistant hideUI={true}/>
+        <GlobalJarvisWidget />
       </>
     </LanguageProvider>
   );

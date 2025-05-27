@@ -15,5 +15,6 @@ router.post("/", teacherController.createTeacher);
 router.put("/:id", teacherController.updateTeacher);
 router.delete("/:id", teacherController.deleteTeacher);
 router.get("/:id", teacherController.getTeacherById);
+router.get("/", teacherController.getAllTeachers);
 
 module.exports = router;

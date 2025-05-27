@@ -1341,9 +1341,10 @@ const AuthDetails = () => {
         photoUrl,
         status: "pending",
         email: authUser.email,
-        username,
-        userAvatar: avatarUrl,
-        userId: authUser.uid
+        username: username, // Добавляем текущее имя пользователя
+        userAvatar: avatarUrl, // Добавляем текущий аватар
+        userId: authUser.uid,
+        createdAt: new Date().toISOString() // Добавляем метку времени
       });
 
       // Обновляем статус после создания заявки

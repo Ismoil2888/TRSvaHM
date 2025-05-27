@@ -68,11 +68,4 @@ export const themes = {
     if (metaTag && theme.metaThemeColor) {
       metaTag.setAttribute('content', theme.metaThemeColor);
     }
-  };  
-  
-  // export const applyTheme = (themeName) => {
-  //   const theme = themes[themeName];
-  //   Object.keys(theme).forEach(variable => {
-  //     document.documentElement.style.setProperty(variable, theme[variable]);
-  //   });
-  // };  
+  };

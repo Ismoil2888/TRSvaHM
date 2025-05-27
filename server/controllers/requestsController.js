@@ -1,29 +1,64 @@
-const admin = require("firebase-admin");
-const db = admin.database();
+const { db } = require("../firebaseAdmin");
 
 exports.getAllRequests = async (req, res) => {
   try {
-    const snapshot = await db.ref("requests").once("value");
-    const data = snapshot.val() || {};
-    const formatted = [];
+    const requestsRef = db.ref("requests");
+    const requestsSnapshot = await requestsRef.once("value");
+    const requestsData = requestsSnapshot.val() || {};
 
-    for (const id in data) {
-      const request = { id, ...data[id] };
-      const userSnap = await db.ref(`users/${request.senderId}`).once("value");
-      const user = userSnap.val();
-      if (user) {
-        request.username = user.username;
-        request.userAvatar = user.avatarUrl;
-        request.role = user.role;
-      }
-      formatted.push(request);
+    const usersRef = db.ref("users");
+    const usersSnapshot = await usersRef.once("value");
+    const usersData = usersSnapshot.val() || {};
+
+    const formattedRequests = [];
+
+    for (const [requestId, request] of Object.entries(requestsData)) {
+      // Используем данные из заявки, если они есть
+      const userData = {
+        username: request.username || "Неизвестный",
+        avatarUrl: request.userAvatar || defaultAvatar,
+        email: request.email,
+        role: request.role
+      };
+
+      formattedRequests.push({
+        id: requestId,
+        ...request,
+        username: userData.username,
+        userAvatar: userData.avatarUrl,
+        status: request.status || "pending"
+      });
     }
 
-    res.json(formatted);
+    res.json(formattedRequests);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
+// exports.getAllRequests = async (req, res) => {
+//   try {
+//     const snapshot = await db.ref("requests").once("value");
+//     const data = snapshot.val() || {};
+//     const formatted = [];
+
+//     for (const id in data) {
+//       const request = { id, ...data[id] };
+//       const userSnap = await db.ref(`users/${request.senderId}`).once("value");
+//       const user = userSnap.val();
+//       if (user) {
+//         request.username = user.username;
+//         request.userAvatar = user.avatarUrl;
+//         request.role = user.role;
+//       }
+//       formatted.push(request);
+//     }
+
+//     res.json(formatted);
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// };
 
 exports.acceptRequest = async (req, res) => {
   const requestId = req.params.id;

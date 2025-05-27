@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { getDatabase, ref as dbRef, set, onValue, push, update, remove, get } from "firebase/database";
 import { auth } from "../firebase";
 import "../App.css";
@@ -50,6 +50,9 @@ const Teachers = () => {
     return savedState ? JSON.parse(savedState) : true;
   });
   const navigate = useNavigate();
+  const location = useLocation();
+  // состояние для подсветки / скролла к нужному преподавателю
+  const [highlightedId, setHighlightedId] = useState(null);
 
   const goToProfile = (userId) => {
     navigate(`/profile/${userId}`);
@@ -165,6 +168,28 @@ const Teachers = () => {
       });
     }
   }, []);
+
+  useEffect(() => {
+    const teacherName = location.state?.teacherName?.toLowerCase();
+      // если нет команды или список ещё пуст — ничего не делаем
+   if (!teacherName || teachers.length === 0) return;
+
+    // когда teachers уже есть — найдём совпадение по имени или фамилии
+    const match = teachers.find(t =>
+      t.name?.toLowerCase() === teacherName ||
+      t.surname?.toLowerCase() === teacherName
+    );
+    if (match) {
+      setHighlightedId(match.id);
+      // setFilteredTeachers([match]);      // отфильтруем список (только его)
+      // setHighlightedId(match.id);       // запомним id для подсветки
+          // опционально: очищаем state, чтобы не «подхватить» эту же команду снова
+     navigate(location.pathname, { replace: true, state: {} });
+    } else {
+      // если не нашли — можно показать уведомление
+      showNotificationError(`Преподаватель ${teacherName} не найден.`);
+    }
+  }, [teachers, location.state, navigate, location.pathname]);
 
   const handleSearchChange = (e) => {
     const query = e.target.value.toLowerCase();
@@ -316,9 +341,26 @@ const Teachers = () => {
   };
 
   // Фильтрация преподавателей по выбранной кафедре или поиск по всем
-  const displayedTeachers = searchQuery
-    ? filteredTeachers
-    : filteredTeachers.filter((teacher) => teacher.cathedra === activeDepartment);
+  // После объявления highlightedId и filteredTeachers
+const displayedTeachers = (() => {
+  // Если есть highlightedId — значит мы из голосового помощника
+  if (highlightedId) {
+    // покажем ровно тот преподаватель, которого просили
+    return filteredTeachers;
+  }
+  // если в строке поиска что-то есть — ищем по ней
+  if (searchQuery) {
+    return filteredTeachers;
+  }
+  // иначе — фильтруем по активной кафедре
+  return filteredTeachers.filter((teacher) => 
+    teacher.cathedra === activeDepartment
+  );
+})();
+
+  // const displayedTeachers = searchQuery
+  //   ? filteredTeachers
+  //   : filteredTeachers.filter((teacher) => teacher.cathedra === activeDepartment);
 
   return (
     <div className="glava">
@@ -474,6 +516,26 @@ const Teachers = () => {
               {t("selectcathedra")}:
             </label>
             <select
+  id="department-select"
+  value={activeDepartment}
+  onChange={(e) => {
+    const dept = e.target.value;
+    setActiveDepartment(dept);
+    setSearchQuery("");         // сброс текстового поиска
+    setHighlightedId(null);     // сброс «голосового» режима
+    setFilteredTeachers(
+      teachers.filter((t) => t.cathedra === dept)
+    );
+  }}
+  style={{ padding: "7px", borderRadius: "15px", border: "1px solid #ccc", width: "350px" }}
+>
+  {departments.map((dept, idx) => (
+    <option key={idx} value={dept}>
+      {dept}
+    </option>
+  ))}
+</select>
+            {/* <select
               id="department-select"
               value={activeDepartment}
               onChange={(e) => setActiveDepartment(e.target.value)}
@@ -484,7 +546,7 @@ const Teachers = () => {
                   {dept}
                 </option>
               ))}
-            </select>
+            </select> */}
           </div>
           <section className="teachers-section">
             <div className="search-bar">
@@ -501,7 +563,16 @@ const Teachers = () => {
                 <p>Найдите нужного вам преподавателя.</p>
               ) : (
                 displayedTeachers.map((teacher) => (
-                  <div className="teacher-card" key={teacher.id}>
+                  <div
+                    className={`teacher-card ${teacher.id === highlightedId ? "highlighted" : ""}`}
+                    key={teacher.id}
+                    ref={el => {
+                      // если это наш преподаватель — проскроллим к нему сразу
+                      if (teacher.id === highlightedId && el) {
+                        el.scrollIntoView({ behavior: "smooth", block: "center" });
+                      }
+                    }}
+                  >
                     <LazyLoadImage
                       src={teacher.photo || defaultTeacherImg}
                       alt={`${teacher.name} ${teacher.surname}`}

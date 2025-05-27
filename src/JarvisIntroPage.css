@@ -7,6 +7,14 @@
     justify-content: center;
     padding: 3rem 1rem;
   }
+
+  .back-button-jp{
+    font-size: 25px;
+    position: absolute;
+    color: white;
+    left: 10px;
+    top: 10px;
+  }
   
   .jarvis-container {
     max-width: 700px;

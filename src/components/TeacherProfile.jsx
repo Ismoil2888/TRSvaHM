@@ -233,7 +233,8 @@ const TeacherProfile = () => {
         url,
         storagePath,
         cathedra: teacher.cathedra,
-        author: `${teacher.name} ${teacher.surname}`,
+        author: `${teacher.name}`,
+        authorId: id,
         timestamp: new Date().toISOString(),
       };
   
@@ -319,40 +320,85 @@ const TeacherProfile = () => {
   };  
 
   const handleUploadBook = async () => {
-    if (newBook.title && newBook.description && (newBook.file || editingBook)) {
-      setUploading(true);
+  if (newBook.title && newBook.description && (newBook.file || editingBook)) {
+    setUploading(true);
 
-      let fileURL = editingBook ? editingBook.fileURL : '';
-      if (newBook.file) {
-        const fileRef = storageRef(storage, `books/${newBook.file.name}`);
-        await uploadBytes(fileRef, newBook.file);
-        fileURL = await getDownloadURL(fileRef);
-      }
+    // загружаем/обновляем файл
+    let fileURL = editingBook ? editingBook.fileURL : '';
+    if (newBook.file) {
+      const fileRef = storageRef(storage, `books/${newBook.file.name}`);
+      await uploadBytes(fileRef, newBook.file);
+      fileURL = await getDownloadURL(fileRef);
+    }
 
+    // собираем данные книги
+    if (editingBook) {
+      // при редактировании НЕ меняем timestamp и author
+      const bookRef = dbRef(database, `teachers/${id}/books/${editingBook.id}`);
+      await update(bookRef, {
+        title: newBook.title,
+        description: newBook.description,
+        fileURL,
+      });
+      showNotification('Книга успешно обновлена.');
+    } else {
+      // при новой публикации — сохраняем дату и автора
+      const booksRef = dbRef(database, `teachers/${id}/books`);
       const bookData = {
         title: newBook.title,
         description: newBook.description,
-        fileURL
+        fileURL,
+        author: `${teacher.name}`,
+        timestamp: new Date().toISOString(),
+        cathedra: teacher.cathedra,
       };
-
-      if (editingBook) {
-        // Обновляем существующую книгу
-        const bookRef = dbRef(database, `teachers/${id}/books/${editingBook.id}`);
-        await update(bookRef, bookData);
-        showNotification('Книга успешно обновлена.');
-      } else {
-        // Добавляем новую книгу
-        const booksRef = dbRef(database, `teachers/${id}/books`);
-        await set(push(booksRef), bookData);
-        showNotification('Книга успешно загружена.');
-      }
-
-      setNewBook({ title: '', description: '', file: null });
-      setIsModalOpen(false);
-      setEditingBook(null);
-      setUploading(false);
+      await push(booksRef, bookData);
+      showNotification('Книга успешно загружена.');
     }
-  };
+
+    // сброс формы
+    setNewBook({ title: '', description: '', file: null });
+    setIsModalOpen(false);
+    setEditingBook(null);
+    setUploading(false);
+  }
+};
+
+  // const handleUploadBook = async () => {
+  //   if (newBook.title && newBook.description && (newBook.file || editingBook)) {
+  //     setUploading(true);
+
+  //     let fileURL = editingBook ? editingBook.fileURL : '';
+  //     if (newBook.file) {
+  //       const fileRef = storageRef(storage, `books/${newBook.file.name}`);
+  //       await uploadBytes(fileRef, newBook.file);
+  //       fileURL = await getDownloadURL(fileRef);
+  //     }
+
+  //     const bookData = {
+  //       title: newBook.title,
+  //       description: newBook.description,
+  //       fileURL
+  //     };
+
+  //     if (editingBook) {
+  //       // Обновляем существующую книгу
+  //       const bookRef = dbRef(database, `teachers/${id}/books/${editingBook.id}`);
+  //       await update(bookRef, bookData);
+  //       showNotification('Книга успешно обновлена.');
+  //     } else {
+  //       // Добавляем новую книгу
+  //       const booksRef = dbRef(database, `teachers/${id}/books`);
+  //       await set(push(booksRef), bookData);
+  //       showNotification('Книга успешно загружена.');
+  //     }
+
+  //     setNewBook({ title: '', description: '', file: null });
+  //     setIsModalOpen(false);
+  //     setEditingBook(null);
+  //     setUploading(false);
+  //   }
+  // };
 
   const handleEditBook = (book) => {
     setEditingBook(book);
